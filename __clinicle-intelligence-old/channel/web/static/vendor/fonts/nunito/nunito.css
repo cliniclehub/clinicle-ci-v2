@@ -1,0 +1,21 @@
+/* Nunito (variable font, full latin+ character set).
+ * Weight axis 200-1000, used here at 700-800 for headlines per brand guide.
+ * Source: Google Fonts (Nunito), redistributed locally to avoid runtime
+ * dependency on fonts.googleapis.com / fonts.gstatic.com.
+ */
+
+@font-face {
+    font-family: 'Nunito';
+    font-style: normal;
+    font-weight: 200 1000;
+    font-display: swap;
+    src: url('./nunito-variable.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Nunito';
+    font-style: italic;
+    font-weight: 200 1000;
+    font-display: swap;
+    src: url('./nunito-italic-variable.ttf') format('truetype');
+}

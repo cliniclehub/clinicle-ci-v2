@@ -1,0 +1,201 @@
+# Clinicle Intelligence monorepo — run git from the repository root
+
+# Root (no package.json here — stray vitest/vite cache must not be committed)
+/node_modules/
+
+# ---------------------------------------------------------------------------
+# Legacy Clinicle Intelligence baseline (absorbed into monorepo; not a submodule)
+# ---------------------------------------------------------------------------
+clinicle-intelligence-old/.venv/
+clinicle-intelligence-old/**/__pycache__/
+clinicle-intelligence-old/*.egg-info/
+clinicle-intelligence-old/config.json
+clinicle-intelligence-old/client_config.json
+clinicle-intelligence-old/.preview_secret
+clinicle-intelligence-old/.cow.pid
+clinicle-intelligence-old/nohup.out
+clinicle-intelligence-old/user_datas.pkl
+clinicle-intelligence-old/docker/cow/
+clinicle-intelligence-old/docker/cow-data/
+clinicle-intelligence-old/workspace/
+clinicle-intelligence-old/local/
+clinicle-intelligence-old/tmp/
+
+# ---------------------------------------------------------------------------
+# Frontend (fe/)
+# ---------------------------------------------------------------------------
+fe/node_modules/
+fe/.next/
+fe/.turbo/
+fe/out/
+fe/dist/
+fe/build/
+fe/tsconfig.tsbuildinfo
+fe/public/media/
+fe/npm-debug.log*
+fe/yarn-debug.log*
+fe/yarn-error.log*
+fe/.pnpm-debug.log*
+!fe/lib/
+!fe/lib/actions/
+!fe/lib/types/
+
+# ---------------------------------------------------------------------------
+# Backend (be/)
+# ---------------------------------------------------------------------------
+be/.venv/
+be/__pycache__/
+be/**/__pycache__/
+be/.pytest_cache/
+be/.mypy_cache/
+be/build/
+be/dist/
+be/*.egg-info/
+be/config/.env.*
+
+# ---------------------------------------------------------------------------
+# Backend tests (test_unit_be/)
+# ---------------------------------------------------------------------------
+test_unit_be/.pytest_cache/
+test_unit_be/htmlcov/
+test_unit_be/.coverage
+
+# ---------------------------------------------------------------------------
+# Frontend tests (test_unit_fe/)
+# ---------------------------------------------------------------------------
+test_unit_fe/coverage/
+test_unit_fe/node_modules/
+
+# ---------------------------------------------------------------------------
+# E2E tests (test_st_ui/)
+# ---------------------------------------------------------------------------
+test_st_ui/node_modules/
+test_st_ui/test-results/
+test_st_ui/playwright-report/
+test_st_ui/blob-report/
+test_st_ui/.auth/
+test_st_ui/.env
+
+# API tests (test_st_api/)
+test_st_api/node_modules/
+test_st_api/newman/
+test_st_api/.env
+test_st_api/assets/video_file.mp4
+
+# E2E test media (keep local; too large for GitHub)
+test_st_ui/assets/video_file.mp4
+fe_mobile/.venv/
+!fe_mobile/lib/
+!fe_mobile/lib/**
+
+# ---------------------------------------------------------------------------
+# DevOps (devops/)
+# ---------------------------------------------------------------------------
+devops/docker-repo/
+devops/db-backups/*
+!devops/db-backups/initial_load.dump
+devops/config-backups/
+devops/pgdata/
+devops/logs/
+devops/cloud-flare/.wrangler/
+devops/deploy/deploy.env
+devops/deploy/render-services.yaml
+devops/deploy/env-dev.env
+devops/deploy/env-tst.env
+devops/deploy/env-prod.env
+
+# Render env snapshots (local backup only — secrets)
+devops/config-backups/*
+!devops/config-backups/README.md
+
+# ---------------------------------------------------------------------------
+# Env & secrets (all packages)
+# ---------------------------------------------------------------------------
+**/.env
+**/.env.*
+!**/.env.example
+!**/env-*.env.example
+**/.thinkific_api_key
+# ---------------------------------------------------------------------------
+# Docs — local media, secrets, env copies (keep markdown/CSV in git)
+# ---------------------------------------------------------------------------
+devops/docs/**/*.mp4
+devops/docs/**/*.mmdb
+**/*service account*.json
+devops/docs/TWILLIO.txt
+
+# GeoIP databases (download locally; see devops/docs/archive/geoip-setup.md)
+be/app/GeoLite2-*.mmdb
+
+# Caddy binary (install via brew/package manager)
+devops/caddy
+devops/caddy.exe
+
+# Client/source-project design artifacts are not part of the CI baseline
+*UI mockups.zip
+
+# Historical product fixtures and client-branded assets are excluded from the baseline
+fe/public/templates/quiz-exam-import-template.xlsx
+fe/public/images/*
+!fe/public/images/logo.png
+test_st_api/assets/
+test_st_ui/assets/
+test_unit_fe/fixtures/excel-question-import/
+test_unit_be/scripts/google_dwd_meet_smoke.py
+
+# ---------------------------------------------------------------------------
+# Local IDE / agent config
+# ---------------------------------------------------------------------------
+.cursor/*
+!.cursor/rules/
+!.cursor/rules/*.mdc
+!.cursor/plans/
+!.cursor/plans/**
+!.cursor/skills/
+!.cursor/skills/**
+.claude/
+.vscode/
+.idea/
+
+# Local Spec Kit CLI venv (host tool; prefer `pipx install specify-cli` or `uv tool install specify-cli`)
+.specify-venv/
+
+# ---------------------------------------------------------------------------
+# Logs & OS
+# ---------------------------------------------------------------------------
+**/logs/
+.DS_Store
+Thumbs.db
+*.log
+
+# ---------------------------------------------------------------------------
+# Python (global patterns)
+# ---------------------------------------------------------------------------
+*.pyc
+*.pyo
+*.egg-info/
+htmlcov/
+.tox/
+.mypy_cache/
+
+# ---------------------------------------------------------------------------
+# Coverage
+# ---------------------------------------------------------------------------
+.coverage
+.coverage.*
+secrets.md
+thinkific_migration_example.json
+
+# pytest coverage artifacts
+test_unit_be/coverage-be.json
+test_unit_be/*_cov.json
+test_unit_be/_baseline_owned_miss.json
+test_unit_be/.coverage*
+
+# Local media uploads (MEDIA_STORAGE=local). Seeded org branding is tracked.
+local-media/*
+!local-media/orgs/
+!local-media/orgs/**
+fe/local-media/*
+!fe/local-media/orgs/
+!fe/local-media/orgs/**

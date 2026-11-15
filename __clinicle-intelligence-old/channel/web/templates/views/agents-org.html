@@ -1,0 +1,74 @@
+                <!-- ====================================================== -->
+                <!-- VIEW: Agents & Org                                      -->
+                <!-- ====================================================== -->
+                <div id="view-agents-org" class="settings-pane" data-settings-pane="agents-org">
+                    <div class="flex-1 overflow-y-auto p-6">
+                        <div class="max-w-4xl mx-auto">
+                            <div class="flex items-center justify-between mb-6">
+                                <div>
+                                    <h2 class="text-xl font-bold text-surface-800 dark:text-surface-100" data-i18n="menu_agents_org">Agents &amp; Org</h2>
+                                    <p class="text-sm text-surface-500 dark:text-surface-400 mt-1" data-i18n="agents_org_desc">Who's in your org, their role, and your own two-factor login</p>
+                                </div>
+                            </div>
+
+                            <div id="agents-org-status" class="text-sm mb-4 opacity-0 transition-opacity duration-150"></div>
+
+                            <!-- Members -->
+                            <div class="p-5 rounded-xl border border-surface-200 dark:border-white/10 bg-white dark:bg-surface-800 mb-6">
+                                <div class="flex items-center justify-between mb-3">
+                                    <h3 class="text-sm font-semibold text-surface-700 dark:text-surface-200" data-i18n="agents_org_members">Members</h3>
+                                    <button onclick="openInviteModal()"
+                                            class="text-xs font-medium px-3 py-1.5 rounded-lg bg-primary-500 hover:bg-primary-600 text-white cursor-pointer">
+                                        <i class="fas fa-user-plus"></i> <span data-i18n="agents_org_invite">Invite member</span>
+                                    </button>
+                                </div>
+                                <div id="agents-org-members" class="divide-y divide-surface-100 dark:divide-white/5"></div>
+                            </div>
+
+                            <!-- Pending invites -->
+                            <div id="agents-org-invites-card" class="p-5 rounded-xl border border-surface-200 dark:border-white/10 bg-white dark:bg-surface-800 mb-6 hidden">
+                                <h3 class="text-sm font-semibold text-surface-700 dark:text-surface-200 mb-3" data-i18n="agents_org_pending_invites">Pending invites</h3>
+                                <div id="agents-org-invites" class="divide-y divide-surface-100 dark:divide-white/5"></div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Invite member modal -->
+                <div id="invite-modal" class="fixed inset-0 z-[60] hidden items-center justify-center bg-black/40 p-4">
+                    <div class="bg-white dark:bg-[#0F2036] rounded-xl shadow-xl w-full max-w-md flex flex-col overflow-hidden">
+                        <div class="flex items-center justify-between px-5 py-4 border-b border-surface-200 dark:border-white/10">
+                            <h3 class="text-base font-semibold text-surface-800 dark:text-surface-100" data-i18n="agents_org_invite">Invite member</h3>
+                            <button onclick="closeInviteModal()" class="text-surface-400 hover:text-surface-600 dark:hover:text-surface-200 cursor-pointer" aria-label="Close">
+                                <i class="fas fa-xmark"></i>
+                            </button>
+                        </div>
+                        <div class="p-5 space-y-4">
+                            <div>
+                                <label class="text-xs font-medium text-surface-500 dark:text-surface-400">Email</label>
+                                <input type="email" id="invite-email"
+                                       class="mt-1 w-full px-3 py-2 rounded-lg border border-surface-200 dark:border-white/10 bg-transparent text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/40">
+                            </div>
+                            <div>
+                                <label class="text-xs font-medium text-surface-500 dark:text-surface-400">Role</label>
+                                <select id="invite-role"
+                                        class="mt-1 w-full px-3 py-2 rounded-lg border border-surface-200 dark:border-white/10 bg-white dark:bg-surface-800 text-sm">
+                                    <option value="member">member</option>
+                                    <option value="admin">admin</option>
+                                </select>
+                            </div>
+                            <div id="invite-result" class="hidden">
+                                <label class="text-xs font-medium text-surface-500 dark:text-surface-400">Invite link (copy and send this yourself -- no email is sent automatically)</label>
+                                <input type="text" id="invite-result-url" readonly onclick="this.select()"
+                                       class="mt-1 w-full px-3 py-2 rounded-lg border border-surface-200 dark:border-white/10 bg-surface-50 dark:bg-surface-800 text-xs font-mono">
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-end gap-2 px-5 py-4 border-t border-surface-200 dark:border-white/10">
+                            <button onclick="closeInviteModal()"
+                                    class="px-3 py-1.5 rounded-lg text-xs font-medium text-surface-600 dark:text-surface-300 hover:bg-surface-100 dark:hover:bg-white/10 cursor-pointer" data-i18n="cancel">Cancel</button>
+                            <button id="invite-submit-btn" onclick="submitInvite()"
+                                    class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-primary-500 hover:bg-primary-600 text-white cursor-pointer">Send invite</button>
+                        </div>
+                    </div>
+                </div>

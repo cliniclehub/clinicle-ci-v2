@@ -1,0 +1,161 @@
+                <!-- ====================================================== -->
+                <!-- VIEW: Sovereignty & Trust                               -->
+                <!-- ====================================================== -->
+                <div id="view-sovereignty" class="settings-pane" data-settings-pane="sovereignty">
+                    <div class="flex-1 overflow-y-auto p-6">
+                        <div class="max-w-6xl mx-auto">
+                            <!-- Header -->
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-9 h-9 rounded-lg bg-primary-50 dark:bg-primary-900/30 flex items-center justify-center shrink-0">
+                                        <i class="fas fa-shield-halved text-primary-500 text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <h2 class="text-xl font-bold text-surface-800 dark:text-surface-100" data-i18n="sovereignty_title">Sovereignty &amp; Trust</h2>
+                                        <p class="text-sm text-surface-500 dark:text-surface-400 mt-0.5" data-i18n="sovereignty_desc">Proof that this Agent runs on your machine -- nothing leaves unless the ledger below says so</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-3 shrink-0">
+                                    <button onclick="window.print()"
+                                            class="text-xs font-medium text-surface-500 dark:text-surface-400 underline decoration-surface-300 dark:decoration-surface-600 underline-offset-2 hover:text-primary-500 dark:hover:text-primary-400 cursor-pointer">
+                                        <span data-i18n="sovereignty_print">Print view</span>
+                                    </button>
+                                    <a href="/api/sovereignty/export" download
+                                       class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold bg-primary-500 hover:bg-primary-600 text-white cursor-pointer transition-colors shadow-sm">
+                                        <i class="fas fa-download text-[11px]"></i>
+                                        <span data-i18n="sovereignty_export">Sovereign Export (PDF)</span>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div id="sovereignty-status" class="text-sm mb-4 opacity-0 transition-opacity duration-150"></div>
+
+                            <!-- Stat card row: 1 large cost-avoided card + 4 smaller cards -->
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 mb-6">
+                                <!-- Cloud cost avoided (large, green tint) -->
+                                <div class="sm:col-span-2 lg:col-span-2 p-5 rounded-xl border border-emerald-200 dark:border-emerald-800/30 bg-emerald-50/60 dark:bg-emerald-900/10 flex flex-col">
+                                    <div class="flex items-center gap-2 mb-3">
+                                        <div class="w-7 h-7 rounded-lg bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center shrink-0">
+                                            <i class="fas fa-sack-dollar text-emerald-600 dark:text-emerald-400 text-xs"></i>
+                                        </div>
+                                        <span class="text-xs font-medium text-emerald-700 dark:text-emerald-400" data-i18n="sovereignty_cost_avoided">Cloud cost avoided</span>
+                                    </div>
+                                    <div id="sov-cost-avoided" class="text-3xl font-bold text-emerald-600 dark:text-emerald-400 leading-none">$0.00</div>
+                                    <div id="sov-cost-benchmark" class="text-xs text-surface-500 dark:text-surface-400 mt-2"></div>
+                                    <div class="mt-auto pt-3 border-t border-emerald-200/60 dark:border-emerald-800/30 flex items-center gap-2 text-xs text-surface-500 dark:text-surface-400">
+                                        <span id="sov-tokens-in">0 tokens in</span>
+                                        <span class="opacity-40">|</span>
+                                        <span id="sov-tokens-out">0 tokens out</span>
+                                    </div>
+                                </div>
+
+                                <!-- Queries served -->
+                                <div class="p-4 rounded-xl border border-surface-200 dark:border-white/10 bg-white dark:bg-surface-800">
+                                    <div class="w-7 h-7 rounded-lg bg-surface-100 dark:bg-surface-700/50 flex items-center justify-center mb-2.5">
+                                        <i class="fas fa-comments text-surface-400 text-xs"></i>
+                                    </div>
+                                    <div id="sov-queries" class="text-2xl font-bold text-surface-800 dark:text-surface-100">0</div>
+                                    <div class="text-xs text-surface-500 dark:text-surface-400 mt-0.5" data-i18n="sovereignty_queries">Queries served</div>
+                                    <div id="sov-queries-sub" class="text-[11px] text-surface-400 dark:text-surface-500 mt-0.5">&nbsp;</div>
+                                </div>
+
+                                <!-- Tokens processed -->
+                                <div class="p-4 rounded-xl border border-surface-200 dark:border-white/10 bg-white dark:bg-surface-800">
+                                    <div class="w-7 h-7 rounded-lg bg-surface-100 dark:bg-surface-700/50 flex items-center justify-center mb-2.5">
+                                        <i class="fas fa-microchip text-surface-400 text-xs"></i>
+                                    </div>
+                                    <div id="sov-tokens" class="text-2xl font-bold text-surface-800 dark:text-surface-100">0</div>
+                                    <div class="text-xs text-surface-500 dark:text-surface-400 mt-0.5" data-i18n="sovereignty_tokens">Tokens processed</div>
+                                    <div class="text-[11px] text-surface-400 dark:text-surface-500 mt-0.5" data-i18n="sovereignty_tokens_sub">locally, on your machine</div>
+                                </div>
+
+                                <!-- Documents on-device -->
+                                <div class="p-4 rounded-xl border border-surface-200 dark:border-white/10 bg-white dark:bg-surface-800">
+                                    <div class="w-7 h-7 rounded-lg bg-surface-100 dark:bg-surface-700/50 flex items-center justify-center mb-2.5">
+                                        <i class="fas fa-file-lines text-surface-400 text-xs"></i>
+                                    </div>
+                                    <div id="sov-documents" class="text-2xl font-bold text-surface-800 dark:text-surface-100">0</div>
+                                    <div class="text-xs text-surface-500 dark:text-surface-400 mt-0.5" data-i18n="sovereignty_documents">Documents on-device</div>
+                                    <div id="sov-documents-sub" class="text-[11px] text-surface-400 dark:text-surface-500 mt-0.5">&nbsp;</div>
+                                </div>
+
+                                <!-- Outbound calls -->
+                                <div class="p-4 rounded-xl border border-surface-200 dark:border-white/10 bg-white dark:bg-surface-800">
+                                    <div class="w-7 h-7 rounded-lg bg-surface-100 dark:bg-surface-700/50 flex items-center justify-center mb-2.5">
+                                        <i class="fas fa-arrow-up-right-from-square text-surface-400 text-xs"></i>
+                                    </div>
+                                    <div id="sov-egress-total" class="text-2xl font-bold text-surface-800 dark:text-surface-100">0</div>
+                                    <div class="text-xs text-surface-500 dark:text-surface-400 mt-0.5" data-i18n="sovereignty_outbound">Outbound calls</div>
+                                    <div class="text-[11px] text-surface-400 dark:text-surface-500 mt-0.5" data-i18n="sovereignty_outbound_sub">all user-invoked &middot; logged</div>
+                                </div>
+                            </div>
+
+                            <!-- Data residency + Tamper-evident audit -->
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+                                <!-- Data residency checklist -->
+                                <div class="p-5 rounded-xl border border-surface-200 dark:border-white/10 bg-white dark:bg-surface-800">
+                                    <div class="flex items-center gap-2 mb-3">
+                                        <h3 class="text-sm font-semibold text-surface-700 dark:text-surface-200" data-i18n="sovereignty_residency">Data residency</h3>
+                                        <span class="px-2 py-0.5 rounded-full text-[11px] font-medium bg-surface-100 dark:bg-surface-700 text-surface-500 dark:text-surface-400" data-i18n="sovereignty_residency_pill">stays on this machine</span>
+                                    </div>
+                                    <div id="sov-residency" class="space-y-2 text-sm"></div>
+                                </div>
+
+                                <!-- Tamper-evident audit -->
+                                <div class="p-5 rounded-xl border border-surface-200 dark:border-white/10 bg-white dark:bg-surface-800">
+                                    <div class="flex items-center gap-2 mb-3">
+                                        <h3 class="text-sm font-semibold text-surface-700 dark:text-surface-200" data-i18n="sovereignty_audit">Tamper-evident audit</h3>
+                                        <span id="sov-chain-pill" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400">
+                                            <i class="fas fa-check text-[9px]"></i>
+                                            <span data-i18n="sovereignty_audit_intact">intact</span>
+                                        </span>
+                                    </div>
+                                    <div id="sov-chain-count" class="text-2xl font-bold text-surface-800 dark:text-surface-100 leading-none">0</div>
+                                    <div class="text-xs text-surface-400 dark:text-surface-500 mt-1 mb-3" data-i18n="sovereignty_audit_count_label">entries hash-chained</div>
+                                    <p class="text-xs text-surface-500 dark:text-surface-400 leading-relaxed" data-i18n="sovereignty_audit_desc">
+                                        Every governed action is appended as a SHA-256-linked entry; any edit, deletion or reorder after the fact breaks the chain and is detected.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Egress ledger -->
+                            <div class="p-5 rounded-xl border border-surface-200 dark:border-white/10 bg-white dark:bg-surface-800 mb-4">
+                                <div class="flex items-center justify-between mb-1">
+                                    <div class="flex items-center gap-2">
+                                        <h3 class="text-sm font-semibold text-surface-700 dark:text-surface-200" data-i18n="sovereignty_egress">Egress ledger</h3>
+                                        <span id="sov-egress-count" class="px-2 py-0.5 rounded-full text-[11px] bg-surface-100 dark:bg-surface-700 text-surface-500 dark:text-surface-400 font-medium">0 outbound calls</span>
+                                    </div>
+                                </div>
+                                <p class="text-xs text-surface-400 dark:text-surface-500 mb-3" data-i18n="sovereignty_egress_desc">Every outbound network call this Agent has made, grouped by destination.</p>
+                                <div id="sov-egress-list" class="space-y-1.5 text-xs max-h-64 overflow-y-auto"></div>
+                            </div>
+
+                            <!-- Data retention -->
+                            <div class="p-5 rounded-xl border border-surface-200 dark:border-white/10 bg-white dark:bg-surface-800 mb-4">
+                                <h3 class="text-sm font-semibold text-surface-700 dark:text-surface-200 mb-1" data-i18n="sovereignty_retention">Data retention</h3>
+                                <p class="text-xs text-surface-400 dark:text-surface-500 mb-3" data-i18n="sovereignty_retention_desc">
+                                    Deletes whole conversations (and every message in them) once they have been inactive longer than this window. This never touches the tamper-evident audit chain above -- deleting audit entries would defeat the point of a tamper-evident log, so retention only applies to conversation history.
+                                </p>
+                                <div class="flex items-center gap-3 flex-wrap">
+                                    <label class="text-xs text-surface-500 dark:text-surface-400" data-i18n="sovereignty_retention_days_label">Delete conversations inactive for more than</label>
+                                    <input type="number" id="sov-retention-days" min="0" step="1"
+                                           class="w-20 px-2 py-1.5 rounded-lg border border-surface-200 dark:border-white/10 bg-transparent text-sm text-center">
+                                    <span class="text-xs text-surface-500 dark:text-surface-400" data-i18n="sovereignty_retention_days_suffix">days (0 = disabled)</span>
+                                    <button onclick="saveRetentionSetting()"
+                                            class="text-xs font-medium px-3 py-1.5 rounded-lg bg-primary-500 hover:bg-primary-600 text-white cursor-pointer" data-i18n="save">Save</button>
+                                </div>
+                                <div class="flex items-center justify-between mt-4 pt-4 border-t border-surface-100 dark:border-white/5">
+                                    <span id="sov-retention-pending" class="text-xs text-surface-500 dark:text-surface-400">&nbsp;</span>
+                                    <button onclick="runRetentionPurge()"
+                                            class="text-xs font-medium px-3 py-1.5 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 cursor-pointer" data-i18n="sovereignty_retention_purge_now">
+                                        Purge now
+                                    </button>
+                                </div>
+                            </div>
+
+                            <p class="text-xs text-surface-400 dark:text-surface-500">
+                                Cost avoided is an estimate: tokens processed on this machine x a benchmark hosted-model price per token. See <code>BENCHMARK_CLOUD_PRICE_PER_1M_TOKENS</code> in <code>channel/web/api/sovereignty.py</code>.
+                            </p>
+                        </div>
+                    </div>
+                </div>

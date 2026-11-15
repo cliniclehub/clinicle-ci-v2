@@ -1,0 +1,93 @@
+                <!-- ====================================================== -->
+                <!-- VIEW: Workflows (n8n/Make.com-style node/edge canvas)   -->
+                <!-- ====================================================== -->
+                <div id="view-workflows" class="view">
+                    <div class="wf-header">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <i class="fas fa-diagram-project wf-header-icon"></i>
+                            <h2 class="text-base font-semibold text-surface-800 dark:text-surface-100" data-i18n="workflows_title">Workflows</h2>
+                        </div>
+                        <button onclick="openWorkflowCreateModal()"
+                                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-primary-500 hover:bg-primary-600 text-white cursor-pointer">
+                            <i class="fas fa-plus"></i>
+                            <span data-i18n="workflows_new">New Workflow</span>
+                        </button>
+                    </div>
+
+                    <div class="wf-body">
+                        <div class="wf-list" id="wf-list">
+                            <div id="workflows-empty" class="meetings-empty hidden">
+                                <i class="fas fa-diagram-project text-3xl opacity-40"></i>
+                                <div class="text-sm" data-i18n="workflows_empty_hint">No workflows yet. Create one to start building.</div>
+                            </div>
+                            <div id="wf-list-items"></div>
+                        </div>
+
+                        <div class="wf-editor hidden" id="wf-editor">
+                            <div class="wf-toolbar">
+                                <input id="wf-name-input" class="wf-name-input" onchange="renameActiveWorkflow()">
+                                <button class="wf-add-node-btn" onclick="openNodePicker()">
+                                    <i class="fas fa-plus"></i> <span data-i18n="workflows_add_node">Add node</span>
+                                </button>
+                                <div class="flex items-center gap-2 ms-auto">
+                                    <label class="wf-active-toggle">
+                                        <input type="checkbox" id="wf-active-checkbox" onchange="toggleWorkflowActive(this.checked)">
+                                        <span data-i18n="workflows_active">Active</span>
+                                    </label>
+                                    <button class="meeting-btn-secondary" onclick="runActiveWorkflow()"><i class="fas fa-play"></i> <span data-i18n="workflows_run">Run</span></button>
+                                    <button class="meeting-btn-primary" onclick="saveActiveGraph()"><i class="fas fa-floppy-disk"></i> <span data-i18n="workflows_save">Save</span></button>
+                                    <button class="meeting-btn-secondary" onclick="deleteActiveWorkflow()" title="Delete workflow"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>
+                            <div class="wf-canvas-wrap">
+                                <svg id="wf-canvas" class="wf-canvas"></svg>
+                                <div id="wf-canvas-empty" class="wf-canvas-empty">
+                                    <button class="wf-big-add-btn" onclick="openNodePicker()"><i class="fas fa-plus"></i></button>
+                                    <span data-i18n="workflows_canvas_empty">Add a trigger node to get started.</span>
+                                </div>
+                                <div id="wf-inspector" class="wf-inspector hidden"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Node picker: n8n-style searchable panel of node types -->
+                <div id="wf-node-picker" class="wf-node-picker hidden" onclick="if(event.target===this) closeNodePicker()">
+                    <div class="wf-node-picker-panel">
+                        <div class="wf-node-picker-head">
+                            <input id="wf-node-search" class="wf-node-search" placeholder="Search nodes..." oninput="renderNodePickerList()">
+                            <button onclick="closeNodePicker()" class="wf-inspector-close"><i class="fas fa-xmark"></i></button>
+                        </div>
+                        <div id="wf-node-picker-list" class="wf-node-picker-list"></div>
+                    </div>
+                </div>
+
+                <!-- New workflow modal -->
+                <div id="workflow-create-modal" class="fixed inset-0 z-[60] hidden items-center justify-center bg-black/40 p-4">
+                    <div class="bg-white dark:bg-surface-800 rounded-xl shadow-xl w-full max-w-md flex flex-col overflow-hidden">
+                        <div class="flex items-center justify-between px-5 py-4 border-b border-surface-200 dark:border-white/10">
+                            <h3 class="text-base font-semibold text-surface-800 dark:text-surface-100" data-i18n="workflows_new">New Workflow</h3>
+                            <button onclick="closeWorkflowCreateModal()" class="text-surface-400 hover:text-surface-600 dark:hover:text-surface-200 cursor-pointer" aria-label="Close">
+                                <i class="fas fa-xmark"></i>
+                            </button>
+                        </div>
+                        <div class="p-5 space-y-4">
+                            <div>
+                                <label class="text-xs font-medium text-surface-500 dark:text-surface-400" data-i18n="workflows_name">Name</label>
+                                <input type="text" id="workflow-name"
+                                       class="mt-1 w-full px-3 py-2 rounded-lg border border-surface-200 dark:border-white/10 bg-transparent text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/40">
+                            </div>
+                            <div>
+                                <label class="text-xs font-medium text-surface-500 dark:text-surface-400" data-i18n="workflows_description">Description</label>
+                                <input type="text" id="workflow-description"
+                                       class="mt-1 w-full px-3 py-2 rounded-lg border border-surface-200 dark:border-white/10 bg-transparent text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/40">
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-end gap-2 px-5 py-4 border-t border-surface-200 dark:border-white/10">
+                            <button onclick="closeWorkflowCreateModal()"
+                                    class="px-3 py-1.5 rounded-lg text-xs font-medium text-surface-600 dark:text-surface-300 hover:bg-surface-100 dark:hover:bg-white/10 cursor-pointer" data-i18n="cancel">Cancel</button>
+                            <button onclick="saveWorkflowCreate()"
+                                    class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-primary-500 hover:bg-primary-600 text-white cursor-pointer" data-i18n="board_create">Create</button>
+                        </div>
+                    </div>
+                </div>

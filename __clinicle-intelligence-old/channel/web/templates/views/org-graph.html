@@ -1,0 +1,26 @@
+                <!-- ====================================================== -->
+                <!-- VIEW: Org Graph (read-only org -> teams -> agents map)  -->
+                <!-- ====================================================== -->
+                <div id="view-org-graph" class="view">
+                    <div class="wf-header">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <i class="fas fa-sitemap wf-header-icon"></i>
+                            <h2 class="text-base font-semibold text-surface-800 dark:text-surface-100" data-i18n="org_graph_title">Org Graph</h2>
+                        </div>
+                    </div>
+
+                    <div class="wf-body">
+                        <div id="og-not-applicable" class="meetings-empty hidden">
+                            <i class="fas fa-sitemap text-3xl opacity-40"></i>
+                            <div class="text-sm" data-i18n="org_graph_not_applicable_hint">Organizations aren't set up on this install.</div>
+                        </div>
+
+                        <div id="og-canvas-wrap" class="wf-canvas-wrap hidden">
+                            <div id="og-empty" class="meetings-empty hidden">
+                                <i class="fas fa-people-group text-3xl opacity-40"></i>
+                                <div class="text-sm" data-i18n="org_graph_empty_hint">No teams linked to your org yet.</div>
+                            </div>
+                            <svg id="og-canvas" class="wf-canvas"></svg>
+                        </div>
+                    </div>
+                </div>

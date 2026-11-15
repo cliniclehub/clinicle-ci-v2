@@ -1,0 +1,54 @@
+[
+  {
+    "template_key": "email-verification",
+    "name": "Email Verification Code",
+    "description": null,
+    "subject": "Verify Your Email - {{organizationName}}",
+    "body_html": "<h1>Verify Your Email</h1><h2>{{organizationName}}</h2><h3>Hello {{firstName}}!</h3><p class=\"mb-2\">You requested a new verification code for your email address. Use the code below to verify your email:</p><p class=\"mb-2\"><strong>Your Verification Code:  {{emailVerificationCode}}</strong></p><p class=\"mb-2\">This code expires in 15 minutes</p><p class=\"mb-2\"><strong>How to verify your email:</strong></p><ol><li><p class=\"mb-2\"><a href=\"{{emailVerificationUrl}}\" style=\"display:inline-block;background:#2563eb;color:#fff;padding:12px 24px;text-decoration:none;border-radius:6px;font-weight:600;\">Verify Email</a></p></li><li><p class=\"mb-2\">Enter the verification code above</p></li><li><p class=\"mb-2\">Click \"Verify Email\"</p></li></ol><p class=\"mb-2\"><strong>Important:</strong> If you didn't request this verification code, please ignore this email. Your account security is not compromised.</p><p class=\"mb-2\">If you have any questions, contact us at <a href=\"mailto:{{replyToEmail}}\">{{replyToEmail}}</a>.</p><p class=\"mb-2\">Best regards,<br class=\"break-all\">The {{organizationName}} Team</p>",
+    "body_text": null,
+    "category": "system",
+    "is_active": true,
+    "is_system_default": true,
+    "available_fields": null,
+    "preview_data": null
+  },
+  {
+    "template_key": "password-reset",
+    "name": "Password Reset Code",
+    "description": null,
+    "subject": "Reset Your Password - {{organizationName}}",
+    "body_html": "<h1>Reset Your Password</h1><h2>{{organizationName}}</h2><h3>Hello {{firstName}}!</h3><p class=\"mb-2\">We received a request to reset your password for your {{organizationName}} account. Use the code below to create a new password:</p><p class=\"mb-2\"><strong>Your Reset Code:   {{passwordResetCode}}</strong></p><p class=\"mb-2\">This code expires in 15 minutes</p><p class=\"mb-2\"><strong>How to reset your password:</strong></p><ol><li><p class=\"mb-2\"><a href=\"{{passwordResetUrl}}\" style=\"display:inline-block;background:#2563eb;color:#fff;padding:12px 24px;text-decoration:none;border-radius:6px;font-weight:600;\">Reset Password</a></p></li><li><p class=\"mb-2\">Enter the reset code above</p></li><li><p class=\"mb-2\">Create a new strong password</p></li><li><p class=\"mb-2\">Click \"Reset Password\"</p></li></ol><p class=\"mb-2\"><strong>Security Alert:</strong> If you didn't request this password reset, please ignore this email and consider changing your password immediately. Your account may be at risk.</p><p class=\"mb-2\"><strong>Password Requirements:</strong></p><ul><li><p class=\"mb-2\">At least 8 characters long</p></li><li><p class=\"mb-2\">One uppercase letter</p></li><li><p class=\"mb-2\">One lowercase letter</p></li><li><p class=\"mb-2\">One number</p></li><li><p class=\"mb-2\">One special character</p></li></ul><p class=\"mb-2\">If you have any questions or concerns, contact us immediately at <a href=\"mailto:{{replyToEmail}}\">{{replyToEmail}}</a>.</p><p class=\"mb-2\">Stay secure,<br class=\"break-all\">The {{organizationName}} Security Team</p>",
+    "body_text": null,
+    "category": "system",
+    "is_active": true,
+    "is_system_default": true,
+    "available_fields": null,
+    "preview_data": null
+  },
+  {
+    "template_key": "password-changed",
+    "name": "Password Changed Confirmation",
+    "description": null,
+    "subject": "Password Successfully Changed - {{organizationName}}",
+    "body_html": "<h1>Password Changed Successfully</h1><h2>{{organizationName}}</h2><h3>Hello {{firstName}}!</h3><p class=\"mb-2\">Your password has been successfully changed for your {{organizationName}} account.</p><h3>Change Details</h3><p class=\"mb-2\"><strong>Time:</strong> {{changeTime}} </p><p class=\"mb-2\"><strong>IP Address:</strong> {{ipAddress}} </p><p class=\"mb-2\"><strong>Device:</strong> {{device}}</p><p class=\"mb-2\"><strong>Security Confirmed:</strong> Your account is now protected with your new password. All existing sessions have been logged out for security.</p><p class=\"mb-2\"><strong>Didn't change your password?</strong> If you didn't make this change, your account may be compromised. Please contact us immediately at <a href=\"mailto:{{replyToEmail}}\">{{replyToEmail}}</a> and change your password again.</p><p class=\"mb-2\"><strong>What happens next:</strong></p><ul><li><p class=\"mb-2\">You'll need to log in again with your new password</p></li><li><p class=\"mb-2\">All other devices will be automatically logged out</p></li><li><p class=\"mb-2\">Your account security has been enhanced</p></li></ul><p class=\"mb-2\"><strong>Keep your account secure:</strong></p><ul><li><p class=\"mb-2\">Use a unique password for this account</p></li><li><p class=\"mb-2\">Don't share your password with anyone</p></li><li><p class=\"mb-2\">Log out from shared devices</p></li><li><p class=\"mb-2\">Enable two-factor authentication if available</p></li></ul><p class=\"mb-2\">If you have any questions or concerns, contact us at <a href=\"mailto:{{replyToEmail}}\">{{replyToEmail}}</a>.</p><p class=\"mb-2\">Stay secure,<br class=\"break-all\">The {{organizationName}} Security Team</p>",
+    "body_text": null,
+    "category": "system",
+    "is_active": true,
+    "is_system_default": true,
+    "available_fields": null,
+    "preview_data": null
+  },
+  {
+    "template_key": "registration-welcome",
+    "name": "Registration Welcome & Email Verification",
+    "description": null,
+    "subject": "Welcome to {{organizationName}} - Verify Your Email",
+    "body_html": "<h1>Welcome to {{organizationName}}!</h1><h2>Hello {{firstName}}!</h2><p class=\"mb-2\">Thank you for joining {{organizationName}}.</p><p class=\"mb-2\">To complete your registration, please verify your email address using the code below:</p><p class=\"mb-2\"><strong>Your Verification Code:   {{emailVerificationCode}}</strong></p><p class=\"mb-2\">(This code expires in 15 minutes)</p><p class=\"mb-2\"><strong>How to verify your email:</strong></p><ol><li><p class=\"mb-2\"><a href=\"{{emailVerificationUrl}}\" style=\"display:inline-block;background:#2563eb;color:#fff;padding:12px 24px;text-decoration:none;border-radius:6px;font-weight:600;\">Verify Email</a></p></li><li><p class=\"mb-2\">Enter the verification code above</p></li><li><p class=\"mb-2\">Click \"Verify Email\"</p></li></ol><p class=\"mb-2\"><strong>Security Note:</strong> If you didn't create an account with us, please ignore this email. Your account will be automatically deleted if not verified within 24 hours.</p><p class=\"mb-2\">If you have any questions, feel free to contact us at <a href=\"mailto:{{replyToEmail}}\">{{replyToEmail}}</a>.</p><p class=\"mb-2\">Best regards,<br class=\"break-all\">The {{organizationName}} Team</p>",
+    "body_text": null,
+    "category": "system",
+    "is_active": true,
+    "is_system_default": true,
+    "available_fields": null,
+    "preview_data": null
+  }
+]

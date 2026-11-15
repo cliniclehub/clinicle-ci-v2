@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "strict": true,
+    "noEmit": true,
+    "paths": {
+      "@/*": ["../fe/*"]
+    },
+    "types": ["node", "@playwright/test"]
+  },
+  "include": ["**/*.ts", "../fe/lib/utils/middleware-route-policy.ts", "../fe/lib/types/permission-schema.ts"],
+  "exclude": ["node_modules", "playwright-report", "test-results"]
+}

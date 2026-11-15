@@ -1,0 +1,77 @@
+                <!-- ====================================================== -->
+                <!-- VIEW: Settings                                          -->
+                <!-- Shell only -- every pane below used to be its own       -->
+                <!-- top-level .view; they're now .settings-pane children,   -->
+                <!-- switched by settings.js's switchSettingsPane() rather   -->
+                <!-- than nav.js's navigateTo(). Their own internal tabs     -->
+                <!-- (e.g. config.html's General/Models) are untouched.      -->
+                <!-- ====================================================== -->
+                <div id="view-settings" class="view">
+                    <div class="settings-shell flex h-full overflow-hidden">
+                        <nav class="settings-subnav flex-shrink-0 overflow-y-auto py-4 px-3 space-y-1">
+                            <a id="settings-tab-profile" class="settings-nav-item" data-settings-pane="profile"
+                               onclick="switchSettingsPane('profile')">
+                                <i class="fas fa-user item-icon text-xs w-5 text-center"></i>
+                                <span data-i18n="settings_nav_profile">Profile</span>
+                            </a>
+                            <a id="settings-tab-general" class="settings-nav-item active" data-settings-pane="general"
+                               data-capability="settings.general" onclick="switchSettingsPane('general')">
+                                <i class="fas fa-sliders item-icon text-xs w-5 text-center"></i>
+                                <span data-i18n="settings_nav_general">General</span>
+                            </a>
+                            <a id="settings-tab-security-access" class="settings-nav-item" data-settings-pane="security-access"
+                               data-capability="settings.security" onclick="switchSettingsPane('security-access')">
+                                <i class="fas fa-lock item-icon text-xs w-5 text-center"></i>
+                                <span data-i18n="settings_nav_security">Security &amp; Access</span>
+                            </a>
+                            <a id="settings-tab-agents-org" class="settings-nav-item" data-settings-pane="agents-org"
+                               data-capability="settings.users" onclick="switchSettingsPane('agents-org')">
+                                <i class="fas fa-users item-icon text-xs w-5 text-center"></i>
+                                <span data-i18n="settings_nav_users">Users</span>
+                            </a>
+                            <a id="settings-tab-permissions" class="settings-nav-item" data-settings-pane="permissions"
+                               data-capability="settings.permissions" onclick="switchSettingsPane('permissions')">
+                                <i class="fas fa-user-shield item-icon text-xs w-5 text-center"></i>
+                                <span data-i18n="settings_nav_permissions">Permissions</span>
+                            </a>
+                            <a id="settings-tab-activity" class="settings-nav-item" data-settings-pane="activity"
+                               data-capability="settings.users" onclick="switchSettingsPane('activity')">
+                                <i class="fas fa-clock-rotate-left item-icon text-xs w-5 text-center"></i>
+                                <span data-i18n="settings_nav_activity">Activity</span>
+                            </a>
+                            <a id="settings-tab-connectors" class="settings-nav-item" data-settings-pane="connectors"
+                               data-capability="settings.connectors" onclick="switchSettingsPane('connectors')">
+                                <i class="fas fa-plug item-icon text-xs w-5 text-center"></i>
+                                <span data-i18n="menu_connectors">Connectors</span>
+                            </a>
+                            <a id="settings-tab-channels" class="settings-nav-item" data-settings-pane="channels"
+                               data-capability="settings.channels" onclick="switchSettingsPane('channels')">
+                                <i class="fas fa-tower-broadcast item-icon text-xs w-5 text-center"></i>
+                                <span data-i18n="menu_channels">Channels</span>
+                            </a>
+                            <a id="settings-tab-skills" class="settings-nav-item" data-settings-pane="skills"
+                               data-capability="settings.general" onclick="switchSettingsPane('skills')">
+                                <i class="fas fa-bolt item-icon text-xs w-5 text-center"></i>
+                                <span data-i18n="menu_skills">Skills</span>
+                            </a>
+                            <a id="settings-tab-sovereignty" class="settings-nav-item" data-settings-pane="sovereignty"
+                               data-capability="settings.sovereignty" onclick="switchSettingsPane('sovereignty')">
+                                <i class="fas fa-shield-halved item-icon text-xs w-5 text-center"></i>
+                                <span data-i18n="menu_sovereignty">Sovereignty</span>
+                            </a>
+                        </nav>
+
+                        <div class="settings-panes flex-1 overflow-y-auto min-w-0">
+                            <!--#include templates/views/settings-profile.html-->
+                            <!--#include templates/views/config.html-->
+                            <!--#include templates/views/security-access.html-->
+                            <!--#include templates/views/agents-org.html-->
+                            <!--#include templates/views/settings-permissions.html-->
+                            <!--#include templates/views/settings-activity.html-->
+                            <!--#include templates/views/connectors.html-->
+                            <!--#include templates/views/channels.html-->
+                            <!--#include templates/views/skills.html-->
+                            <!--#include templates/views/sovereignty.html-->
+                        </div>
+                    </div>
+                </div>

@@ -1,0 +1,21 @@
+/* JetBrains Mono (variable font, full latin+ character set).
+ * Weight axis 100-800.
+ * Source: Google Fonts (JetBrains Mono), redistributed locally to avoid
+ * runtime dependency on fonts.googleapis.com / fonts.gstatic.com.
+ */
+
+@font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal;
+    font-weight: 100 800;
+    font-display: swap;
+    src: url('./jetbrains-mono-variable.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'JetBrains Mono';
+    font-style: italic;
+    font-weight: 100 800;
+    font-display: swap;
+    src: url('./jetbrains-mono-italic-variable.ttf') format('truetype');
+}

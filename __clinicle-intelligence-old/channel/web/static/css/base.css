@@ -1,0 +1,311 @@
+/* Foundation: keyframes, scrollbars, tooltips, view switching.
+   Split out of console.css; see channel/web/README.md for the
+   load order, which is load-bearing. */
+
+/* =====================================================================
+   Clinicle Intelligence Console Styles
+   ===================================================================== */
+
+/* Brand: headlines are always Nunito 700-800 (Clinicle-Brand-Guidelines.html).
+   Bare h1-h3 need this explicitly -- the Tailwind `font-display` utility
+   class doesn't retroactively apply to untagged tags. */
+h1, h2, h3 {
+    font-family: 'Nunito', system-ui, sans-serif;
+    font-weight: 800;
+}
+
+/* Mobile viewport fixes.
+   On mobile browsers `100vh` includes the (collapsible) URL bar, so a full-height
+   layout ends up taller than the visible area and leaks a vertical scrollbar/jitter.
+   `dvh` tracks the *dynamic* viewport instead. On desktop `dvh` equals `vh`, so this
+   is a no-op there and leaves the PC layout untouched. Guarded by @supports so old
+   engines keep the `100vh` fallback baked into the markup. */
+@supports (height: 100dvh) {
+    html.h-screen,
+    body.h-screen,
+    #app.h-screen,
+    #main-content.h-screen,
+    .session-panel {
+        height: 100dvh;
+    }
+}
+
+/* Belt-and-braces horizontal-overflow guard for phones. Some inner toolbars are
+   laid out as single non-wrapping flex rows that can exceed a narrow viewport; on
+   iOS Safari `overflow-x: hidden` alone doesn't always stop the page from panning.
+   Scoped to small screens so the desktop layout is completely unaffected. */
+@media (max-width: 768px) {
+    html, body { max-width: 100%; overflow-x: hidden; }
+    /* The header logout icon is redundant on phones (and was overflowing the top
+       bar). Hide it on small screens regardless of the JS-toggled `hidden` class. */
+    #logout-btn-header { display: none !important; }
+}
+
+/* Animations */
+@keyframes pulseDot {
+    0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+    40% { transform: scale(1); opacity: 1; }
+}
+
+/* Scrollbar */
+* { scrollbar-width: thin; scrollbar-color: #7F9FB8 transparent; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #7F9FB8; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #5A7C96; }
+.dark ::-webkit-scrollbar-thumb { background: #3D5A72; }
+.dark ::-webkit-scrollbar-thumb:hover { background: #5A7C96; }
+
+/* Generic Tooltip (via data-tooltip attribute) */
+[data-tooltip] {
+    position: relative;
+}
+[data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 8px);
+    transform: translateX(-50%);
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.4;
+    white-space: nowrap;
+    background: #182E44;
+    color: #DCEBF7;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+    z-index: 100;
+}
+[data-tooltip-pos="bottom"]::after {
+    bottom: auto;
+    top: calc(100% + 8px);
+}
+.dark [data-tooltip]::after {
+    background: #28405A;
+    color: #EBF5FF;
+}
+[data-tooltip]:hover::after {
+    opacity: 1;
+}
+[data-tooltip=""]:hover::after {
+    display: none;
+}
+/* Float-portal elements render their tooltip via the body-level node, so
+   suppress the clipped ::after variant to avoid a double tooltip. */
+[data-tip-float]::after,
+[data-tip-float]::before {
+    display: none !important;
+}
+
+/* Menu Groups */
+.menu-group-items { max-height: 0; overflow: hidden; transition: max-height 0.25s ease-out; }
+.menu-group.open .menu-group-items { max-height: 2000px; transition: max-height 0.35s ease-in; }
+.menu-group .chevron { transition: transform 0.25s ease; }
+.menu-group.open .chevron { transform: rotate(90deg); }
+
+/* View Switching */
+.view { display: none; height: 100%; }
+.view.active { display: flex; flex-direction: column; }
+
+/* Mission Control: staggered entrance for cards/panels (--mc-delay per
+   element) and a small pulsing "live" indicator next to the title. */
+@keyframes mc-fade-up {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.mc-anim {
+    animation: mc-fade-up 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: var(--mc-delay, 0ms);
+}
+@keyframes mc-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5); }
+    50%      { box-shadow: 0 0 0 4px rgba(16, 185, 129, 0); }
+}
+.mc-live-dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: #10b981;
+    animation: mc-pulse 1.8s ease-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+    .mc-anim, .mc-live-dot { animation: none; }
+}
+
+/* Dashboard stat cards: a small uppercase eyebrow groups each row (what the
+   row actually is, not decoration), a tinted icon chip per metric gives the
+   grid scannable rhythm instead of one flat gray icon repeated 12 times, and
+   tabular figures keep the numbers aligned as they animate. */
+.mc-eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgb(148 163 184 / 1);
+    margin-bottom: 0.5rem;
+}
+.dark .mc-eyebrow { color: #5A7C96; } /* surface-500 */
+
+.mc-stat {
+    padding: 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid rgb(226 232 240 / 1);
+    background: #fff;
+}
+/* surface-800: this app's actual dark card color (see chat.html's Tailwind
+   config, "brand-tinted dark neutral" -- deep-sky blue-navy, not generic
+   slate). Every other card in the app already renders at this color via
+   dark:bg-surface-800; .mc-stat just needed the literal value since it isn't
+   a Tailwind utility class. */
+.dark .mc-stat { border-color: rgb(255 255 255 / 0.1); background: #182E44; }
+.mc-stat-link { cursor: pointer; transition: border-color 150ms; }
+.mc-stat-link:hover { border-color: rgb(147 197 253 / 1); }
+.dark .mc-stat-link:hover { border-color: rgba(46, 159, 220, 0.4); } /* primary-500 */
+
+.mc-stat-icon {
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.625rem;
+}
+.mc-stat-num {
+    font-size: 1.5rem;
+    line-height: 2rem;
+    font-weight: 700;
+    color: rgb(30 41 59 / 1);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+}
+.dark .mc-stat-num { color: #E4F0F9; } /* surface-100 */
+.mc-stat-label {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgb(148 163 184 / 1);
+    margin-top: 0.375rem;
+}
+.dark .mc-stat-label { color: #5A7C96; } /* surface-500 */
+
+/* Status pill: the Audit chain card's idle/good/bad states -- was a bare "--"
+   that looked broken next to a grid of bold numbers; now sized and weighted
+   like the other cards' figures instead of a stray placeholder. */
+.mc-stat-pill {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 0.125rem 0.5rem;
+    border-radius: 999px;
+}
+.mc-stat-pill-neutral { background: rgb(241 245 249 / 1); color: rgb(100 116 139 / 1); }
+.dark .mc-stat-pill-neutral { background: rgba(40, 64, 90, 0.6); color: #7F9FB8; } /* surface-700 / surface-400 */
+.mc-stat-pill-good { background: rgb(209 250 229 / 1); color: rgb(5 150 105 / 1); }
+.dark .mc-stat-pill-good { background: rgb(6 78 59 / 0.4); color: rgb(52 211 153 / 1); }
+.mc-stat-pill-bad { background: rgb(254 226 226 / 1); color: rgb(220 38 38 / 1); }
+.dark .mc-stat-pill-bad { background: rgb(127 29 29 / 0.4); color: rgb(248 113 113 / 1); }
+
+/* Card tints: every Dashboard stat card already carries a fixed per-metric
+   hue on its icon chip (bg-{color}-100 ... ) -- these give the card's own
+   background/border a soft wash of that same hue instead of plain white, so
+   the grid reads as color-coded sections rather than a flat white grid.
+   Two classes (.mc-stat.mc-tint-X) beat .mc-stat alone on specificity, so
+   this always wins regardless of Tailwind's own injection order. 8-digit hex
+   encodes the alpha directly (1A=10%, 4D=30%) -- same light/dark convention
+   already used by the hand-written Sovereignty cost-avoided card. */
+.mc-stat.mc-tint-primary { background: #EBF5FF; border-color: #ADD7FE99; }
+.dark .mc-stat.mc-tint-primary { background: #173F5C1A; border-color: #1B50754D; }
+.mc-stat.mc-tint-violet { background: #f5f3ff; border-color: #ddd6fe99; }
+.dark .mc-stat.mc-tint-violet { background: #4c1d951A; border-color: #5b21b64D; }
+.mc-stat.mc-tint-emerald { background: #ecfdf5; border-color: #a7f3d099; }
+.dark .mc-stat.mc-tint-emerald { background: #064e3b1A; border-color: #065f464D; }
+.mc-stat.mc-tint-amber { background: #fffbeb; border-color: #fde68a99; }
+.dark .mc-stat.mc-tint-amber { background: #78350f1A; border-color: #92400e4D; }
+.mc-stat.mc-tint-rose { background: #fff1f2; border-color: #fecdd399; }
+.dark .mc-stat.mc-tint-rose { background: #8813371A; border-color: #9f12394D; }
+.mc-stat.mc-tint-indigo { background: #eef2ff; border-color: #c7d2fe99; }
+.dark .mc-stat.mc-tint-indigo { background: #312e811A; border-color: #3730a34D; }
+.mc-stat.mc-tint-teal { background: #f0fdfa; border-color: #99f6e499; }
+.dark .mc-stat.mc-tint-teal { background: #134e4a1A; border-color: #115e594D; }
+.mc-stat.mc-tint-sky { background: #f0f9ff; border-color: #bae6fd99; }
+.dark .mc-stat.mc-tint-sky { background: #0c4a6e1A; border-color: #0759854D; }
+.mc-stat.mc-tint-fuchsia { background: #fdf4ff; border-color: #f5d0fe99; }
+.dark .mc-stat.mc-tint-fuchsia { background: #701a751A; border-color: #86198f4D; }
+.mc-stat.mc-tint-cyan { background: #ecfeff; border-color: #a5f3fc99; }
+.dark .mc-stat.mc-tint-cyan { background: #164e631A; border-color: #155e754D; }
+.mc-stat.mc-tint-orange { background: #fff7ed; border-color: #fed7aa99; }
+.dark .mc-stat.mc-tint-orange { background: #7c2d121A; border-color: #9a34124D; }
+
+/* Loading state: a stat card's fetch hasn't resolved yet. Shown instead of a
+   bare "0" so a slow network reads as "loading" rather than "empty" -- the
+   number itself is still in the DOM (color: transparent), so removing this
+   class on arrival never causes a layout shift. */
+.mc-skeleton {
+    color: transparent !important;
+    background: linear-gradient(90deg, rgb(226 232 240) 25%, rgb(203 213 225) 50%, rgb(226 232 240) 75%);
+    background-size: 200% 100%;
+    animation: mc-skeleton-shimmer 1.4s ease-in-out infinite;
+    border-radius: 4px;
+    display: inline-block;
+    min-width: 2rem;
+}
+.dark .mc-skeleton {
+    /* surface-700 / surface-600 */
+    background: linear-gradient(90deg, #28405A 25%, #3D5A72 50%, #28405A 75%);
+    background-size: 200% 100%;
+}
+@keyframes mc-skeleton-shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .mc-skeleton { animation: none; opacity: 0.5; }
+}
+
+/* System status ring gauges: a point-in-time reading (CPU/GPU/Memory/Storage
+   right now), not a count building toward a total -- a ring reads as "how
+   full", a bar reads as "how far along", and only the first is true here. */
+.mc-gauge { position: relative; width: 68px; height: 68px; margin: 0 auto 0.5rem; }
+.mc-gauge-ring { width: 100%; height: 100%; transform: rotate(-90deg); }
+.mc-gauge-track { fill: none; stroke: rgb(226 232 240 / 1); stroke-width: 3.5; }
+.dark .mc-gauge-track { stroke: #28405A; } /* surface-700 */
+.mc-gauge-fill {
+    fill: none;
+    stroke-width: 3.5;
+    stroke-linecap: round;
+    stroke-dasharray: 100.53;
+    stroke-dashoffset: 100.53;
+    transition: stroke-dashoffset 700ms cubic-bezier(0.16, 1, 0.3, 1), stroke 300ms;
+}
+.mc-gauge-fill-primary { stroke: rgb(96 165 250 / 1); }
+.mc-gauge-fill-violet { stroke: rgb(167 139 250 / 1); }
+.mc-gauge-fill-emerald { stroke: rgb(52 211 153 / 1); }
+.mc-gauge-fill-amber { stroke: rgb(251 191 36 / 1); }
+.mc-gauge-fill-warn { stroke: rgb(245 158 11 / 1) !important; }
+.mc-gauge-fill-danger { stroke: rgb(239 68 68 / 1) !important; }
+.mc-gauge-icon {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.mc-gauge-unavailable { opacity: 0.35; }
+
+/* Chat view is split horizontally: conversation + workspace panel */
+#view-chat.active { flex-direction: row; }
+.chat-main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+

@@ -1,0 +1,36 @@
+/* Settings shell: sub-nav + pane switching. Panes reuse each former view's
+   own markup untouched; this file only styles the shell around them. */
+
+.settings-subnav {
+    width: 208px;
+    border-right: 1px solid rgb(226 232 240 / 1);
+}
+.dark .settings-subnav { border-right-color: rgb(255 255 255 / 0.1); }
+
+.settings-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-size: 13px;
+    color: rgb(100 116 139 / 1);
+    transition: background-color 150ms, color 150ms;
+}
+.dark .settings-nav-item { color: rgb(148 163 184 / 1); }
+.settings-nav-item:hover { background: rgb(241 245 249 / 1); }
+.dark .settings-nav-item:hover { background: rgb(255 255 255 / 0.05); }
+.settings-nav-item.active {
+    background: rgb(239 246 255 / 1);
+    color: rgb(59 130 246 / 1);
+    font-weight: 600;
+}
+.dark .settings-nav-item.active { background: rgb(59 130 246 / 0.15); color: rgb(96 165 250 / 1); }
+.settings-nav-item.hidden { display: none; }
+
+/* Panes: same show/one-at-a-time semantics as .view/.view.active in
+   base.css, scoped to .settings-pane so the outer #view-settings toggle
+   (still a plain .view) doesn't fight with which pane is selected inside it. */
+.settings-pane { display: none; height: 100%; }
+.settings-pane.active { display: flex; flex-direction: column; }

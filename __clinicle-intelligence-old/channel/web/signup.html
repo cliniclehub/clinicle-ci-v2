@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create account &middot; Clinicle Intelligence</title>
+    <link rel="icon" type="image/svg+xml" href="/assets/brand/favicon/clinicle-favicon.svg">
+    <link rel="stylesheet" href="/assets/vendor/fonts/inter-tight/inter-tight.css">
+    <link rel="stylesheet" href="/assets/vendor/fonts/nunito/nunito.css">
+    <!-- Default light; an explicit stored 'dark' choice is honored on next load. -->
+    <script>try{if(localStorage.getItem('cow_theme')==='dark')document.documentElement.classList.add('dark');}catch(e){}</script>
+    <style>
+        /* The hero panel carries the primary mark, so it stays on its
+           brand-light ground in both themes (Don't #6 in the guideline bans
+           the primary logo on a dark background); the dark toggle scopes to
+           the functional form panel only. */
+        :root {
+            --deep-sky: #2E9FDC; --mint-teal: #5EDEC8;
+            --sky-mist: #EBF5FF; --sky-frost: #F4FAFE; --hairline: #DCEBF7;
+            --text: #1D6693; --muted: #3D6580; --error: #dc2626;
+            --form-bg: #fff; --form-bg-2: var(--sky-frost);
+            --card-bg: #fff; --card-border: var(--hairline);
+            --tabs-bg: var(--sky-frost); --tab-text: #4A5B76; --heading: #182E44;
+            --input-bg: var(--sky-frost); --input-bg-focus: #fff; --input-text: #182E45;
+            --card-shadow: 0 12px 28px -14px rgba(0, 0, 0, .18);
+            --tab-shadow: 0 4px 12px -4px rgba(46, 159, 220, .5);
+            --focus-ring: 0 0 0 4px rgba(46, 159, 220, .12);
+            --btn-shadow: 0 12px 28px -12px rgba(46, 159, 220, .55);
+            --btn-shadow-hover: 0 16px 32px -12px rgba(46, 159, 220, .6);
+        }
+        html.dark {
+            --hairline: rgba(255, 255, 255, .12); --muted: #7F9FB8;
+            --form-bg: #0B1D33; --form-bg-2: #0F2036;
+            --card-bg: #10253F; --card-border: rgba(255, 255, 255, .08);
+            --tabs-bg: rgba(255, 255, 255, .06); --tab-text: #7F9FB8; --heading: #DCEBF7;
+            --input-bg: rgba(255, 255, 255, .05); --input-bg-focus: rgba(255, 255, 255, .08); --input-text: #DCEBF7;
+            --card-shadow: none;
+            --tab-shadow: none;
+            --focus-ring: 0 0 0 4px rgba(255, 255, 255, .1);
+            --btn-shadow: 0 12px 28px -12px rgba(0, 0, 0, .5);
+            --btn-shadow-hover: 0 16px 32px -12px rgba(0, 0, 0, .55);
+        }
+        * { box-sizing: border-box; }
+        body { margin: 0; min-height: 100vh; font-family: 'Inter Tight', 'Inter', sans-serif; color: var(--text); }
+        ::selection { background: rgba(46, 159, 220, .25); color: inherit; }
+        :focus-visible { outline: 2px solid var(--deep-sky); outline-offset: 2px; }
+        svg { display: block; }
+
+        .auth-shell { display: flex; min-height: 100vh; }
+
+        .auth-hero {
+            flex: 1 1 50%; padding: 44px 48px; overflow-y: auto;
+            background: linear-gradient(160deg, #fff 0%, var(--sky-mist) 100%);
+            display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+        }
+        .hero-inner { max-width: 720px; display: flex; flex-direction: column; align-items: center; }
+
+        .brand-row { display: flex; align-items: center; justify-content: center; gap: 18px; margin-bottom: 36px; }
+        .brand-mark { width: 64px; height: 64px; }
+        .wordmark-sm { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 34px; letter-spacing: -.015em; color: var(--deep-sky); }
+        .wordmark-sm .accent-letter { color: var(--mint-teal); }
+        .wordmark-stack { display: flex; flex-direction: column; align-items: flex-start; }
+        .wordmark-sub { font-family: 'Inter Tight', sans-serif; font-weight: 500; font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); }
+
+        .hero-mark { width: 140px; height: 140px; margin: 0 0 26px; }
+        @keyframes markFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+        .hero-mark circle { animation: markFloat 4.2s ease-in-out infinite; }
+        .hero-mark circle:nth-child(2) { animation-delay: -1.1s; }
+        .hero-mark circle:nth-child(3) { animation-delay: -2.2s; }
+        @media (prefers-reduced-motion: reduce) { .hero-mark circle { animation: none; } }
+
+        .hero-headline {
+            font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 40px; line-height: 1.2;
+            letter-spacing: -.015em; color: var(--text); margin: 0 0 14px; max-width: 540px;
+        }
+        .hero-headline .accent { color: var(--mint-teal); }
+        .hero-desc { font-size: 15.5px; line-height: 1.6; color: var(--muted); max-width: 480px; margin: 0 auto 32px; }
+
+        .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 0 auto 24px; max-width: 640px; }
+        .feature-card {
+            display: flex; align-items: flex-start; gap: 13px; padding: 16px; border-radius: 13px;
+            background: #fff; border: 1px solid var(--hairline); text-align: left;
+        }
+        .feature-icon {
+            width: 34px; height: 34px; border-radius: 9px; flex: none;
+            background: var(--sky-mist); display: flex; align-items: center; justify-content: center; color: var(--deep-sky);
+        }
+        .feature-icon svg { width: 18px; height: 18px; }
+        .feature-card strong { display: block; font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+        .feature-card p { margin: 0; font-size: 12.5px; line-height: 1.4; color: var(--muted); }
+
+        .hero-foot { font-size: 13px; color: var(--muted); margin: 0 auto; max-width: 480px; }
+
+        .auth-form-pane {
+            flex: 1 1 50%; display: flex; flex-direction: column; padding: 32px 48px; position: relative;
+            background: linear-gradient(160deg, var(--form-bg) 0%, var(--form-bg-2) 100%);
+        }
+        .auth-form-wrap { flex: 1; display: flex; flex-direction: column; justify-content: center; max-width: 440px; margin: 0 auto; width: 100%; }
+
+        .theme-toggle {
+            position: absolute; top: 24px; right: 24px; width: 34px; height: 34px; border-radius: 9px;
+            border: 1px solid var(--card-border); background: var(--input-bg); color: var(--muted);
+            display: flex; align-items: center; justify-content: center; cursor: pointer;
+        }
+        .theme-toggle svg { width: 16px; height: 16px; }
+        .theme-toggle .icon-sun { display: none; }
+        html.dark .theme-toggle .icon-moon { display: none; }
+        html.dark .theme-toggle .icon-sun { display: block; }
+
+        .auth-card {
+            background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 22px;
+            padding: 40px; box-shadow: var(--card-shadow);
+        }
+
+        .auth-tabs { display: inline-flex; background: var(--tabs-bg); border-radius: 13px; padding: 5px; gap: 4px; margin-bottom: 30px; }
+        .auth-tab {
+            padding: 10px 22px; border-radius: 10px; font-size: 15px; font-weight: 400;
+            color: var(--tab-text); text-decoration: none; cursor: pointer; border: none; background: none; font-family: inherit;
+            transition: color .15s ease, background .15s ease;
+        }
+        .auth-tab.active { background: var(--text); color: #fff; font-weight: 600; box-shadow: var(--tab-shadow); }
+
+        .auth-form-wrap h1 { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 28px; letter-spacing: -.015em; color: var(--heading); margin: 0 0 8px; }
+        .auth-form-wrap p.sub { font-size: 15px; color: var(--muted); margin: 0 0 30px; }
+
+        .input-group {
+            position: relative; margin-bottom: 14px; border-radius: 12px;
+            border: 1px solid transparent; background: var(--input-bg);
+            transition: background .15s ease, border-color .15s ease, box-shadow .15s ease;
+        }
+        .input-group:focus-within { background: var(--input-bg-focus); border-color: var(--deep-sky); box-shadow: var(--focus-ring); }
+        .input-group svg { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); width: 17px; height: 17px; color: var(--muted); pointer-events: none; }
+        input {
+            width: 100%; padding: 15px 15px 15px 44px; border-radius: 12px; border: none; background: transparent;
+            color: var(--input-text); font-size: 15.5px; font-family: inherit;
+        }
+        input:focus { outline: none; }
+        input::placeholder { color: var(--muted); opacity: .85; }
+
+        /* Flat #1F78AC, not the literal #2E9FDC -- white on literal Deep Sky
+           measures ~2.95:1 and fails even large-text contrast (3:1). */
+        button[type=submit] {
+            width: 100%; padding: 16px; border-radius: 12px; border: none;
+            display: flex; align-items: center; justify-content: center; gap: 9px;
+            background: #1F78AC; color: #fff;
+            font-size: 15.5px; font-weight: 600; cursor: pointer; font-family: inherit;
+            box-shadow: var(--btn-shadow);
+            transition: background .15s ease, transform .15s cubic-bezier(.16, 1, .3, 1), box-shadow .15s ease;
+            margin-top: 10px;
+        }
+        button[type=submit] svg { width: 17px; height: 17px; transition: transform .18s cubic-bezier(.16, 1, .3, 1); }
+        button[type=submit]:hover { background: var(--text); transform: translateY(-1px); box-shadow: var(--btn-shadow-hover); }
+        button[type=submit]:hover svg { transform: translateX(3px); }
+        button[type=submit]:active { transform: translateY(0); }
+        button[type=submit]:disabled { opacity: .55; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        #auth-error { font-size: 12px; color: var(--error); margin-top: 10px; display: none; }
+        .auth-foot { font-size: 12.5px; color: var(--muted); margin-top: 20px; text-align: center; }
+        .auth-foot a { color: var(--deep-sky); font-weight: 600; text-decoration: none; }
+
+        @media (max-width: 960px) {
+            .auth-shell { flex-direction: column; }
+            .auth-hero { padding: 28px 22px; }
+            .hero-headline { font-size: 26px; }
+            .feature-grid { grid-template-columns: 1fr; }
+            .auth-form-pane { padding: 24px 20px 36px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-shell">
+        <div class="auth-hero">
+            <div class="hero-inner">
+                <div class="brand-row">
+                    <svg class="brand-mark" viewBox="0 0 100 100" aria-hidden="true">
+                        <circle cx="20" cy="62" r="9" fill="#4DB8F0"/>
+                        <circle cx="50" cy="44" r="13" fill="#2E9FDC"/>
+                        <circle cx="80" cy="56" r="8" fill="#5EDEC8"/>
+                    </svg>
+                    <span class="wordmark-stack">
+                        <span class="wordmark-sm">Clinic<span class="accent-letter">le</span></span>
+                        <span class="wordmark-sub">Intelligence</span>
+                    </span>
+                </div>
+
+                <svg class="hero-mark" viewBox="0 0 100 100" role="img" aria-label="Clinicle Intelligence">
+                    <circle cx="20" cy="62" r="9" fill="#4DB8F0"/>
+                    <circle cx="50" cy="44" r="13" fill="#2E9FDC"/>
+                    <circle cx="80" cy="56" r="8" fill="#5EDEC8"/>
+                </svg>
+
+                <h1 class="hero-headline">Where your AI agents <span class="accent">connect.</span></h1>
+                <p class="hero-desc">Purpose-built AI agents -- each with its own skills, memory, and workspace -- plus visual workflows, a shared knowledge base, and a tamper-evident audit trail.</p>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M17 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+                        <div><strong>Multi-agent teams</strong><p>Work solo or as a team</p></div>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg></span>
+                        <div><strong>Visual workflows</strong><p>Scheduled or triggered</p></div>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+                        <div><strong>Knowledge base</strong><p>Shared across every agent</p></div>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></span>
+                        <div><strong>Review queue</strong><p>Humans approve every flag</p></div>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="18" rx="1.5"/><rect x="14" y="3" width="7" height="10" rx="1.5"/></svg></span>
+                        <div><strong>Task board</strong><p>Kanban, shared with your team</p></div>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="14" height="12" rx="2"/><path d="M16 10l6-4v12l-6-4"/></svg></span>
+                        <div><strong>Meeting assistant</strong><p>Live capture, auto minutes</p></div>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg></span>
+                        <div><strong>Analytics</strong><p>Live dashboard, every metric</p></div>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></span>
+                        <div><strong>Audit &amp; security</strong><p>Tamper-evident, full RBAC</p></div>
+                    </div>
+                </div>
+
+                <p class="hero-foot">AI assists, people decide -- nothing acts without your approval.</p>
+            </div>
+        </div>
+        <div class="auth-form-pane">
+            <button class="theme-toggle" id="theme-toggle-btn" type="button" aria-label="Toggle theme">
+                <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.5"/><line x1="12" y1="1.5" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22.5"/><line x1="4.2" y1="4.2" x2="6" y2="6"/><line x1="18" y1="18" x2="19.8" y2="19.8"/><line x1="1.5" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22.5" y2="12"/><line x1="4.2" y1="19.8" x2="6" y2="18"/><line x1="18" y1="6" x2="19.8" y2="4.2"/></svg>
+            </button>
+            <div class="auth-form-wrap">
+                <div class="auth-card">
+                    <div class="auth-tabs">
+                        <a class="auth-tab" href="/login">Log in</a>
+                        <span class="auth-tab active">Sign up</span>
+                    </div>
+                    <h1>Create your workspace</h1>
+                    <p class="sub">You'll become the owner of a new organization</p>
+                    <form id="signup-form">
+                        <div class="input-group">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg>
+                            <input id="email" type="email" autocomplete="username" placeholder="Email" aria-label="Email" required>
+                        </div>
+                        <div class="input-group">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                            <input id="org_name" type="text" autocomplete="organization" placeholder="Workspace name (optional)" aria-label="Workspace name">
+                        </div>
+                        <div class="input-group">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+                            <input id="password" type="password" autocomplete="new-password" minlength="8" placeholder="Password (at least 8 characters)" aria-label="Password" required>
+                        </div>
+                        <div class="input-group">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+                            <input id="password_confirm" type="password" autocomplete="new-password" minlength="8" placeholder="Confirm password" aria-label="Confirm password" required>
+                        </div>
+                        <button type="submit" id="submit-btn">
+                            <span>Create account</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                        </button>
+                        <p id="auth-error"></p>
+                    </form>
+                    <p class="auth-foot">Already have an account? <a href="/login">Log in</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        (function () {
+            var form = document.getElementById('signup-form');
+            var errorEl = document.getElementById('auth-error');
+            var btn = document.getElementById('submit-btn');
+
+            var themeBtn = document.getElementById('theme-toggle-btn');
+            themeBtn.addEventListener('click', function () {
+                var isDark = document.documentElement.classList.toggle('dark');
+                try { localStorage.setItem('cow_theme', isDark ? 'dark' : 'light'); } catch (e) {}
+            });
+
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                errorEl.style.display = 'none';
+                var password = document.getElementById('password').value;
+                var confirm = document.getElementById('password_confirm').value;
+                if (password !== confirm) {
+                    errorEl.textContent = 'Passwords do not match.';
+                    errorEl.style.display = 'block';
+                    return;
+                }
+                btn.disabled = true;
+                fetch('/auth/signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: document.getElementById('email').value,
+                        org_name: document.getElementById('org_name').value,
+                        password: password,
+                    }),
+                }).then(function (r) { return r.json(); }).then(function (data) {
+                    btn.disabled = false;
+                    if (data.status !== 'success') {
+                        errorEl.textContent = data.message || 'Could not create your account.';
+                        errorEl.style.display = 'block';
+                        return;
+                    }
+                    window.location.href = '/';
+                }).catch(function () {
+                    btn.disabled = false;
+                    errorEl.textContent = 'Could not reach the server.';
+                    errorEl.style.display = 'block';
+                });
+            });
+        })();
+    </script>
+</body>
+</html>

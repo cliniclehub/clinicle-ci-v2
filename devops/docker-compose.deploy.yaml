@@ -1,0 +1,38 @@
+# Overlay for local smoke-test of pre-built images (make deploy-local).
+# Requires: make build-local (tags ${GHCR_PACKAGE_BE}:local, ${GHCR_PACKAGE_FE}:local).
+# Package names come from Makefile / devops/deploy/deploy.env (defaults: ci_app_be / ci_app_fe).
+
+services:
+  be:
+    image: ${GHCR_PACKAGE_BE:-ci_app_be}:local
+    container_name: ci_app_be_deploy
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      ENVIRONMENT: local
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: ci_db
+      DB_USER: ci_user
+      DB_PASSWORD: ci_user
+      DB_SCHEMA: ci
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - default
+
+  fe:
+    image: ${GHCR_PACKAGE_FE:-ci_app_fe}:local
+    container_name: ci_app_fe_deploy
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+    depends_on:
+      - be
+    networks:
+      - default

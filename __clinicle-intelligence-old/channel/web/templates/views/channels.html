@@ -1,0 +1,23 @@
+                <!-- ====================================================== -->
+                <!-- VIEW: Channels                                          -->
+                <!-- ====================================================== -->
+                <div id="view-channels" class="settings-pane" data-settings-pane="channels">
+                    <div class="flex-1 overflow-y-auto p-6">
+                        <div class="max-w-4xl mx-auto">
+                            <div class="flex items-center justify-between mb-6">
+                                <div>
+                                    <h2 class="text-xl font-bold text-surface-800 dark:text-surface-100" data-i18n="channels_title">Channels</h2>
+                                    <p class="text-sm text-surface-500 dark:text-surface-400 mt-1" data-i18n="channels_desc">Manage connected messaging channels</p>
+                                </div>
+                                <button id="add-channel-btn" onclick="openAddChannelPanel()"
+                                        class="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary-500 hover:bg-primary-600
+                                               text-white text-sm font-medium cursor-pointer transition-colors duration-150">
+                                    <i class="fas fa-plus text-xs"></i>
+                                    <span data-i18n="channels_add">Connect</span>
+                                </button>
+                            </div>
+                            <div id="channels-content" class="grid gap-4"></div>
+                            <div id="channels-add-panel" class="hidden mt-4"></div>
+                        </div>
+                    </div>
+                </div>

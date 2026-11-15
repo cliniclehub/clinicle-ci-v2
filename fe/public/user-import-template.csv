@@ -1,0 +1,3 @@
+Email,First Name,Last Name,Phone Number,Roles
+user@example.com,Jamie,Rivera,+12025550123,user
+admin@example.com,Admin,User,+12025550124,"org_admin, user"

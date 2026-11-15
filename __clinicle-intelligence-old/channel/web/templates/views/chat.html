@@ -1,0 +1,396 @@
+                <!-- ====================================================== -->
+                <!-- VIEW: Chat                                              -->
+                <!-- ====================================================== -->
+                <div id="view-chat" class="view">
+                  <div id="chat-main" class="chat-main relative">
+                    <!-- Approvals bar: session permission mode, backend status, clear chat, Activity toggle -->
+                    <div id="approvals-bar" class="approvals-bar">
+                        <div class="approvals-bar-left">
+                            <span id="backend-status-pill" class="status-pill status-pill-online">
+                                <span class="status-dot"></span>
+                                <span data-i18n="status_online">Online</span>
+                            </span>
+                            <span class="approvals-label" data-i18n="approvals_label">Approvals</span>
+                            <div id="approvals-segmented" class="approvals-segmented">
+                                <button type="button" class="approvals-seg-btn" data-mode="read-only"
+                                        onclick="setApprovalsMode('read-only')" data-i18n="approvals_manual">Manual</button>
+                                <button type="button" class="approvals-seg-btn" data-mode="workspace-write"
+                                        onclick="setApprovalsMode('workspace-write')" data-i18n="approvals_accept_edits">Accept edits</button>
+                                <button type="button" class="approvals-seg-btn" data-mode="full-access"
+                                        onclick="setApprovalsMode('full-access')" data-i18n="approvals_full_auto">Full-auto</button>
+                            </div>
+                        </div>
+                        <div class="approvals-bar-right">
+                            <button type="button" class="approvals-clear-btn" onclick="newChat()">
+                                <i class="fas fa-trash-can"></i>
+                                <span data-i18n="clear_chat">Clear chat</span>
+                            </button>
+                            <button type="button" id="code-editor-panel-toggle-btn" class="approvals-activity-btn" onclick="toggleCodeEditorPanel()">
+                                <i class="fas fa-laptop-code"></i>
+                                <span data-i18n="code_editor_title">Code Editor</span>
+                            </button>
+                            <button type="button" id="browser-panel-toggle-btn" class="approvals-activity-btn" onclick="toggleBrowserPanel()">
+                                <i class="fas fa-globe"></i>
+                                <span data-i18n="browser_view_title">Browser</span>
+                            </button>
+                            <button type="button" id="activity-toggle-btn" class="approvals-activity-btn" onclick="toggleActivityPanel()">
+                                <i class="fas fa-bolt"></i>
+                                <span data-i18n="activity_panel_label">Activity</span>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Messages -->
+                    <div id="chat-messages" class="flex-1 overflow-y-auto">
+                        <!-- Welcome Screen -->
+                        <div id="welcome-screen" class="flex flex-col items-center justify-center h-full px-6 pb-16" style="padding-top: 6vh">
+                            <div class="w-16 h-16 rounded-2xl mb-6 shadow-lg shadow-primary-500/20 bg-white flex items-center justify-center overflow-hidden shrink-0"
+                                 role="img" aria-label="Clinicle Intelligence">
+                                <svg width="40" height="40" viewBox="0 0 100 100">
+                                    <circle cx="20" cy="62" r="9" fill="#4DB8F0"/>
+                                    <circle cx="50" cy="44" r="13" fill="#2E9FDC"/>
+                                    <circle cx="80" cy="56" r="8" fill="#5EDEC8"/>
+                                </svg>
+                            </div>
+                            <h1 id="welcome-title" class="text-2xl font-bold text-surface-800 dark:text-surface-100 mb-3">Clinicle Intelligence</h1>
+                            <p id="welcome-subtitle" class="text-surface-500 dark:text-surface-400 text-center max-w-lg mb-10 leading-relaxed"
+                               data-i18n-html="welcome_subtitle">I can help you answer questions, manage your computer, create and execute skills, and keep growing through <br> long-term memory and a personal knowledge base.</p>
+
+                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 w-full max-w-2xl">
+                                <div class="example-card group bg-white dark:bg-[#0F2036] border border-surface-200 dark:border-white/10 rounded-xl p-4
+                                            cursor-pointer hover:border-primary-300 dark:hover:border-primary-600 hover:shadow-md transition-all duration-200">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <div class="w-7 h-7 rounded-lg bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center">
+                                            <i class="fas fa-folder-open text-blue-500 text-xs"></i>
+                                        </div>
+                                        <span class="font-medium text-sm text-surface-700 dark:text-surface-200" data-i18n="example_sys_title">System</span>
+                                    </div>
+                                    <p class="text-sm text-surface-500 dark:text-surface-400 leading-relaxed" data-i18n="example_sys_text">Show me the files in the workspace</p>
+                                </div>
+                                <div class="example-card group bg-white dark:bg-[#0F2036] border border-surface-200 dark:border-white/10 rounded-xl p-4
+                                            cursor-pointer hover:border-primary-300 dark:hover:border-primary-600 hover:shadow-md transition-all duration-200">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <div class="w-7 h-7 rounded-lg bg-amber-50 dark:bg-amber-900/30 flex items-center justify-center">
+                                            <i class="fas fa-clock text-amber-500 text-xs"></i>
+                                        </div>
+                                        <span class="font-medium text-sm text-surface-700 dark:text-surface-200" data-i18n="example_task_title">Scheduler</span>
+                                    </div>
+                                    <p class="text-sm text-surface-500 dark:text-surface-400 leading-relaxed" data-i18n="example_task_text">Remind me to check the server in 5 minutes</p>
+                                </div>
+                                <div class="example-card group bg-white dark:bg-[#0F2036] border border-surface-200 dark:border-white/10 rounded-xl p-4
+                                            cursor-pointer hover:border-primary-300 dark:hover:border-primary-600 hover:shadow-md transition-all duration-200">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <div class="w-7 h-7 rounded-lg bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center">
+                                            <i class="fas fa-code text-emerald-500 text-xs"></i>
+                                        </div>
+                                        <span class="font-medium text-sm text-surface-700 dark:text-surface-200" data-i18n="example_code_title">Coding</span>
+                                    </div>
+                                    <p class="text-sm text-surface-500 dark:text-surface-400 leading-relaxed" data-i18n="example_code_text">Search today's AI news and generate a visual report webpage</p>
+                                </div>
+                                <div class="example-card group bg-white dark:bg-[#0F2036] border border-surface-200 dark:border-white/10 rounded-xl p-4
+                                            cursor-pointer hover:border-primary-300 dark:hover:border-primary-600 hover:shadow-md transition-all duration-200">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <div class="w-7 h-7 rounded-lg bg-violet-50 dark:bg-violet-900/30 flex items-center justify-center">
+                                            <i class="fas fa-book text-violet-500 text-xs"></i>
+                                        </div>
+                                        <span class="font-medium text-sm text-surface-700 dark:text-surface-200" data-i18n="example_knowledge_title">Knowledge</span>
+                                    </div>
+                                    <p class="text-sm text-surface-500 dark:text-surface-400 leading-relaxed" data-i18n="example_knowledge_text">Show me the current knowledge base</p>
+                                </div>
+                                <div class="example-card group bg-white dark:bg-[#0F2036] border border-surface-200 dark:border-white/10 rounded-xl p-4
+                                            cursor-pointer hover:border-primary-300 dark:hover:border-primary-600 hover:shadow-md transition-all duration-200">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <div class="w-7 h-7 rounded-lg bg-rose-50 dark:bg-rose-900/30 flex items-center justify-center">
+                                            <i class="fas fa-puzzle-piece text-rose-500 text-xs"></i>
+                                        </div>
+                                        <span class="font-medium text-sm text-surface-700 dark:text-surface-200" data-i18n="example_skill_title">Skills</span>
+                                    </div>
+                                    <p class="text-sm text-surface-500 dark:text-surface-400 leading-relaxed" data-i18n="example_skill_text">Show current tools and skills</p>
+                                </div>
+                                <div class="example-card group bg-white dark:bg-[#0F2036] border border-surface-200 dark:border-white/10 rounded-xl p-4
+                                            cursor-pointer hover:border-primary-300 dark:hover:border-primary-600 hover:shadow-md transition-all duration-200"
+                                     data-send="/help">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <div class="w-7 h-7 rounded-lg bg-surface-100 dark:bg-surface-800 flex items-center justify-center">
+                                            <i class="fas fa-terminal text-surface-500 text-xs"></i>
+                                        </div>
+                                        <span class="font-medium text-sm text-surface-700 dark:text-surface-200" data-i18n="example_web_title">Commands</span>
+                                    </div>
+                                    <p class="text-sm text-surface-500 dark:text-surface-400 leading-relaxed" data-i18n="example_web_text">Show all commands</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Scroll-to-bottom FAB -->
+                    <button id="scroll-to-bottom-btn"
+                            class="hidden absolute right-5 bottom-[80px] z-10
+                                   w-9 h-9 rounded-full shadow-lg
+                                   bg-white dark:bg-[#182E44] border border-surface-200 dark:border-white/15
+                                   text-surface-500 dark:text-surface-400 hover:text-primary-500 dark:hover:text-primary-400
+                                   flex items-center justify-center cursor-pointer transition-all duration-200
+                                   hover:shadow-xl hover:scale-105"
+                            onclick="_autoScrollEnabled = true; scrollChatToBottom(true);">
+                        <i class="fas fa-chevron-down text-sm"></i>
+                    </button>
+
+                    <!-- Chat Input -->
+                    <div class="flex-shrink-0 border-t border-surface-200 dark:border-white/10 bg-white dark:bg-[#0F2036] px-4 py-3">
+                        <div class="max-w-3xl mx-auto">
+                            <!-- Composer card: text on top, session controls along the bottom -->
+                            <div id="composer-card" class="composer-card">
+                                <!-- Attachment preview: scrolls horizontally above the text -->
+                                <div id="attachment-preview" class="attachment-preview hidden"></div>
+
+                                <div class="composer-identity-row">
+                                    <textarea id="chat-input"
+                                              class="composer-textarea"
+                                              rows="1"
+                                              data-i18n-placeholder="input_placeholder"
+                                              placeholder="Type a message, / for commands, @ to reference a file"></textarea>
+                                </div>
+
+                                <div class="composer-toolbar">
+                                    <div class="composer-group">
+                                        <button id="new-chat-btn" type="button" class="composer-icon-btn"
+                                                onclick="newChat()">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                        <button id="clear-context-btn" type="button" class="composer-icon-btn ctx-pie-btn">
+                                            <span id="ctx-pie-mini" class="ctx-pie-mini"><svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="4" opacity="0.35"></circle></svg></span>
+                                        </button>
+                                        <button id="attach-btn" type="button" class="composer-icon-btn"
+                                                onclick="toggleAttachMenu(event)">
+                                            <i class="fas fa-paperclip"></i>
+                                        </button>
+
+                                        <span class="composer-divider"></span>
+
+                                        <button id="workspace-selector-btn" type="button" class="composer-chip"
+                                                onclick="toggleWorkspaceSelector(event)"
+                                                data-tip-float data-tooltip-pos="top">
+                                            <i class="fas fa-folder-open"></i>
+                                            <span id="workspace-selector-label" class="composer-chip-label" data-i18n="ws_default_workspace">Default</span>
+                                            <i class="fas fa-chevron-down composer-chip-caret"></i>
+                                        </button>
+
+                                        <button id="permission-selector-btn" type="button" class="composer-chip composer-chip-icon-only"
+                                                onclick="togglePermissionSelector(event)"
+                                                data-tip-float data-tooltip-pos="top">
+                                            <i id="permission-selector-icon" class="fas fa-shield-halved"></i>
+                                            <span id="permission-selector-label" class="composer-chip-label" data-i18n="perm_full_access">Full access</span>
+                                            <i class="fas fa-chevron-down composer-chip-caret"></i>
+                                        </button>
+                                    </div>
+
+                                    <div class="composer-group composer-group-end">
+                                        <button id="model-selector-btn" type="button" class="composer-chip"
+                                                onclick="toggleModelSelector(event)"
+                                                data-tip-float data-tooltip-pos="top">
+                                            <i class="fas fa-microchip"></i>
+                                            <span id="model-selector-label" class="composer-chip-label">—</span>
+                                            <i class="fas fa-chevron-down composer-chip-caret"></i>
+                                        </button>
+
+                                        <!-- The Agent identity chip sits right of the model, avatar-only,
+                                             as the face the reply comes from (matches the desktop composer).
+                                             Only shown in multi-Agent mode. -->
+                                        <div id="composer-identity" class="composer-identity hidden">
+                                            <button id="composer-agent-btn" type="button" class="composer-agent-btn"
+                                                    onclick="toggleComposerAgentMenu(event)"
+                                                    data-tip-float data-tooltip-pos="top">
+                                                <span id="composer-agent-avatar" class="agent-avatar agent-avatar-32"></span>
+                                            </button>
+                                            <div id="composer-agent-menu" class="composer-menu composer-menu-up hidden"></div>
+                                        </div>
+                                        <button id="optimize-btn" type="button" class="composer-icon-btn"
+                                                data-tip-key="optimize_input_tooltip" data-tooltip="Smart-optimize input">
+                                            <i class="fas fa-magic text-[13px]"></i>
+                                        </button>
+                                        <button id="mic-btn" type="button" class="composer-icon-btn text-surface-400"
+                                                data-tip-key="mic_tooltip" data-tooltip="Click to record / click again to stop">
+                                            <i class="fas fa-microphone text-sm"></i>
+                                        </button>
+                                        <button id="steer-btn" type="button"
+                                                class="hidden composer-send-btn composer-steer-btn"
+                                                data-i18n-aria-label="steer_active"
+                                                aria-label="Steer active task"
+                                                data-tip-key="steer_active" data-tooltip="Steer active task">
+                                            <i class="fas fa-arrow-turn-up text-sm"></i>
+                                        </button>
+                                        <button id="send-btn" class="composer-send-btn" disabled>
+                                            <i class="fas fa-paper-plane text-sm"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <input type="file" id="file-input" class="hidden" multiple
+                                       accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.json,.xml,.zip,.rar,.7z,.py,.js,.ts,.java,.c,.cpp,.go,.rs,.md">
+                                <input type="file" id="folder-input" class="hidden" multiple webkitdirectory directory>
+                                <div id="attach-menu" class="attach-menu hidden">
+                                    <button id="attach-file-option" type="button" class="attach-menu-item" onclick="triggerFileUpload()">
+                                        <i class="fas fa-file-arrow-up"></i>
+                                        <span data-i18n="attach_menu_file">Upload File</span>
+                                    </button>
+                                    <button id="attach-folder-option" type="button" class="attach-menu-item" onclick="triggerFolderUpload()">
+                                        <i class="fas fa-folder-plus"></i>
+                                        <span data-i18n="attach_menu_folder">Upload Folder</span>
+                                    </button>
+                                </div>
+                                <div id="slash-menu" class="slash-menu hidden"></div>
+                                <div id="mention-menu" class="mention-menu hidden"></div>
+                                <div id="workspace-selector-menu" class="workspace-selector-menu hidden"></div>
+                                <div id="permission-selector-menu" class="composer-menu hidden"></div>
+                                <div id="model-selector-menu" class="composer-menu composer-menu-wide hidden"></div>
+                            </div>
+                        </div>
+                    </div>
+                  </div><!-- /#chat-main -->
+
+                    <!-- ================================================== -->
+                    <!-- Workspace panel: file preview + file manager        -->
+                    <!-- ================================================== -->
+                    <aside id="workspace-panel" class="workspace-panel hidden">
+                        <div id="ws-resizer" class="workspace-resizer" title="Drag to resize"></div>
+                        <div class="workspace-inner">
+                            <div class="workspace-header">
+                                <div class="workspace-tabs">
+                                    <button class="workspace-tab active" data-ws-tab="preview" onclick="switchWorkspaceTab('preview')">
+                                        <i class="fas fa-eye"></i>
+                                        <span data-i18n="ws_tab_preview">Preview</span>
+                                    </button>
+                                    <button class="workspace-tab" data-ws-tab="files" onclick="switchWorkspaceTab('files')">
+                                        <i class="fas fa-folder-tree"></i>
+                                        <span data-i18n="ws_tab_files">Files</span>
+                                    </button>
+                                </div>
+                                <div class="workspace-header-actions">
+                                    <button id="ws-btn-save" class="workspace-icon-btn hidden" onclick="savePreviewEdit()"
+                                            data-i18n-title="ws_edit_save" title="Save (Ctrl+S)">
+                                        <i class="fas fa-floppy-disk"></i>
+                                    </button>
+                                    <button id="ws-btn-edit-cancel" class="workspace-icon-btn hidden" onclick="cancelPreviewEdit()"
+                                            data-i18n-title="ws_edit_cancel" title="Leave editor">
+                                        <i class="fas fa-rotate-left"></i>
+                                    </button>
+                                    <button id="ws-btn-edit" class="workspace-icon-btn hidden" onclick="startPreviewEdit()"
+                                            data-i18n-title="ws_edit" title="Edit">
+                                        <i class="fas fa-pen-to-square"></i>
+                                    </button>
+                                    <button id="ws-btn-external" class="workspace-icon-btn hidden" onclick="openPreviewExternally()"
+                                            data-i18n-title="ws_open_external" title="Open in new tab">
+                                        <i class="fas fa-up-right-from-square"></i>
+                                    </button>
+                                    <button id="ws-btn-download" class="workspace-icon-btn hidden" onclick="downloadPreviewFile()"
+                                            data-i18n-title="ws_download" title="Download">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                    <button id="ws-btn-copy" class="workspace-icon-btn hidden" onclick="copyPreviewPath()"
+                                            data-i18n-title="ws_copy_path" title="Copy path">
+                                        <i class="fas fa-link"></i>
+                                    </button>
+                                    <button class="workspace-icon-btn" onclick="closeWorkspacePanel(true)"
+                                            data-i18n-title="ws_close" title="Close">
+                                        <i class="fas fa-xmark"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Preview tab -->
+                            <div id="ws-body-preview" class="workspace-body active">
+                                <div id="ws-preview-title" class="workspace-file-title hidden"></div>
+                                <div id="ws-preview-content" class="workspace-preview-content"></div>
+                            </div>
+
+                            <!-- Files tab -->
+                            <div id="ws-body-files" class="workspace-body">
+                                <div class="workspace-files-toolbar">
+                                    <div class="workspace-search">
+                                        <i class="fas fa-magnifying-glass"></i>
+                                        <input id="ws-search-input" type="text" spellcheck="false"
+                                               data-i18n-placeholder="ws_search_placeholder" placeholder="Search files">
+                                    </div>
+                                    <button class="workspace-icon-btn" onclick="refreshWorkspaceTree()"
+                                            data-i18n-title="ws_refresh" title="Refresh">
+                                        <i class="fas fa-rotate-right"></i>
+                                    </button>
+                                </div>
+                                <div id="ws-breadcrumb" class="workspace-breadcrumb"></div>
+                                <div id="ws-file-list" class="workspace-file-list"></div>
+                            </div>
+                        </div>
+                    </aside>
+
+                    <!-- Activity panel: live feed of background agent work -->
+                    <aside id="activity-panel" class="activity-panel hidden">
+                        <div class="activity-panel-header">
+                            <span data-i18n="activity_panel_label">Activity</span>
+                            <button type="button" class="activity-panel-close" onclick="toggleActivityPanel()" aria-label="Close">
+                                <i class="fas fa-xmark"></i>
+                            </button>
+                        </div>
+                        <div class="activity-panel-body">
+                            <div class="activity-autopilot-row">
+                                <div>
+                                    <div class="activity-autopilot-title" data-i18n="board_autopilot">Autopilot</div>
+                                    <div id="activity-autopilot-status" class="activity-autopilot-status" data-i18n="activity_autopilot_off">Off</div>
+                                </div>
+                                <label class="activity-autopilot-switch">
+                                    <input type="checkbox" id="activity-autopilot-checkbox" onchange="toggleActivityAutopilot(this.checked)">
+                                    <span class="activity-autopilot-track"><span class="activity-autopilot-thumb"></span></span>
+                                </label>
+                            </div>
+                            <div class="activity-inbox-row">
+                                <span><span class="activity-inbox-dot"></span> <span data-i18n="activity_watching_inbox">Watching the inbox for new email</span></span>
+                                <button type="button" class="activity-simulate-btn" onclick="simulateInboundEmail()" data-i18n="activity_simulate_email">+ Simulate an inbound email</button>
+                            </div>
+                            <div id="activity-feed" class="activity-feed">
+                                <div class="activity-empty" data-i18n="activity_empty">No agents are working right now.</div>
+                            </div>
+                        </div>
+                    </aside>
+
+                    <!-- Browser panel: live view of the shared browser tool,   -->
+                    <!-- split-pane on the right of Chat instead of a separate  -->
+                    <!-- nav page (or a real OS browser window). Reuses the     -->
+                    <!-- same .bv-* styling + /api/browser/* endpoints as the   -->
+                    <!-- standalone Browser View (views/browser-view.js); own   -->
+                    <!-- cbp- prefixed ids so both can exist in the DOM without -->
+                    <!-- colliding. See chat/browser-panel.js.                  -->
+                    <aside id="browser-panel" class="browser-panel hidden">
+                        <div id="bp-resizer" class="browser-panel-resizer" title="Drag to resize"></div>
+                        <div class="bv-shell">
+                            <div class="bv-toolbar">
+                                <div class="w-7 h-7 rounded-lg bg-primary-50 dark:bg-primary-900/30 flex items-center justify-center shrink-0">
+                                    <i class="fas fa-globe text-primary-500 text-xs"></i>
+                                </div>
+                                <h2 class="text-sm font-semibold text-surface-800 dark:text-surface-100" data-i18n="browser_view_title">Browser View</h2>
+                                <span id="cbp-page-info" class="text-xs text-surface-400 truncate"></span>
+                                <button type="button" id="cbp-control-toggle" class="bv-control-toggle ml-auto" onclick="cbpToggleControl()">
+                                    <i class="fas fa-hand-pointer"></i>
+                                    <span data-i18n="browser_view_take_control">Take control</span>
+                                </button>
+                                <span id="cbp-status" class="text-xs text-surface-400"></span>
+                                <button type="button" class="activity-panel-close" onclick="closeBrowserPanel(true)" aria-label="Close">
+                                    <i class="fas fa-xmark"></i>
+                                </button>
+                            </div>
+                            <div id="cbp-body" class="bv-body">
+                                <div id="cbp-idle" class="bv-empty">
+                                    <div>
+                                        <p data-i18n="browser_view_idle_title">No browser session is currently active.</p>
+                                    </div>
+                                </div>
+                                <img id="cbp-frame" class="bv-frame hidden" alt="Live browser view">
+                            </div>
+                            <div id="cbp-control-bar" class="bv-control-bar hidden">
+                                <span class="bv-control-hint" data-i18n="browser_view_control_hint">In control: click the page to interact, type below, scroll with your mouse wheel over the page.</span>
+                                <input id="cbp-control-input" type="text" class="bv-control-input" data-i18n-placeholder="browser_view_type_placeholder" placeholder="Type, then press Enter to submit"
+                                       onkeydown="cbpHandleKeydown(event)">
+                                <button type="button" class="bv-control-key-btn" onclick="cbpSendKey('Backspace')">⌫</button>
+                                <button type="button" class="bv-control-key-btn" onclick="cbpSendKey('Escape')">Esc</button>
+                            </div>
+                        </div>
+                    </aside>
+
+<!--#include templates/views/code-editor.html-->
+                </div>

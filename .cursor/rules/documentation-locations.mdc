@@ -1,0 +1,16 @@
+---
+description: Where to put plans vs requirement/design docs
+alwaysApply: true
+---
+
+# Documentation locations
+
+- **Plans / architectural discussions / Cursor plans** → `.cursor/plans/`
+- **Module BRD / SDD / QA system tests** → `devops/docs/system_docs/`
+  - `BRD/*-BRD.md` (flat, numbered)
+  - `SDD/*-SDD.md` (design + unit-test inventory)
+  - `ST-UI/*-ST-UI.md` (Playwright)
+  - `ST-API/<service>-ST-API.md` (pytest)
+- **Cross-module specs not yet owned** → `devops/docs/req & design/`
+- Do not put new specs in `devops/docs/` root, `devops/docs/design/`, or `devops/docs/modules_docs/`.
+- Full detail: `devops/docs/rules/AI_RULES.md` (Documentation locations).

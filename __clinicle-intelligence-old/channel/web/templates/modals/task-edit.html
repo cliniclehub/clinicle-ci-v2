@@ -1,0 +1,201 @@
+    <!-- Task Edit Modal -->
+    <div id="task-edit-modal-overlay" class="fixed inset-0 bg-black/50 z-[100] hidden flex items-center justify-center">
+        <div class="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-white/10 shadow-xl
+                    w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex items-center gap-3 mb-5">
+                    <div class="w-10 h-10 rounded-xl bg-primary-50 dark:bg-primary-900/20 flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-clock text-primary-500"></i>
+                    </div>
+                    <div class="min-w-0 flex-1">
+                        <h3 class="font-semibold text-surface-800 dark:text-surface-100 text-base" data-i18n="task_edit_title">Edit Task</h3>
+                        <p id="task-edit-modal-subtitle" class="text-xs text-surface-500 dark:text-surface-400 mt-0.5 font-mono"></p>
+                    </div>
+                    <div id="task-edit-owner" class="hidden flex-shrink-0 items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-100 dark:bg-white/10"></div>
+                </div>
+
+                <div class="space-y-4">
+                    <!-- Task name and enabled toggle -->
+                    <div class="flex gap-4 items-end">
+                        <div class="flex-1">
+                            <label class="block text-sm font-medium text-surface-600 dark:text-surface-400 mb-1.5">
+                                <span data-i18n="task_name">Task Name</span>
+                            </label>
+                            <input id="task-edit-name" type="text"
+                                   class="w-full px-3 py-2 rounded-lg border border-surface-200 dark:border-surface-600
+                                          bg-surface-50 dark:bg-white/5 text-sm text-surface-800 dark:text-surface-100
+                                          focus:outline-none focus:border-primary-500 transition-colors"
+                                   data-i18n-placeholder="task_name"
+                                   placeholder="Task Name">
+                        </div>
+                        <div class="flex items-center gap-2 pb-[2px]">
+                            <label class="text-xs font-medium text-surface-600 dark:text-surface-400">
+                                <span data-i18n="task_enabled">Enable Task</span>
+                            </label>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="task-edit-enabled" class="sr-only peer">
+                                <div class="w-11 h-6 bg-surface-200 peer-focus:outline-none rounded-full peer peer-checked:after:transurface-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-500 dark:bg-surface-600 dark:peer-checked:bg-primary-500"></div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Schedule type + schedule value -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-surface-600 dark:text-surface-400 mb-1.5">
+                                <span data-i18n="task_schedule_type">Schedule Type</span>
+                            </label>
+                            <div id="task-edit-schedule-type" class="cfg-dropdown" tabindex="0">
+                                <div class="cfg-dropdown-selected">
+                                    <span class="cfg-dropdown-text">--</span>
+                                    <i class="fas fa-chevron-down cfg-dropdown-arrow"></i>
+                                </div>
+                                <div class="cfg-dropdown-menu"></div>
+                            </div>
+                        </div>
+
+                        <!-- Cron expression -->
+                        <div id="task-edit-cron-wrap">
+                            <label class="block text-sm font-medium text-surface-600 dark:text-surface-400 mb-1.5">
+                                <span data-i18n="task_cron_expression">Cron Expression</span>
+                            </label>
+                            <input id="task-edit-cron-expression" type="text"
+                                   class="w-full px-3 py-2 rounded-lg border border-surface-200 dark:border-surface-600
+                                          bg-surface-50 dark:bg-white/5 text-sm text-surface-800 dark:text-surface-100
+                                          focus:outline-none focus:border-primary-500 font-mono transition-colors"
+                                   placeholder="0 9 * * *">
+                        </div>
+
+                        <!-- Fixed interval -->
+                        <div id="task-edit-interval-wrap" class="hidden">
+                            <label class="block text-sm font-medium text-surface-600 dark:text-surface-400 mb-1.5">
+                                <span data-i18n="task_interval_seconds">Interval (seconds)</span>
+                            </label>
+                            <input id="task-edit-interval-seconds" type="number" min="60"
+                                   class="w-full px-3 py-2 rounded-lg border border-surface-200 dark:border-surface-600
+                                          bg-surface-50 dark:bg-white/5 text-sm text-surface-800 dark:text-surface-100
+                                          focus:outline-none focus:border-primary-500 transition-colors"
+                                   placeholder="3600">
+                        </div>
+
+                        <!-- One-time task time -->
+                        <div id="task-edit-once-wrap" class="hidden">
+                            <label class="block text-sm font-medium text-surface-600 dark:text-surface-400 mb-1.5">
+                                <span data-i18n="task_once_time">Execution Time</span>
+                            </label>
+                            <input id="task-edit-once-time" type="datetime-local" step="1"
+                                   class="w-full px-3 py-2 rounded-lg border border-surface-200 dark:border-surface-600
+                                          bg-surface-50 dark:bg-white/5 text-sm text-surface-800 dark:text-surface-100
+                                          focus:outline-none focus:border-primary-500 transition-colors
+                                          cursor-pointer"
+                                   onclick="this.showPicker && this.showPicker()">
+                        </div>
+                    </div>
+
+                    <!-- Cron/Interval hint -->
+                    <p id="task-edit-cron-hint" class="text-xs text-surface-400 dark:text-surface-500">
+                        <span data-i18n="task_cron_hint">Format: minute hour day month weekday, e.g. "0 9 * * *" means daily at 9:00</span>
+                    </p>
+                    <p id="task-edit-interval-hint" class="text-xs text-surface-400 dark:text-surface-500 hidden">
+                        <span data-i18n="task_interval_hint">Minimum 60 seconds, e.g. 3600 means once per hour</span>
+                    </p>
+
+                    <!-- Task type + channel -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-surface-600 dark:text-surface-400 mb-1.5">
+                                <span data-i18n="task_action_type">Task Type</span>
+                            </label>
+                            <div id="task-edit-action-type" class="cfg-dropdown" tabindex="0">
+                                <div class="cfg-dropdown-selected">
+                                    <span class="cfg-dropdown-text">--</span>
+                                    <i class="fas fa-chevron-down cfg-dropdown-arrow"></i>
+                                </div>
+                                <div class="cfg-dropdown-menu"></div>
+                            </div>
+                        </div>
+                        <!-- Channel cell: an optional channel instance when creating a task; a read-only channel type when editing -->
+                        <div>
+                            <label class="flex items-center gap-1.5 text-sm font-medium text-surface-600 dark:text-surface-400 mb-1.5">
+                                <span data-i18n="task_instance">Channel</span>
+                                <span id="task-instance-tip" class="cfg-tip" data-tip-key="task_instance_tip"><i class="fas fa-circle-question"></i></span>
+                            </label>
+                            <!-- Create mode: select a channel instance -->
+                            <div id="task-edit-instance-wrap">
+                                <div id="task-edit-instance" class="cfg-dropdown" tabindex="0">
+                                    <div class="cfg-dropdown-selected">
+                                        <span class="cfg-dropdown-text">--</span>
+                                        <i class="fas fa-chevron-down cfg-dropdown-arrow"></i>
+                                    </div>
+                                    <div class="cfg-dropdown-menu"></div>
+                                </div>
+                            </div>
+                            <!-- Edit mode: read-only channel type -->
+                            <div id="task-edit-channel-wrap" class="hidden">
+                                <div id="task-edit-channel-type" class="cfg-dropdown cfg-dropdown-disabled" tabindex="-1">
+                                    <div class="cfg-dropdown-selected">
+                                        <span class="cfg-dropdown-text">--</span>
+                                        <i class="fas fa-chevron-down cfg-dropdown-arrow"></i>
+                                    </div>
+                                    <div class="cfg-dropdown-menu"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recipient picker (create mode only, shown after a channel is selected) -->
+                    <div id="task-edit-recipient-wrap" class="hidden">
+                        <label class="flex items-center gap-1.5 text-sm font-medium text-surface-600 dark:text-surface-400 mb-1.5">
+                            <span data-i18n="task_recipient">Recipient</span>
+                            <button type="button" id="task-recipient-refresh" onclick="refreshTaskRecipients()"
+                                    data-tip-key="task_recipient_refresh"
+                                    class="text-surface-400 hover:text-primary-500 cursor-pointer transition-colors">
+                                <i class="fas fa-rotate-right text-xs"></i>
+                            </button>
+                        </label>
+                        <div id="task-edit-recipient" class="cfg-dropdown" tabindex="0">
+                            <div class="cfg-dropdown-selected">
+                                <span class="cfg-dropdown-text">--</span>
+                                <i class="fas fa-chevron-down cfg-dropdown-arrow"></i>
+                            </div>
+                            <div class="cfg-dropdown-menu"></div>
+                        </div>
+                    </div>
+
+                    <!-- Hidden receiver ID field (auto-filled) -->
+                    <input id="task-edit-receiver" type="hidden" value="">
+
+                    <!-- Message content / task description -->
+                    <div>
+                        <label class="block text-sm font-medium text-surface-600 dark:text-surface-400 mb-1.5">
+                            <span id="task-edit-content-label" data-i18n="task_message_content">Message Content</span>
+                        </label>
+                        <textarea id="task-edit-content" rows="3"
+                                  class="w-full px-3 py-2 rounded-lg border border-surface-200 dark:border-surface-600
+                                         bg-surface-50 dark:bg-white/5 text-sm text-surface-800 dark:text-surface-100
+                                         focus:outline-none focus:border-primary-500 transition-colors resize-none"
+                                  data-i18n-placeholder="task_message_placeholder"
+                                  placeholder="Enter message content or task description"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center justify-between gap-3 px-6 py-4 border-t border-surface-100 dark:border-white/5 rounded-b-2xl">
+                <button id="task-edit-modal-delete"
+                        class="px-4 py-2 rounded-lg text-sm font-medium text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20
+                               cursor-pointer transition-colors duration-150 hidden"
+                        data-i18n="task_delete_btn">Delete Task</button>
+                <span id="task-edit-modal-status"
+                      class="flex-1 text-xs text-primary-500 opacity-0 transition-opacity duration-300 text-left"></span>
+                <button id="task-edit-modal-cancel"
+                        class="px-4 py-2 rounded-lg border border-surface-200 dark:border-white/10
+                               text-surface-600 dark:text-surface-300 text-sm font-medium
+                               hover:bg-surface-50 dark:hover:bg-white/5
+                               cursor-pointer transition-colors duration-150"
+                        data-i18n="cancel">Cancel</button>
+                <button id="task-edit-modal-save"
+                        class="px-4 py-2 rounded-lg bg-primary-500 hover:bg-primary-600 text-white text-sm font-medium
+                               cursor-pointer transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
+                        data-i18n="save">Save</button>
+            </div>
+        </div>
+    </div>

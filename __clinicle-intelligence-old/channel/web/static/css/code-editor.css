@@ -1,0 +1,181 @@
+/* Code Editor: file tree + textarea editor + a persistent-shell terminal
+   (see agent/workspace/terminal_session.py -- not a full pty, but cd/env
+   state now carries over between commands). Fixed three-region layout
+   inside .ce-shell, no internal resizable splitters -- the smallest layout
+   that actually works for this v1. Lives as a split panel on the right of
+   Chat (see chat/code-editor-panel.js) rather than a standalone view -- the
+   panel-as-sidebar shell below follows the same shape as .browser-panel
+   (browser-panel.css) and .activity-panel (activity-panel.css). */
+
+.code-editor-panel {
+    position: relative; flex-shrink: 0; width: 680px; min-width: 420px; max-width: 80vw;
+    height: 100%; display: flex; flex-direction: column; background: #ffffff;
+    border-left: 1px solid #DCEBF7; overflow: hidden;
+}
+.dark .code-editor-panel { background: #0F2036; border-left-color: rgba(255, 255, 255, 0.08); }
+.code-editor-panel.hidden { display: none; }
+
+.code-editor-panel-resizer {
+    position: absolute; left: -3px; top: 0; bottom: 0; width: 6px; cursor: col-resize; z-index: 20;
+}
+.code-editor-panel-resizer:hover,
+.code-editor-panel-resizer.dragging { background: rgba(46, 159, 220, 0.35); }
+
+@media (max-width: 900px) {
+    .code-editor-panel { position: absolute; right: 0; top: 0; z-index: 15; width: 92vw; box-shadow: -8px 0 24px rgba(0, 0, 0, .12); }
+}
+
+.ce-shell { display: flex; flex-direction: column; height: 100%; min-height: 0; }
+.ce-toolbar {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 16px; border-bottom: 1px solid var(--border-color, #e5e7eb);
+    flex-shrink: 0;
+}
+.ce-agent-select {
+    font-size: 12px; padding: 4px 8px; border-radius: 8px;
+    border: 1px solid var(--border-color, #e5e7eb);
+    background: var(--surface-bg, #fff); cursor: pointer;
+}
+.ce-body { display: flex; flex: 1; min-height: 0; }
+.ce-tree-panel {
+    width: 240px; flex-shrink: 0; display: flex; flex-direction: column;
+    border-right: 1px solid var(--border-color, #e5e7eb);
+}
+.ce-tree-toolbar {
+    display: flex; align-items: center; gap: 4px; padding: 6px 8px;
+    border-bottom: 1px solid var(--border-color, #e5e7eb); flex-shrink: 0;
+}
+.ce-tree-toolbar-btn {
+    width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;
+    border: none; background: transparent; border-radius: 6px; cursor: pointer;
+    color: #5A7C96; font-size: 11px;
+}
+.ce-tree-toolbar-btn:hover { background: rgba(0, 0, 0, 0.06); }
+.dark .ce-tree-toolbar-btn:hover { background: rgba(255, 255, 255, 0.08); }
+.ce-tree { font-size: 12.5px; flex: 1; overflow-y: auto; padding: 8px; }
+.ce-tree-node { cursor: pointer; user-select: none; }
+.ce-tree-row {
+    display: flex; align-items: center; gap: 5px;
+    padding: 3px 6px; border-radius: 6px; white-space: nowrap;
+}
+.ce-tree-row:hover { background: rgba(0, 0, 0, 0.04); }
+.dark .ce-tree-row:hover { background: rgba(255, 255, 255, 0.06); }
+.ce-tree-row.active { background: #2280B8; color: #fff; }
+.ce-tree-row i { font-size: 11px; width: 12px; text-align: center; flex-shrink: 0; }
+.ce-tree-children { padding-left: 14px; display: none; }
+.ce-tree-children.open { display: block; }
+
+.ce-main-panel { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.ce-editor-header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 6px 12px; border-bottom: 1px solid var(--border-color, #e5e7eb);
+    flex-shrink: 0;
+}
+.ce-open-path { font-size: 12px; font-family: monospace; color: #5A7C96; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.ce-save-btn {
+    padding: 3px 12px; border: none; border-radius: 7px;
+    background: #2280B8; color: #fff; font-size: 12px; font-weight: 500; cursor: pointer;
+}
+.ce-save-btn:hover { background: #1D6693; }
+.ce-save-btn:disabled { opacity: 0.5; cursor: default; }
+.ce-delete-btn {
+    width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;
+    border: none; background: transparent; border-radius: 6px; cursor: pointer;
+    color: #dc2626; font-size: 12px;
+}
+.ce-delete-btn:hover { background: rgba(220, 38, 38, 0.1); }
+
+/* Syntax highlighting overlay: a read-only, hljs-highlighted <pre><code>
+   sits behind the real textarea, which is made text-transparent so its
+   caret/selection stay visible while the colored text shows through from
+   underneath. Both share the exact same box model (font, padding, line
+   height) via the one .ce-editor class, or the two layers drift apart. */
+.ce-editor-wrap { position: relative; flex: 1 1 55%; min-height: 120px; overflow: hidden; }
+.ce-editor {
+    position: absolute; inset: 0; width: 100%; height: 100%; margin: 0;
+    resize: none; border: none; outline: none; overflow: auto;
+    padding: 12px 16px; font-family: 'SFMono-Regular', Consolas, Menlo, monospace;
+    font-size: 13px; line-height: 1.6; white-space: pre; word-wrap: normal;
+    box-sizing: border-box;
+}
+.ce-editor-highlight { pointer-events: none; margin: 0; background: transparent; color: inherit; z-index: 1; }
+.ce-editor-highlight code { background: transparent !important; padding: 0 !important; }
+.ce-editor-input {
+    z-index: 2; background: transparent; color: transparent; caret-color: #1f2937;
+}
+.dark .ce-editor-input { caret-color: #e2e8f0; }
+.ce-editor-input::selection { background: rgba(34, 128, 184, 0.35); color: transparent; }
+.ce-empty {
+    flex: 1; display: flex; align-items: center; justify-content: center;
+    color: #94a3b8; font-size: 13px; padding: 24px; text-align: center;
+}
+
+/* Multi-format preview: image/PDF render inline via the existing
+   /api/file?path=<abs> raw-bytes endpoint; anything else binary falls
+   back to a download link in the same .ce-empty layout. */
+.ce-preview-wrap {
+    flex: 1 1 55%; min-height: 120px; overflow: auto;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--surface-bg, #fff); padding: 12px;
+}
+.ce-preview-image { max-width: 100%; max-height: 100%; object-fit: contain; }
+.ce-preview-pdf { width: 100%; height: 100%; min-height: 300px; border: none; }
+
+/* docx-preview / SheetJS renders (see code-editor.js's ensureDocxPreviewLoaded
+   / ensureXlsxLoaded) -- these need top-left alignment and their own scroll,
+   unlike the centered image/PDF wraps above. */
+.ce-preview-office { display: block; align-items: initial; justify-content: initial; text-align: left; }
+.ce-preview-loading { color: #94a3b8; font-size: 13px; padding: 24px; text-align: center; }
+#ce-preview-docx .docx-wrapper { background: transparent; padding: 0; }
+#ce-preview-docx .docx { box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1); margin: 0 auto 16px; }
+.ce-preview-xlsx-tabs { display: flex; gap: 4px; margin-bottom: 8px; flex-wrap: wrap; }
+.ce-preview-xlsx-tab {
+    padding: 4px 10px; border-radius: 6px; font-size: 12px; cursor: pointer;
+    border: 1px solid var(--border-color, #e5e7eb); background: transparent; color: inherit;
+}
+.ce-preview-xlsx-tab.active { background: #2280B8; border-color: #2280B8; color: #fff; }
+#ce-preview-xlsx table {
+    border-collapse: collapse; font-size: 12.5px; font-family: monospace;
+}
+#ce-preview-xlsx table td, #ce-preview-xlsx table th {
+    border: 1px solid var(--border-color, #e5e7eb); padding: 3px 8px; white-space: pre;
+}
+.ce-preview-download-link {
+    display: inline-block; margin-top: 10px; padding: 6px 14px; border-radius: 8px;
+    background: #2280B8; color: #fff; font-size: 12.5px; font-weight: 500;
+    text-decoration: none; cursor: pointer;
+}
+.ce-preview-download-link:hover { background: #1D6693; }
+
+.ce-terminal-panel {
+    flex: 0 0 34%; display: flex; flex-direction: column; min-height: 140px;
+    border-top: 1px solid var(--border-color, #e5e7eb);
+    background: #0f172a; color: #e2e8f0;
+}
+.ce-terminal-header {
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em;
+    padding: 6px 12px; color: #94a3b8; border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    flex-shrink: 0;
+}
+.ce-terminal-reset-btn {
+    width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;
+    border: none; background: transparent; border-radius: 6px; cursor: pointer;
+    color: #94a3b8; font-size: 10px;
+}
+.ce-terminal-reset-btn:hover { background: rgba(255, 255, 255, 0.08); color: #e2e8f0; }
+.ce-terminal-output {
+    flex: 1; overflow-y: auto; padding: 8px 12px;
+    font-family: monospace; font-size: 12px; white-space: pre-wrap; word-break: break-word;
+}
+.ce-terminal-line-command { color: #7dd3fc; }
+.ce-terminal-line-error { color: #fca5a5; }
+.ce-terminal-input-row {
+    display: flex; align-items: center; gap: 6px; padding: 6px 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08); flex-shrink: 0;
+}
+.ce-terminal-prompt { color: #7dd3fc; font-family: monospace; font-size: 12px; }
+.ce-terminal-input {
+    flex: 1; background: transparent; border: none; outline: none;
+    color: #e2e8f0; font-family: monospace; font-size: 12px;
+}

@@ -1,0 +1,218 @@
+/* Teams view: a named roster of Agents working in parallel, one grid column
+   per member. Ported from AionUi's team page (parallel grid + single-chat
+   toggle, leader crown, identity-colored member pills, dashed add-member
+   pill) onto Clinicle Intelligence's layout system. See views/teams.js. */
+
+/* ---- Embedded pane (a grid column) --------------------------------- */
+/* Set on <html> by boot.js when this same page loads inside a Teams column
+   iframe (?embed=1). Strips the app chrome down to just the message thread
+   and composer, which is the entire visible surface of a column. */
+html.embed-mode #sidebar,
+html.embed-mode #session-panel,
+html.embed-mode header.h-14 { display: none !important; }
+html.embed-mode #main-content { height: 100vh !important; }
+
+/* ---- Teams view shell ------------------------------------------------ */
+#view-teams { display: none; }
+#view-teams.active { display: flex; flex-direction: row; }
+
+.teams-rail {
+    width: 220px; flex-shrink: 0; display: flex; flex-direction: column;
+    border-right: 1px solid #EBF5FF; background: #F4FAFE;
+}
+.dark .teams-rail { border-color: rgba(255,255,255,.08); background: #0F2036; }
+.teams-rail-header { padding: 12px; border-bottom: 1px solid #EBF5FF; }
+.dark .teams-rail-header { border-color: rgba(255,255,255,.08); }
+.teams-rail-list { flex: 1; overflow-y: auto; padding: 6px; }
+.teams-rail-item {
+    display: flex; align-items: center; gap: 8px; padding: 8px 10px;
+    border-radius: 8px; cursor: pointer; font-size: 13px; color: #3D5A72;
+}
+.teams-rail-item:hover { background: #EBF5FF; }
+.dark .teams-rail-item { color: #B9D4E8; }
+.dark .teams-rail-item:hover { background: rgba(255,255,255,.06); }
+.teams-rail-item.active { background: #EBF5FF; color: #1B5075; font-weight: 600; }
+.dark .teams-rail-item.active { background: rgba(46, 159, 220,.15); color: #2E9FDC; }
+.teams-rail-item-actions { display: none; align-items: center; gap: 8px; margin-left: 4px; flex-shrink: 0; }
+.teams-rail-item-actions i { opacity: .55; font-size: 11px; }
+.teams-rail-item-actions i:hover { opacity: 1; }
+.teams-rail-item:hover .teams-rail-item-actions { display: inline-flex; }
+.teams-rail-item:hover .teams-rail-item-count { display: none; }
+
+.teams-workbench { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.teams-empty {
+    flex: 1; display: flex; flex-direction: column; align-items: center;
+    justify-content: center; gap: 8px; color: #7F9FB8; text-align: center; padding: 24px;
+}
+
+/* ---- Member tab row -----------------------------------------------------
+   Browser-style tabs, one per member, sitting flush on top of the grid so
+   the selected tab visually fuses with its column below (matches AionUi's
+   reference: rounded top corners, no bottom border on the active tab, a
+   divider line the inactive tabs sit on but the active one breaks through).
+   The add-member tab is dashed and always visible at the end, never
+   scrolled away. */
+.teams-pillrow {
+    display: flex; align-items: flex-end; gap: 4px; padding: 10px 14px 0;
+    border-bottom: 1px solid #EBF5FF; flex-shrink: 0; position: relative;
+}
+.dark .teams-pillrow { border-color: rgba(255,255,255,.08); }
+.teams-pills-wrap { position: relative; flex: 1; min-width: 0; display: flex; }
+.teams-pills { display: flex; align-items: flex-end; gap: 4px; overflow-x: auto; flex: 1; min-width: 0; }
+.teams-pills::-webkit-scrollbar { height: 0; }
+/* Edge-fade "there's more" cue when the pill row overflows (PRD §2) --
+   toggled by _updateTeamPillFade() on scroll/resize, not just always-on,
+   so it disappears once you've scrolled to that edge. */
+.teams-pills-wrap::before, .teams-pills-wrap::after {
+    content: ''; position: absolute; top: 0; bottom: 1px; width: 20px; pointer-events: none;
+    opacity: 0; transition: opacity .15s; z-index: 1;
+}
+.teams-pills-wrap::before { left: 0; background: linear-gradient(90deg, #fff, transparent); }
+.teams-pills-wrap::after { right: 0; background: linear-gradient(270deg, #fff, transparent); }
+.dark .teams-pills-wrap::before { background: linear-gradient(90deg, #081527, transparent); }
+.dark .teams-pills-wrap::after { background: linear-gradient(270deg, #081527, transparent); }
+.teams-pills-wrap.fade-start::before { opacity: 1; }
+.teams-pills-wrap.fade-end::after { opacity: 1; }
+
+.teams-pill {
+    display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0;
+    padding: 7px 12px 8px 8px; border-radius: 10px 10px 0 0; cursor: pointer;
+    border: 1px solid transparent; border-bottom: none; background: transparent;
+    font-size: 12.5px; color: #5A7C96; transition: background .12s, color .12s;
+    margin-bottom: -1px;
+}
+.dark .teams-pill { color: #7F9FB8; }
+.teams-pill:hover { background: #EBF5FF; color: #28405A; }
+.dark .teams-pill:hover { background: rgba(255,255,255,.06); color: #DCEBF7; }
+.teams-pill.selected {
+    background: var(--team-tint, #EBF5FF); border-color: #EBF5FF;
+    color: var(--team-color, #1B5075); font-weight: 600;
+    box-shadow: inset 0 2px 0 0 var(--team-color, #2E9FDC);
+}
+.dark .teams-pill.selected { border-color: rgba(255,255,255,.08); }
+.teams-pill .agent-avatar { width: 18px; height: 18px; }
+.teams-pill-crown { font-size: 10px; color: #d4a017; }
+.teams-pill-status {
+    width: 6px; height: 6px; border-radius: 999px; background: #7F9FB8; flex-shrink: 0;
+}
+.teams-pill-status.online { background: #2E9FDC; }
+.teams-pill-remove {
+    display: none; margin-left: 2px; opacity: .6; font-size: 10px;
+}
+.teams-pill:hover .teams-pill-remove { display: inline; }
+
+.teams-pill-add {
+    border: 1px dashed #B9D4E8; border-bottom: 1px dashed #B9D4E8; background: transparent;
+    color: #5A7C96; flex-shrink: 0; margin-bottom: -1px;
+}
+.dark .teams-pill-add { border-color: #28405A; color: #7F9FB8; }
+.teams-pill-add:hover { border-color: #2E9FDC; color: #2E9FDC; }
+
+.teams-view-toggle { display: flex; align-items: center; gap: 2px; flex-shrink: 0; margin-left: 8px; }
+.teams-view-toggle button {
+    padding: 6px 9px; border-radius: 6px; color: #7F9FB8; font-size: 12px; border: none; background: none; cursor: pointer;
+}
+.teams-view-toggle button.active { background: #EBF5FF; color: #28405A; }
+.dark .teams-view-toggle button.active { background: rgba(255,255,255,.1); color: #DCEBF7; }
+
+/* ---- Grid body ---------------------------------------------------------
+   Parallel view: N columns side by side, each an independent embedded chat
+   pane (iframe) for that member's own session. Selected column gets an
+   identity-colored border + tinted header; the rest desaturate slightly. */
+.teams-grid {
+    flex: 1; display: flex; overflow-x: auto; min-height: 0;
+}
+.teams-col {
+    flex: 1 0 320px; min-width: 320px; display: flex; flex-direction: column;
+    border-right: 1px solid #EBF5FF; min-height: 0;
+}
+.dark .teams-col { border-color: rgba(255,255,255,.08); }
+.teams-col:last-child { border-right: none; }
+.teams-col.selected { box-shadow: inset 0 0 0 2px var(--team-color, #2E9FDC); }
+.teams-col:not(.selected) { filter: saturate(.85); }
+.teams-col-head {
+    display: flex; align-items: center; gap: 6px; padding: 6px 6px 6px 10px;
+    font-size: 12px; font-weight: 600; color: #5A7C96; flex-shrink: 0;
+    border-bottom: 1px solid #EBF5FF;
+}
+.dark .teams-col-head { color: #7F9FB8; border-color: rgba(255,255,255,.08); }
+.teams-col.selected .teams-col-head { background: var(--team-tint, #EBF5FF); color: var(--team-color, #1B5075); }
+.teams-col-expand {
+    margin-left: auto; padding: 4px 6px; border-radius: 5px; opacity: .5;
+    font-size: 11px; cursor: pointer; flex-shrink: 0;
+}
+.teams-col-expand:hover { opacity: 1; background: rgba(0,0,0,.06); }
+.dark .teams-col-expand:hover { background: rgba(255,255,255,.1); }
+.teams-col-frame { flex: 1; border: none; width: 100%; min-height: 0; }
+
+/* Live "working" indicator -- AionUi replaces the sider icon with a Spin
+   while a slot has an active turn; this is the column-header equivalent. */
+.teams-col.working .teams-col-head { box-shadow: inset 0 -2px 0 0 var(--team-color, #2E9FDC); }
+.teams-col-working-spin {
+    display: none; width: 11px; height: 11px; border-radius: 50%;
+    border: 2px solid rgba(90, 124, 150,.25); border-top-color: var(--team-color, #2E9FDC);
+    animation: teams-spin .7s linear infinite; flex-shrink: 0;
+}
+.teams-col.working .teams-col-working-spin { display: inline-block; }
+@keyframes teams-spin { to { transform: rotate(360deg); } }
+.teams-col-failed {
+    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 8px; color: #dc2626; font-size: 13px; padding: 16px; text-align: center;
+}
+
+/* Single-chat view: only the selected column shows, full width. */
+.teams-grid.single .teams-col { display: none; }
+.teams-grid.single .teams-col.selected { display: flex; flex: 1 1 auto; }
+
+/* ---- Add-member popover ------------------------------------------------ */
+.teams-add-popover {
+    position: absolute; z-index: 40; width: 280px; max-height: 360px;
+    background: #fff; border: 1px solid #DCEBF7; border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.12); display: flex; flex-direction: column;
+    overflow: hidden;
+}
+.dark .teams-add-popover { background: #182E44; border-color: rgba(255,255,255,.1); }
+.teams-add-search { padding: 8px; border-bottom: 1px solid #EBF5FF; }
+.dark .teams-add-search { border-color: rgba(255,255,255,.08); }
+.teams-add-search input {
+    width: 100%; padding: 6px 8px; border-radius: 6px; border: 1px solid #DCEBF7;
+    font-size: 13px; background: transparent; color: inherit;
+}
+.dark .teams-add-search input { border-color: rgba(255,255,255,.12); }
+.teams-add-list { flex: 1; overflow-y: auto; padding: 4px; }
+.teams-add-item {
+    display: flex; align-items: center; gap: 8px; padding: 7px 8px; border-radius: 7px;
+    cursor: pointer; font-size: 13px;
+}
+.teams-add-item:hover { background: #EBF5FF; }
+.dark .teams-add-item:hover { background: rgba(255,255,255,.06); }
+.teams-add-footer {
+    padding: 9px 10px; border-top: 1px solid #EBF5FF; font-size: 12px; color: #5A7C96;
+}
+.dark .teams-add-footer { border-color: rgba(255,255,255,.08); color: #7F9FB8; }
+.teams-add-footer a { color: #2E9FDC; font-weight: 600; cursor: pointer; }
+
+/* ---- Narrow screens ----------------------------------------------------
+   Same technique as .agents-list-pane / .agent-detail in agents.css: stack
+   instead of side-by-side. The rail becomes a horizontal strip of team
+   chips above the workbench rather than a fixed-width left column, so a
+   phone-width screen doesn't lose most of its space to the rail. Grid
+   columns already scroll horizontally (overflow-x: auto), so swiping
+   between members works without any extra state. */
+@media (max-width: 768px) {
+    #view-teams.active { flex-direction: column; }
+    .teams-rail {
+        width: 100%; flex-direction: row; align-items: center;
+        border-right: none; border-bottom: 1px solid #EBF5FF; flex-shrink: 0;
+    }
+    .dark .teams-rail { border-color: rgba(255,255,255,.08); }
+    .teams-rail-header { border-bottom: none; padding: 8px; flex-shrink: 0; }
+    .teams-rail-header button span { display: none; }
+    .teams-rail-list {
+        flex: 1; display: flex; flex-direction: row; overflow-x: auto;
+        overflow-y: hidden; padding: 6px 8px 6px 0; gap: 4px;
+    }
+    .teams-rail-item { flex-shrink: 0; }
+    .teams-rail-item-actions, .teams-rail-item-count { display: none !important; }
+    .teams-col { flex-basis: 88vw; min-width: 88vw; }
+}

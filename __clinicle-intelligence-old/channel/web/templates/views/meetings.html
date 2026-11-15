@@ -1,0 +1,142 @@
+                <!-- ====================================================== -->
+                <!-- VIEW: Meetings (Meeting Assistant)                      -->
+                <!-- ====================================================== -->
+                <div id="view-meetings" class="view">
+                    <div class="meetings-header">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <i class="fas fa-users-rectangle meetings-header-icon"></i>
+                            <h2 class="text-base font-semibold text-surface-800 dark:text-surface-100" data-i18n="meetings_title">Meetings</h2>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="meetings-tabbar">
+                                <button id="meetings-tab-list" class="meetings-tab meetings-tab-active" onclick="switchMeetingsTab('list')" data-i18n="meetings_tab_list">List</button>
+                                <button id="meetings-tab-calendar" class="meetings-tab" onclick="switchMeetingsTab('calendar')" data-i18n="meetings_tab_calendar">Calendar</button>
+                            </div>
+                            <button onclick="openRecallaiSetupModal()" title="Meeting Platform Setup"
+                                    class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium meeting-btn-secondary cursor-pointer">
+                                <i class="fas fa-gear"></i>
+                            </button>
+                            <button onclick="openMeetingCreateModal()"
+                                    class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-primary-500 hover:bg-primary-600 text-white cursor-pointer">
+                                <i class="fas fa-plus"></i>
+                                <span data-i18n="meetings_new">New Meeting</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="meetings-body" id="meetings-list-tab">
+                        <div class="meetings-list" id="meetings-list">
+                            <div id="meetings-empty" class="meetings-empty hidden">
+                                <i class="fas fa-users-rectangle text-3xl opacity-40"></i>
+                                <div class="text-sm" data-i18n="meetings_empty_hint">No meetings yet. Create one to get started.</div>
+                            </div>
+                            <div id="meetings-list-items"></div>
+                        </div>
+
+                        <div class="meetings-detail hidden" id="meetings-detail"></div>
+                    </div>
+
+                    <div class="meetings-calendar-tab hidden" id="meetings-calendar-tab">
+                        <div class="meetings-cal-controls">
+                            <div class="meetings-cal-modes">
+                                <button class="meetings-cal-mode-btn" data-cal-mode="day" onclick="setCalendarMode('day')" data-i18n="meetings_cal_day">Day</button>
+                                <button class="meetings-cal-mode-btn meetings-cal-mode-active" data-cal-mode="month" onclick="setCalendarMode('month')" data-i18n="meetings_cal_month">Month</button>
+                                <button class="meetings-cal-mode-btn" data-cal-mode="year" onclick="setCalendarMode('year')" data-i18n="meetings_cal_year">Year</button>
+                            </div>
+                            <div class="meetings-cal-nav">
+                                <button class="meeting-btn-secondary" onclick="calendarNav(-1)"><i class="fas fa-chevron-left"></i></button>
+                                <button class="meeting-btn-secondary" onclick="calendarToday()" data-i18n="meetings_cal_today">Today</button>
+                                <button class="meeting-btn-secondary" onclick="calendarNav(1)"><i class="fas fa-chevron-right"></i></button>
+                                <span id="meetings-cal-label" class="meetings-cal-label"></span>
+                            </div>
+                        </div>
+                        <div id="meetings-cal-grid" class="meetings-cal-grid"></div>
+                    </div>
+                </div>
+
+                <!-- New meeting modal -->
+                <div id="meeting-create-modal" class="fixed inset-0 z-[60] hidden items-center justify-center bg-black/40 p-4">
+                    <div class="bg-white dark:bg-[#0F2036] rounded-xl shadow-xl w-full max-w-md flex flex-col overflow-hidden">
+                        <div class="flex items-center justify-between px-5 py-4 border-b border-surface-200 dark:border-white/10">
+                            <h3 class="text-base font-semibold text-surface-800 dark:text-surface-100" data-i18n="meetings_new">New Meeting</h3>
+                            <button onclick="closeMeetingCreateModal()" class="text-surface-400 hover:text-surface-600 dark:hover:text-surface-200 cursor-pointer" aria-label="Close">
+                                <i class="fas fa-xmark"></i>
+                            </button>
+                        </div>
+                        <div class="p-5 space-y-4">
+                            <div>
+                                <label class="text-xs font-medium text-surface-500 dark:text-surface-400" data-i18n="meetings_field_title">Title</label>
+                                <input type="text" id="meeting-create-title"
+                                       class="mt-1 w-full px-3 py-2 rounded-lg border border-surface-200 dark:border-white/10 bg-transparent text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/40">
+                            </div>
+                            <div>
+                                <label class="text-xs font-medium text-surface-500 dark:text-surface-400" data-i18n="meetings_field_pick_attendees">Add from Agents</label>
+                                <div id="meeting-create-picker-list" class="meeting-picker-list"></div>
+                            </div>
+                            <div>
+                                <label class="text-xs font-medium text-surface-500 dark:text-surface-400" data-i18n="meetings_field_attendees">Other attendees (one email per line)</label>
+                                <textarea id="meeting-create-attendees" rows="4"
+                                       class="mt-1 w-full px-3 py-2 rounded-lg border border-surface-200 dark:border-white/10 bg-transparent text-sm font-mono focus:outline-none focus:ring-2 focus:ring-primary-500/40"></textarea>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-end gap-2 px-5 py-4 border-t border-surface-200 dark:border-white/10">
+                            <button onclick="closeMeetingCreateModal()"
+                                    class="px-3 py-1.5 rounded-lg text-xs font-medium text-surface-600 dark:text-surface-300 hover:bg-surface-100 dark:hover:bg-white/10 cursor-pointer" data-i18n="cancel">Cancel</button>
+                            <button onclick="submitMeetingCreate()"
+                                    class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-primary-500 hover:bg-primary-600 text-white cursor-pointer" data-i18n="meetings_create">Create</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recall.ai platform setup modal (admin-only server-side; this form is
+                     shown to everyone but the POSTs 403 for a non-admin) -->
+                <div id="recallai-setup-modal" class="fixed inset-0 z-[60] hidden items-center justify-center bg-black/40 p-4">
+                    <div class="bg-white dark:bg-[#0F2036] rounded-xl shadow-xl w-full max-w-lg flex flex-col overflow-hidden max-h-[85vh]">
+                        <div class="flex items-center justify-between px-5 py-4 border-b border-surface-200 dark:border-white/10 flex-shrink-0">
+                            <h3 class="text-base font-semibold text-surface-800 dark:text-surface-100" data-i18n="meetings_recallai_setup">Meeting Platform Setup</h3>
+                            <button onclick="closeRecallaiSetupModal()" class="text-surface-400 hover:text-surface-600 dark:hover:text-surface-200 cursor-pointer" aria-label="Close">
+                                <i class="fas fa-xmark"></i>
+                            </button>
+                        </div>
+                        <div class="p-5 space-y-6 overflow-y-auto">
+                            <div>
+                                <h4 class="meeting-setup-h4" data-i18n="meetings_zoom_setup">Zoom Setup</h4>
+                                <div class="meeting-setup-grid">
+                                    <select id="recallai-zoom-kind" class="meeting-setup-input">
+                                        <option value="account_level">account_level</option>
+                                        <option value="user_level">user_level</option>
+                                    </select>
+                                    <input id="recallai-zoom-client-id" type="text" placeholder="Client ID" class="meeting-setup-input">
+                                    <input id="recallai-zoom-client-secret" type="password" placeholder="Client Secret" class="meeting-setup-input">
+                                    <input id="recallai-zoom-webhook-secret" type="password" placeholder="Webhook Secret" class="meeting-setup-input">
+                                </div>
+                                <button class="meeting-btn-primary mt-2" onclick="submitZoomAppSetup()">
+                                    <span data-i18n="meetings_save">Save</span>
+                                </button>
+                            </div>
+                            <div>
+                                <h4 class="meeting-setup-h4" data-i18n="meetings_google_setup">Google Meet Setup</h4>
+                                <div class="meeting-setup-grid">
+                                    <input id="recallai-google-group-name" type="text" placeholder="Group name" class="meeting-setup-input">
+                                    <select id="recallai-google-login-mode" class="meeting-setup-input">
+                                        <option value="always">always</option>
+                                        <option value="only_if_required">only_if_required</option>
+                                    </select>
+                                </div>
+                                <button class="meeting-btn-secondary mt-2" onclick="submitGoogleGroupSetup()">
+                                    <span data-i18n="meetings_save">Save group</span>
+                                </button>
+                                <div class="meeting-setup-grid mt-3">
+                                    <input id="recallai-google-email" type="email" placeholder="Google account email" class="meeting-setup-input">
+                                    <input id="recallai-google-group-id" type="text" placeholder="Group ID (from above)" class="meeting-setup-input">
+                                    <textarea id="recallai-google-cert" rows="3" placeholder="sso_v2_cert" class="meeting-setup-input meeting-setup-textarea"></textarea>
+                                    <textarea id="recallai-google-key" rows="3" placeholder="sso_v2_private_key" class="meeting-setup-input meeting-setup-textarea"></textarea>
+                                    <input id="recallai-google-domain" type="text" placeholder="Workspace domain" class="meeting-setup-input">
+                                </div>
+                                <button class="meeting-btn-primary mt-2" onclick="submitGoogleAccountSetup()">
+                                    <span data-i18n="meetings_save">Save account</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>

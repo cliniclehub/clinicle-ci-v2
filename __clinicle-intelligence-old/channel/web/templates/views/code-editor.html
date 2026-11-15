@@ -1,0 +1,96 @@
+                <!-- ====================================================== -->
+                <!-- Code Editor panel (file tree + editor + terminal),      -->
+                <!-- split-pane on the right of Chat -- see                  -->
+                <!-- chat/code-editor-panel.js. Settings > Security & Access -->
+                <!-- gated -- see channel/web/api/workspace_files.py's own   -->
+                <!-- docstring. Reuses code-editor.js untouched: every       -->
+                <!-- ce-* id below is unique document-wide either way, so    -->
+                <!-- moving this from a standalone view into a chat aside    -->
+                <!-- changed nothing it depends on.                          -->
+                <!-- ====================================================== -->
+                <aside id="code-editor-panel" class="code-editor-panel hidden">
+                    <div id="cep-resizer" class="code-editor-panel-resizer" title="Drag to resize"></div>
+                    <div class="ce-shell">
+                        <div class="ce-toolbar">
+                            <div class="w-7 h-7 rounded-lg bg-primary-50 dark:bg-primary-900/30 flex items-center justify-center shrink-0">
+                                <i class="fas fa-laptop-code text-primary-500 text-xs"></i>
+                            </div>
+                            <h2 class="text-sm font-semibold text-surface-800 dark:text-surface-100" data-i18n="code_editor_title">Code Editor</h2>
+                            <select id="ce-agent-select" onchange="ceSelectAgent(this.value)"
+                                    class="ce-agent-select"></select>
+                            <span id="ce-status" class="text-xs text-surface-400 ml-auto"></span>
+                            <button type="button" class="activity-panel-close" onclick="closeCodeEditorPanel()" aria-label="Close">
+                                <i class="fas fa-xmark"></i>
+                            </button>
+                        </div>
+                        <div id="ce-not-applicable" class="ce-empty hidden" data-i18n="code_editor_no_access">
+                            You don't have access to the Code Editor. It requires the Security &amp; Access permission.
+                        </div>
+                        <div id="ce-body" class="ce-body">
+                            <div class="ce-tree-panel">
+                                <div class="ce-tree-toolbar">
+                                    <button type="button" class="ce-tree-toolbar-btn" onclick="ceNewFilePrompt('')" title="New file">
+                                        <i class="fas fa-file-circle-plus"></i>
+                                    </button>
+                                    <button type="button" class="ce-tree-toolbar-btn" onclick="ceRefreshTree()" title="Refresh">
+                                        <i class="fas fa-rotate"></i>
+                                    </button>
+                                </div>
+                                <div id="ce-tree" class="ce-tree"></div>
+                            </div>
+                            <div class="ce-main-panel">
+                                <div class="ce-editor-header">
+                                    <span id="ce-open-path" class="ce-open-path" data-i18n="code_editor_no_file_open">No file open</span>
+                                    <button type="button" id="ce-delete-btn" class="ce-delete-btn hidden" onclick="ceDeleteOpenFile()" title="Delete file">
+                                        <i class="fas fa-trash-can"></i>
+                                    </button>
+                                    <button type="button" id="ce-save-btn" class="ce-save-btn hidden" onclick="ceSaveFile()" data-i18n="code_editor_save">Save</button>
+                                </div>
+                                <div id="ce-editor-wrap" class="ce-editor-wrap hidden">
+                                    <pre id="ce-editor-highlight" class="ce-editor ce-editor-highlight" aria-hidden="true"><code id="ce-editor-highlight-code"></code></pre>
+                                    <textarea id="ce-editor" class="ce-editor ce-editor-input" spellcheck="false"></textarea>
+                                </div>
+                                <div id="ce-preview-image-wrap" class="ce-preview-wrap hidden">
+                                    <img id="ce-preview-image" class="ce-preview-image" alt="">
+                                </div>
+                                <div id="ce-preview-pdf-wrap" class="ce-preview-wrap hidden">
+                                    <iframe id="ce-preview-pdf" class="ce-preview-pdf"></iframe>
+                                </div>
+                                <!-- docx-preview (+ JSZip) renders a real .docx inline, lazy-loaded
+                                     from /assets/vendor/ on first use (see code-editor.js's
+                                     ensureDocxPreviewLoaded). -->
+                                <div id="ce-preview-docx-wrap" class="ce-preview-wrap ce-preview-office hidden">
+                                    <div id="ce-preview-docx"></div>
+                                </div>
+                                <!-- SheetJS (xlsx.full.min.js) renders the first sheet of a real
+                                     .xlsx/.xls as an HTML table -- see ensureXlsxLoaded. -->
+                                <div id="ce-preview-xlsx-wrap" class="ce-preview-wrap ce-preview-office hidden">
+                                    <div class="ce-preview-xlsx-tabs" id="ce-preview-xlsx-tabs"></div>
+                                    <div id="ce-preview-xlsx"></div>
+                                </div>
+                                <div id="ce-preview-download-wrap" class="ce-empty hidden">
+                                    <div>
+                                        <p data-i18n="code_editor_no_preview">No inline preview for this file type.</p>
+                                        <a id="ce-preview-download-link" class="ce-preview-download-link" download data-i18n="code_editor_download">Download</a>
+                                    </div>
+                                </div>
+                                <div id="ce-editor-empty" class="ce-empty" data-i18n="code_editor_pick_a_file">Pick a file from the tree to open it.</div>
+                                <div class="ce-terminal-panel">
+                                    <div class="ce-terminal-header">
+                                        <span data-i18n="code_editor_terminal">Terminal</span>
+                                        <button type="button" class="ce-terminal-reset-btn" onclick="ceResetTerminal()" title="Reset shell">
+                                            <i class="fas fa-rotate-left"></i>
+                                        </button>
+                                    </div>
+                                    <div id="ce-terminal-output" class="ce-terminal-output"></div>
+                                    <div class="ce-terminal-input-row">
+                                        <span class="ce-terminal-prompt">$</span>
+                                        <input id="ce-terminal-input" type="text" class="ce-terminal-input"
+                                               placeholder="Run a command in this agent's workspace…"
+                                               onkeydown="if(event.key==='Enter') ceRunTerminalCommand()">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </aside>

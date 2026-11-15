@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinicle Intelligence</title>
+    <link rel="icon" type="image/svg+xml" href="/assets/brand/favicon/clinicle-favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/brand/favicon/clinicle-favicon-32.png">
+    <link rel="apple-touch-icon" href="/assets/brand/favicon/apple-touch-icon-180.png">
+    <!-- Vendored third-party assets (no external CDN dependency).
+         See channel/web/static/vendor/README.md for sources & versions. -->
+    <link rel="stylesheet" href="/assets/vendor/fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="/assets/vendor/fonts/inter/inter.css">
+    <link rel="stylesheet" href="/assets/vendor/fonts/inter-tight/inter-tight.css">
+    <link rel="stylesheet" href="/assets/vendor/fonts/nunito/nunito.css">
+    <link rel="stylesheet" href="/assets/vendor/fonts/jetbrains-mono/jetbrains-mono.css">
+    <!-- Kept blocking: the inline tailwind.config below must run, and Tailwind
+         must finish its DOM scan, before first paint or utility classes flash
+         unstyled (FOUC). -->
+    <script src="/assets/vendor/tailwind/tailwind.min.js"></script>
+    <!-- markdown-it/d3/highlight.js only feed already-deferred consumers
+         (core/markdown.js, analytics.js) with no synchronous use in this
+         file and no effect on layout/CSS, so deferring them is FOUC-free --
+         it just stops 7 parse-blocking script executions from holding up
+         everything after them in <head>. -->
+    <script defer src="/assets/vendor/markdown-it/markdown-it.min.js"></script>
+    <script defer src="/assets/vendor/d3/d3.min.js"></script>
+    <link id="hljs-light" rel="stylesheet" href="/assets/vendor/highlightjs/styles/github.min.css">
+    <link id="hljs-dark" rel="stylesheet" href="/assets/vendor/highlightjs/styles/github-dark.min.css" disabled>
+    <script defer src="/assets/vendor/highlightjs/highlight.min.js"></script>
+    <script defer src="/assets/vendor/highlightjs/languages/python.min.js"></script>
+    <script defer src="/assets/vendor/highlightjs/languages/javascript.min.js"></script>
+    <script defer src="/assets/vendor/highlightjs/languages/java.min.js"></script>
+    <script defer src="/assets/vendor/highlightjs/languages/go.min.js"></script>
+    <script defer src="/assets/vendor/highlightjs/languages/bash.min.js"></script>
+    <script>
+    tailwind.config = {
+        darkMode: 'class',
+        theme: {
+            extend: {
+                fontFamily: {
+                    sans: ['Inter Tight', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                    display: ['Nunito', 'system-ui', 'sans-serif'],
+                    mono: ['"JetBrains Mono"', '"Fira Code"', 'Consolas', 'monospace'],
+                },
+                colors: {
+                    // Clinicle brand: Deep Sky #2E9FDC anchors 500. See
+                    // cliniclebranding/Clinicle-Brand-Guidelines.html.
+                    primary: {
+                        50: '#EBF5FF', 100: '#D6EBFF', 200: '#ADD7FE', 300: '#7EC4F8',
+                        400: '#4DB8F0', 500: '#2E9FDC', 600: '#2280B8', 700: '#1D6693',
+                        800: '#1B5075', 900: '#173F5C',
+                    },
+                    // Mint Teal accent — use sparingly (single CTAs, highlights),
+                    // never as a body color. See brand guide.
+                    accent: {
+                        50: '#EFFDFA', 100: '#D7F9F0', 200: '#A6ECDD', 300: '#8CE9D5',
+                        400: '#71E3CE', 500: '#5EDEC8', 600: '#3DBFA8', 700: '#2E9A87',
+                        800: '#237A6C', 900: '#1B5F55',
+                    },
+                    // Brand-tinted dark neutral (deep-sky, desaturated) — replaces
+                    // generic slate/gray in dark mode so the app stays "sky", never
+                    // flat black/charcoal. Light mode keeps using primary/accent/white.
+                    surface: {
+                        50: '#F4FAFE', 100: '#E4F0F9', 200: '#DCEBF7', 300: '#B9D4E8',
+                        400: '#7F9FB8', 500: '#5A7C96', 600: '#3D5A72', 700: '#28405A',
+                        800: '#182E44', 900: '#0F2036', 950: '#081527',
+                    }
+                },
+                animation: {
+                    'pulse-dot': 'pulseDot 1.4s infinite ease-in-out both',
+                }
+            }
+        }
+    }
+    </script>
+    <!-- Split out of a single console.css. The order is load-bearing: later
+         sheets override earlier ones, so keep it as-is and see
+         channel/web/README.md before inserting anything. -->
+    <link rel="stylesheet" href="/assets/css/base.css">
+    <link rel="stylesheet" href="/assets/css/sessions.css">
+    <link rel="stylesheet" href="/assets/css/components.css">
+    <link rel="stylesheet" href="/assets/css/markdown.css">
+    <link rel="stylesheet" href="/assets/css/chat.css">
+    <link rel="stylesheet" href="/assets/css/workspace.css">
+    <link rel="stylesheet" href="/assets/css/knowledge.css">
+    <link rel="stylesheet" href="/assets/css/agents.css">
+    <link rel="stylesheet" href="/assets/css/teams.css">
+    <link rel="stylesheet" href="/assets/css/task-board.css">
+    <link rel="stylesheet" href="/assets/css/meetings.css">
+    <link rel="stylesheet" href="/assets/css/workflows.css">
+    <link rel="stylesheet" href="/assets/css/org-graph.css">
+    <link rel="stylesheet" href="/assets/css/code-editor.css">
+    <link rel="stylesheet" href="/assets/css/browser-view.css">
+    <link rel="stylesheet" href="/assets/css/worktrees.css">
+    <link rel="stylesheet" href="/assets/css/activity-panel.css">
+    <link rel="stylesheet" href="/assets/css/browser-panel.css">
+    <link rel="stylesheet" href="/assets/css/settings.css">
+    <!-- Apply theme/lang before first paint to avoid flash of unstyled content.
+         This runs synchronously in <head> so the correct class is on <html>
+         before any CSS or body rendering occurs. -->
+    <script>
+    // Map an arbitrary locale string (ar-SA, en-US, fr ...) to 'ar' / 'en',
+    // or '' when unrecognized so callers can fall through to the next source.
+    window.__cowNormalizeLang__ = function(raw) {
+        if (!raw) return '';
+        var v = String(raw).trim().toLowerCase().replace('_', '-');
+        if (v === 'auto') return '';
+        // Arabic variants: ar, ar-sa, ar-eg, ar-ae ...
+        if (v.indexOf('ar') === 0) return 'ar';
+        if (v.indexOf('en') === 0) return 'en';
+        return '';
+    };
+    // Resolve the console language by priority:
+    //   user choice (localStorage) -> backend-detected -> browser -> 'en'.
+    window.__cowResolveLang__ = function() {
+        return window.__cowNormalizeLang__(localStorage.getItem('cow_lang'))
+            || window.__cowNormalizeLang__(window.__COW_DEFAULT_LANG__)
+            || window.__cowNormalizeLang__(navigator.language || (navigator.languages && navigator.languages[0]))
+            || 'en';
+    };
+    (function() {
+        // Backend-resolved default language (from cow_lang config / auto-detect).
+        window.__COW_DEFAULT_LANG__ = '{{COW_DEFAULT_LANG}}';
+        var theme = localStorage.getItem('cow_theme') || 'light';
+        if (theme === 'dark') document.documentElement.classList.add('dark');
+        // lang is set by i18n.js's applyI18n() (also runs on initial render, via
+        // boot.js), which keeps it and dir in sync on every language change too.
+    })();
+    </script>
+</head>
+<body class="h-screen overflow-hidden bg-gray-50 dark:bg-surface-900 text-slate-800 dark:text-slate-200 font-sans">
+
+<!--#include templates/layout/login.html-->
+
+    <div id="app" class="flex h-screen">
+
+<!--#include templates/layout/sidebar.html-->
+
+<!--#include templates/layout/session-panel.html-->
+
+<!--#include templates/modals/team-chat.html-->
+
+        <!-- Mobile overlay for session panel (click to close) -->
+        <div id="session-panel-overlay" class="session-panel-overlay hidden" onclick="closeSessionPanel()"></div>
+
+        <!-- ================================================================ -->
+        <!-- MAIN CONTENT                                                     -->
+        <!-- ================================================================ -->
+        <div id="main-content" class="flex-1 flex flex-col min-w-0 h-screen">
+<!--#include templates/layout/header.html-->
+
+            <!-- Content Area -->
+            <div id="content-area" class="flex-1 overflow-hidden">
+
+<!--#include templates/views/chat.html-->
+
+<!--#include templates/views/agents.html-->
+<!--#include templates/views/teams.html-->
+
+<!--#include templates/views/settings.html-->
+
+<!--#include templates/views/memory.html-->
+
+<!--#include templates/views/knowledge.html-->
+
+<!--#include templates/views/tasks.html-->
+
+<!--#include templates/views/overview.html-->
+<!--#include templates/views/alerts.html-->
+<!--#include templates/views/workflows.html-->
+<!--#include templates/views/org-graph.html-->
+<!--#include templates/views/analytics.html-->
+
+<!--#include templates/views/task-board.html-->
+<!--#include templates/views/meetings.html-->
+<!--#include templates/views/review-queue.html-->
+<!--#include templates/views/pending-edits.html-->
+<!--#include templates/views/worktrees.html-->
+
+<!--#include templates/views/logs.html-->
+
+<!--#include templates/views/placeholders.html-->
+
+            </div><!-- /content-area -->
+        </div><!-- /main-content -->
+    </div><!-- /app -->
+
+<!--#include templates/modals/knowledge-dialog.html-->
+
+<!--#include templates/modals/confirm-dialog.html-->
+
+<!--#include templates/modals/rename-dialog.html-->
+
+<!--#include templates/modals/folder-picker.html-->
+
+<!--#include templates/modals/vendor.html-->
+
+<!--#include templates/modals/custom-provider.html-->
+
+<!--#include templates/modals/task-edit.html-->
+
+<!--#include templates/modals/run-detail.html-->
+
+    <!-- Split out of a single console.js. These are classic scripts, not
+         modules: they share one global scope and `defer` runs them in this
+         order. The order is load-bearing - see channel/web/README.md before
+         adding, removing or moving a line. -->
+
+    <!-- doc-editor first: views/doc-viewers.js builds its editors at load time. -->
+    <script defer src="/assets/js/doc-editor.js"></script>
+
+    <script defer src="/assets/js/core/version.js"></script>
+    <script defer src="/assets/js/core/i18n.js"></script>
+    <script defer src="/assets/js/core/theme.js"></script>
+    <script defer src="/assets/js/core/custom-css.js"></script>
+    <script defer src="/assets/js/core/utils.js"></script>
+    <script defer src="/assets/js/core/markdown.js"></script>
+    <script defer src="/assets/js/core/confirm.js"></script>
+    <script defer src="/assets/js/core/notify.js"></script>
+    <script defer src="/assets/js/core/notifications.js"></script>
+    <script defer src="/assets/js/core/nav.js"></script>
+    <!-- After nav.js, whose navigateTo it drives and whose VIEW_META it
+         validates against. Only registers a popstate listener at load time;
+         the first route is applied from initApp(), once auth has settled. -->
+    <script defer src="/assets/js/core/router.js"></script>
+
+    <!-- Ahead of chat/, not with the other views: chat/state.js computes
+         sessionId at load time and activeSessionStorageKey() reads
+         defaultAgentId, which is a `let` declared here. Loading this later
+         puts that binding in its temporal dead zone, and chat/state.js dies
+         on the spot - taking the restored session, and so the visible
+         conversation history, with it. -->
+    <script defer src="/assets/js/views/agents.js"></script>
+    <script defer src="/assets/js/views/teams.js"></script>
+
+    <script defer src="/assets/js/chat/state.js"></script>
+    <script defer src="/assets/js/chat/context-usage.js"></script>
+    <script defer src="/assets/js/chat/workspace-selector.js"></script>
+    <script defer src="/assets/js/chat/session-settings.js"></script>
+    <script defer src="/assets/js/chat/composer-input.js"></script>
+    <script defer src="/assets/js/chat/message-actions.js"></script>
+    <script defer src="/assets/js/chat/send.js"></script>
+    <script defer src="/assets/js/chat/scheduler-notify.js"></script>
+    <script defer src="/assets/js/chat/render.js"></script>
+    <script defer src="/assets/js/chat/timeline.js"></script>
+    <script defer src="/assets/js/chat/new-chat.js"></script>
+    <script defer src="/assets/js/chat/activity-panel.js"></script>
+    <script defer src="/assets/js/chat/browser-panel.js"></script>
+    <script defer src="/assets/js/chat/code-editor-panel.js"></script>
+
+    <script defer src="/assets/js/views/sessions.js"></script>
+    <script defer src="/assets/js/views/config.js"></script>
+    <script defer src="/assets/js/views/models.js"></script>
+    <script defer src="/assets/js/views/models-custom-provider.js"></script>
+    <script defer src="/assets/js/views/channels.js"></script>
+    <script defer src="/assets/js/views/channels-weixin.js"></script>
+    <script defer src="/assets/js/views/channels-wecom.js"></script>
+    <script defer src="/assets/js/views/channels-feishu.js"></script>
+    <script defer src="/assets/js/views/connectors.js"></script>
+    <script defer src="/assets/js/views/tasks.js"></script>
+    <script defer src="/assets/js/views/tasks-modal.js"></script>
+    <script defer src="/assets/js/views/overview.js"></script>
+    <script defer src="/assets/js/views/alerts.js"></script>
+    <script defer src="/assets/js/views/analytics.js"></script>
+    <script defer src="/assets/js/views/agents-org.js"></script>
+    <script defer src="/assets/js/views/workflows.js"></script>
+    <script defer src="/assets/js/views/org-graph.js"></script>
+    <script defer src="/assets/js/views/security-access.js"></script>
+    <script defer src="/assets/js/views/sovereignty.js"></script>
+    <script defer src="/assets/js/views/settings.js"></script>
+    <script defer src="/assets/js/views/task-board.js"></script>
+    <script defer src="/assets/js/views/meetings.js"></script>
+    <script defer src="/assets/js/views/review-queue.js"></script>
+    <script defer src="/assets/js/views/pending-edits.js"></script>
+    <script defer src="/assets/js/views/worktrees.js"></script>
+    <script defer src="/assets/js/views/code-editor.js"></script>
+    <script defer src="/assets/js/views/skills.js"></script>
+    <script defer src="/assets/js/views/memory.js"></script>
+    <script defer src="/assets/js/views/doc-viewers.js"></script>
+    <script defer src="/assets/js/views/knowledge.js"></script>
+    <script defer src="/assets/js/views/logs.js"></script>
+
+    <!-- Last of the core layer rather than first, which is where it sat in
+         console.js. It installs a window.fetch wrapper for 401 handling, and
+         chat/state.js installs one that appends agent_id; keeping this one
+         outermost means the 401 check still sees the URL the caller passed. -->
+    <script defer src="/assets/js/core/auth.js"></script>
+
+    <!-- boot before workspace.js, which is where console.js used to sit:
+         applyI18n() probes for relocalizeWorkspacePanel with a typeof guard,
+         and it has always run before workspace.js defined it. -->
+    <script defer src="/assets/js/boot.js"></script>
+
+    <script defer src="/assets/js/workspace.js"></script>
+</body>
+</html>

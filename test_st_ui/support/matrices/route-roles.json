@@ -1,0 +1,86 @@
+{
+  "generatedFrom": "fe/lib/utils/middleware-route-policy.ts",
+  "publicPrefixes": [
+    "/login",
+    "/register",
+    "/verify-email",
+    "/forgot-password",
+    "/reset-password",
+    "/privacy-policy",
+    "/terms-of-use",
+    "/site-landing",
+    "/unauthorized",
+    "/contact"
+  ],
+  "authenticatedOnlyPrefixes": [
+    "/dashboard",
+    "/profile",
+    "/verify-phone",
+    "/settings",
+    "/notifications",
+    "/notfications",
+    "/chat-with-us",
+    "/help"
+  ],
+  "rolePrefixRules": {
+    "/admin": [
+      "org_owner",
+      "org_admin",
+      "super_admin"
+    ],
+    "/platform-organizations": [
+      "super_admin"
+    ],
+    "/platform-users": [
+      "super_admin"
+    ],
+    "/platform-settings": [
+      "super_admin"
+    ],
+    "/platform-media-manager": [
+      "super_admin"
+    ],
+    "/platform-cron-jobs": [
+      "super_admin"
+    ],
+    "/platform-api-tools": [
+      "super_admin"
+    ],
+    "/dashboard-super-admin": [
+      "super_admin"
+    ],
+    "/organization-users": [
+      "org_owner",
+      "org_admin"
+    ],
+    "/organization-settings": [
+      "org_owner",
+      "org_admin"
+    ],
+    "/organization-media-manager": [
+      "org_owner",
+      "org_admin"
+    ],
+    "/organization-email-manager": [
+      "org_owner",
+      "org_admin"
+    ],
+    "/organization-notifications": [
+      "org_owner",
+      "org_admin"
+    ],
+    "/organization-roles": [
+      "org_owner",
+      "org_admin"
+    ],
+    "/management-dashboard": [
+      "org_owner",
+      "org_admin"
+    ],
+    "/dashboard-org-admin": [
+      "org_owner",
+      "org_admin"
+    ]
+  },
+  "rolePatternRules": []
+}

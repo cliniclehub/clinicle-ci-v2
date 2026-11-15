@@ -1,0 +1,92 @@
+                <!-- ====================================================== -->
+                <!-- VIEW: Teams                                             -->
+                <!-- ====================================================== -->
+                <div id="view-teams" class="view">
+                    <!-- Team switcher rail -->
+                    <div class="teams-rail">
+                        <div class="teams-rail-header flex items-center gap-2">
+                            <button id="teams-new-btn" onclick="openCreateTeamModal()"
+                                    class="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold bg-primary-500 hover:bg-primary-600 text-white cursor-pointer transition-colors">
+                                <i class="fas fa-plus"></i>
+                                <span data-i18n="team_new">New Team</span>
+                            </button>
+                        </div>
+                        <div id="teams-rail-list" class="teams-rail-list"></div>
+                    </div>
+
+                    <!-- Workbench -->
+                    <div class="teams-workbench">
+                        <div id="teams-empty" class="teams-empty">
+                            <i class="fas fa-people-group text-3xl opacity-40"></i>
+                            <div class="text-sm" data-i18n="team_empty_hint">Select a team, or create one to get a group of Agents working together.</div>
+                        </div>
+                        <div id="teams-active" class="hidden flex-1 flex flex-col min-h-0">
+                            <div class="teams-pillrow">
+                                <div class="teams-pills-wrap">
+                                    <div id="teams-pills" class="teams-pills" onscroll="_updateTeamPillFade()"></div>
+                                </div>
+                                <button id="teams-add-pill-btn" class="teams-pill teams-pill-add" onclick="toggleAddMemberPopover(event)">
+                                    <i class="fas fa-plus"></i>
+                                    <span data-i18n="team_add_member">Add member</span>
+                                </button>
+                                <div class="teams-view-toggle">
+                                    <button id="teams-view-grid-btn" class="active" title="Parallel" onclick="setTeamViewMode('grid')">
+                                        <i class="fas fa-table-columns"></i>
+                                    </button>
+                                    <button id="teams-view-single-btn" title="Single chat" onclick="setTeamViewMode('single')">
+                                        <i class="fas fa-expand"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="teams-grid" class="teams-grid"></div>
+                        </div>
+                    </div>
+
+                    <!-- Add-member popover -->
+                    <div id="teams-add-popover" class="teams-add-popover hidden">
+                        <div class="teams-add-search">
+                            <input type="text" id="teams-add-search-input" placeholder="Search assistants..."
+                                   oninput="renderAddMemberList()">
+                        </div>
+                        <div id="teams-add-list" class="teams-add-list"></div>
+                        <div class="teams-add-footer">
+                            <span data-i18n="team_add_fallback">Not the right one? </span>
+                            <a onclick="tellTheLeaderToAddMember()" data-i18n="team_tell_leader">Tell the Leader →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Create-team modal -->
+                <div id="team-create-modal" class="fixed inset-0 z-[60] hidden items-center justify-center bg-black/40 p-4">
+                    <div class="bg-white dark:bg-surface-800 rounded-xl shadow-xl w-full max-w-lg max-h-[85vh] flex flex-col overflow-hidden">
+                        <div class="flex items-center justify-between px-5 py-4 border-b border-surface-200 dark:border-white/10">
+                            <h3 class="text-base font-semibold text-surface-800 dark:text-surface-100" data-i18n="team_create_title">Create Team</h3>
+                            <button onclick="closeCreateTeamModal()" class="text-surface-400 hover:text-surface-600 dark:hover:text-surface-200 cursor-pointer" aria-label="Close">
+                                <i class="fas fa-xmark"></i>
+                            </button>
+                        </div>
+                        <div class="p-5 overflow-y-auto flex-1 space-y-4">
+                            <div>
+                                <label class="text-xs font-medium text-surface-500 dark:text-surface-400" data-i18n="team_name_label">Team name</label>
+                                <input type="text" id="team-create-name" data-i18n-placeholder="team_name_placeholder" placeholder="e.g. prodectivety"
+                                       class="mt-1 w-full px-3 py-2 rounded-lg border border-surface-200 dark:border-white/10 bg-transparent text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/40">
+                            </div>
+                            <div>
+                                <label class="text-xs font-medium text-surface-500 dark:text-surface-400" data-i18n="team_members_label">Members (pick one Leader)</label>
+                                <div id="team-create-members" class="mt-2 space-y-1 max-h-64 overflow-y-auto border border-surface-200 dark:border-white/10 rounded-lg p-2"></div>
+                            </div>
+                            <div>
+                                <label class="text-xs font-medium text-surface-500 dark:text-surface-400" data-i18n="team_workspace_label">Workspace folder (optional)</label>
+                                <input type="text" id="team-create-workspace" data-i18n-placeholder="team_workspace_placeholder" placeholder="Leave empty for each member's own workspace"
+                                       class="mt-1 w-full px-3 py-2 rounded-lg border border-surface-200 dark:border-white/10 bg-transparent text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/40">
+                                <p class="mt-1 text-xs text-surface-400 dark:text-surface-500" data-i18n="team_workspace_hint">All members share this folder -- files one writes, another can @-reference.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-end gap-2 px-5 py-4 border-t border-surface-200 dark:border-white/10">
+                            <button onclick="closeCreateTeamModal()"
+                                    class="px-3 py-1.5 rounded-lg text-xs font-medium text-surface-600 dark:text-surface-300 hover:bg-surface-100 dark:hover:bg-white/10 cursor-pointer" data-i18n="cancel">Cancel</button>
+                            <button onclick="submitCreateTeam()"
+                                    class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-primary-500 hover:bg-primary-600 text-white cursor-pointer" data-i18n="team_create_submit">Create</button>
+                        </div>
+                    </div>
+                </div>

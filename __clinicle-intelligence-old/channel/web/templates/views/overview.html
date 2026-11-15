@@ -1,0 +1,287 @@
+                <!-- ====================================================== -->
+                <!-- VIEW: Overview                                          -->
+                <!-- ====================================================== -->
+                <div id="view-overview" class="view active">
+                    <div class="flex-1 overflow-y-auto p-6">
+                        <div class="max-w-full mx-auto">
+                            <!-- Header -->
+                            <div class="flex items-center gap-3 mb-6 mc-anim" style="--mc-delay:0ms">
+                                <div class="w-9 h-9 rounded-lg bg-primary-50 dark:bg-primary-900/30 flex items-center justify-center shrink-0">
+                                    <i class="fas fa-gauge-high text-primary-500 text-sm"></i>
+                                </div>
+                                <div>
+                                    <h2 class="text-xl font-bold text-surface-800 dark:text-surface-100 flex items-center gap-2">
+                                        <span data-i18n="overview_title">Dashboard</span>
+                                        <span class="mc-live-dot" title="Live"></span>
+                                    </h2>
+                                    <p class="text-sm text-surface-500 dark:text-surface-400 mt-0.5" data-i18n="overview_desc">Everything running across the app, right now</p>
+                                </div>
+                            </div>
+
+                            <div id="overview-status" class="text-sm mb-4 opacity-0 transition-opacity duration-150"></div>
+
+                            <!-- System status: host resource usage, polled live every few seconds
+                                 while this view is on screen (see _startSystemPolling in overview.js).
+                                 Ring, not bar -- these are point-in-time gauges, not a count building
+                                 toward a total, so a bar's implied "progress" reading would mislead. -->
+                            <div class="mc-eyebrow mc-anim" style="--mc-delay:0ms" data-i18n="overview_section_system">System status</div>
+                            <div id="ov-system-grid" class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+                                <div class="mc-stat mc-tint-primary mc-anim mc-card" style="--mc-delay:10ms">
+                                    <div class="mc-gauge">
+                                        <svg viewBox="0 0 40 40" class="mc-gauge-ring">
+                                            <circle cx="20" cy="20" r="16" class="mc-gauge-track"></circle>
+                                            <circle id="ov-cpu-ring" cx="20" cy="20" r="16" class="mc-gauge-fill mc-gauge-fill-primary"></circle>
+                                        </svg>
+                                        <div class="mc-gauge-icon"><i class="fas fa-microchip text-primary-500 text-xl"></i></div>
+                                    </div>
+                                    <div id="ov-cpu-pct" class="mc-stat-num mc-skeleton">0%</div>
+                                    <div class="mc-stat-label" data-i18n="overview_cpu">CPU</div>
+                                </div>
+                                <div id="ov-gpu-card" class="mc-stat mc-tint-violet mc-anim mc-card" style="--mc-delay:20ms">
+                                    <div class="mc-gauge">
+                                        <svg viewBox="0 0 40 40" class="mc-gauge-ring">
+                                            <circle cx="20" cy="20" r="16" class="mc-gauge-track"></circle>
+                                            <circle id="ov-gpu-ring" cx="20" cy="20" r="16" class="mc-gauge-fill mc-gauge-fill-violet"></circle>
+                                        </svg>
+                                        <div class="mc-gauge-icon"><i class="fas fa-tv text-violet-500 text-xl"></i></div>
+                                    </div>
+                                    <div id="ov-gpu-pct" class="mc-stat-num mc-skeleton">0%</div>
+                                    <div class="mc-stat-label" data-i18n="overview_gpu">GPU</div>
+                                </div>
+                                <div class="mc-stat mc-tint-emerald mc-anim mc-card" style="--mc-delay:30ms">
+                                    <div class="mc-gauge">
+                                        <svg viewBox="0 0 40 40" class="mc-gauge-ring">
+                                            <circle cx="20" cy="20" r="16" class="mc-gauge-track"></circle>
+                                            <circle id="ov-mem-ring" cx="20" cy="20" r="16" class="mc-gauge-fill mc-gauge-fill-emerald"></circle>
+                                        </svg>
+                                        <div class="mc-gauge-icon"><i class="fas fa-memory text-emerald-500 text-xl"></i></div>
+                                    </div>
+                                    <div id="ov-mem-pct" class="mc-stat-num mc-skeleton">0%</div>
+                                    <div class="mc-stat-label" data-i18n="overview_memory">Memory</div>
+                                </div>
+                                <div class="mc-stat mc-tint-amber mc-anim mc-card" style="--mc-delay:40ms">
+                                    <div class="mc-gauge">
+                                        <svg viewBox="0 0 40 40" class="mc-gauge-ring">
+                                            <circle cx="20" cy="20" r="16" class="mc-gauge-track"></circle>
+                                            <circle id="ov-disk-ring" cx="20" cy="20" r="16" class="mc-gauge-fill mc-gauge-fill-amber"></circle>
+                                        </svg>
+                                        <div class="mc-gauge-icon"><i class="fas fa-hard-drive text-amber-500 text-xl"></i></div>
+                                    </div>
+                                    <div id="ov-disk-pct" class="mc-stat-num mc-skeleton">0%</div>
+                                    <div class="mc-stat-label" data-i18n="overview_storage">Storage</div>
+                                </div>
+                            </div>
+
+                            <!-- Sovereignty row: local-first proof, same metrics/card design as
+                                 Settings > Sovereignty (sovereignty.html), reusing that page's
+                                 /api/sovereignty/metrics fetch already made below. -->
+                            <div class="mc-eyebrow mc-anim" style="--mc-delay:60ms" data-i18n="overview_section_sovereignty">Sovereignty</div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-3 mb-6">
+                                <div onclick="navigateTo('settings', 'sovereignty')"
+                                     class="sm:col-span-2 lg:col-span-2 mc-anim mc-card mc-stat-link p-5 rounded-xl border border-emerald-200 dark:border-emerald-800/30 bg-emerald-50/60 dark:bg-emerald-900/10 flex flex-col" style="--mc-delay:40ms">
+                                    <div class="flex items-center gap-2 mb-3">
+                                        <div class="w-7 h-7 rounded-lg bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center shrink-0">
+                                            <i class="fas fa-sack-dollar text-emerald-600 dark:text-emerald-400 text-xs"></i>
+                                        </div>
+                                        <span class="text-xs font-medium text-emerald-700 dark:text-emerald-400" data-i18n="sovereignty_cost_avoided">Cloud cost avoided</span>
+                                    </div>
+                                    <div id="ov-sov-cost-avoided" class="text-3xl font-bold text-emerald-600 dark:text-emerald-400 leading-none mc-skeleton">$0.00</div>
+                                    <div id="ov-sov-cost-benchmark" class="text-xs text-surface-500 dark:text-surface-400 mt-2">&nbsp;</div>
+                                    <div class="mt-auto pt-3 border-t border-emerald-200/60 dark:border-emerald-800/30 flex items-center gap-2 text-xs text-surface-500 dark:text-surface-400">
+                                        <span id="ov-sov-tokens-in">0 tokens in</span>
+                                        <span class="opacity-40">|</span>
+                                        <span id="ov-sov-tokens-out">0 tokens out</span>
+                                    </div>
+                                </div>
+                                <div onclick="navigateTo('settings', 'sovereignty')" class="mc-stat mc-tint-sky mc-stat-link mc-anim mc-card" style="--mc-delay:80ms">
+                                    <div class="mc-stat-icon bg-sky-100 dark:bg-sky-900/40">
+                                        <i class="fas fa-comments text-sky-500 text-xs"></i>
+                                    </div>
+                                    <div id="ov-sov-queries" class="mc-stat-num mc-skeleton" data-count-to="0">0</div>
+                                    <div class="mc-stat-label" data-i18n="sovereignty_queries">Queries served</div>
+                                </div>
+                                <div onclick="navigateTo('settings', 'sovereignty')" class="mc-stat mc-tint-emerald mc-stat-link mc-anim mc-card" style="--mc-delay:120ms">
+                                    <div class="mc-stat-icon bg-emerald-100 dark:bg-emerald-900/40">
+                                        <i class="fas fa-microchip text-emerald-500 text-xs"></i>
+                                    </div>
+                                    <div id="ov-sov-tokens" class="mc-stat-num mc-skeleton" data-count-to="0">0</div>
+                                    <div class="mc-stat-label" data-i18n="sovereignty_tokens">Tokens processed</div>
+                                </div>
+                                <div onclick="navigateTo('settings', 'sovereignty')" class="mc-stat mc-tint-amber mc-stat-link mc-anim mc-card" style="--mc-delay:160ms">
+                                    <div class="mc-stat-icon bg-amber-100 dark:bg-amber-900/40">
+                                        <i class="fas fa-file-lines text-amber-500 text-xs"></i>
+                                    </div>
+                                    <div id="ov-sov-documents" class="mc-stat-num mc-skeleton" data-count-to="0">0</div>
+                                    <div class="mc-stat-label" data-i18n="sovereignty_documents">Documents on-device</div>
+                                </div>
+                                <div onclick="navigateTo('settings', 'sovereignty')" class="sm:col-span-2 lg:col-span-2 mc-stat mc-tint-rose mc-stat-link mc-anim mc-card" style="--mc-delay:200ms">
+                                    <div class="mc-stat-icon bg-rose-100 dark:bg-rose-900/40">
+                                        <i class="fas fa-arrow-up-right-from-square text-rose-500 text-xs"></i>
+                                    </div>
+                                    <div id="ov-sov-egress" class="mc-stat-num mc-skeleton" data-count-to="0">0</div>
+                                    <div class="mc-stat-label" data-i18n="sovereignty_outbound">Outbound calls</div>
+                                </div>
+                            </div>
+
+                            <!-- Activity row: what's happening right now, needs-attention first -->
+                            <div class="mc-eyebrow mc-anim" style="--mc-delay:60ms" data-i18n="overview_section_activity">Activity</div>
+                            <div class="grid grid-cols-2 lg:grid-cols-6 gap-3 mb-6">
+                                <div class="mc-stat mc-tint-primary mc-anim mc-card" style="--mc-delay:40ms">
+                                    <div class="mc-stat-icon bg-primary-100 dark:bg-primary-900/40">
+                                        <i class="fas fa-comments text-primary-500 text-xs"></i>
+                                    </div>
+                                    <div id="ov-queries" class="mc-stat-num mc-skeleton" data-count-to="0">0</div>
+                                    <div class="mc-stat-label" data-i18n="overview_queries">Queries served</div>
+                                </div>
+                                <div class="mc-stat mc-tint-violet mc-anim mc-card" style="--mc-delay:80ms">
+                                    <div class="mc-stat-icon bg-violet-100 dark:bg-violet-900/40">
+                                        <i class="fas fa-robot text-violet-500 text-xs"></i>
+                                    </div>
+                                    <div id="ov-agents" class="mc-stat-num mc-skeleton" data-count-to="0">0</div>
+                                    <div class="mc-stat-label" data-i18n="overview_agents">Agents</div>
+                                </div>
+                                <div class="mc-stat mc-tint-emerald mc-anim mc-card" style="--mc-delay:120ms">
+                                    <div class="mc-stat-icon bg-emerald-100 dark:bg-emerald-900/40">
+                                        <i class="fas fa-plug text-emerald-500 text-xs"></i>
+                                    </div>
+                                    <div id="ov-connectors" class="mc-stat-num mc-skeleton" data-count-to="0">0</div>
+                                    <div class="mc-stat-label" data-i18n="overview_connectors">Connectors connected</div>
+                                </div>
+                                <div class="mc-stat mc-anim mc-card" style="--mc-delay:160ms">
+                                    <div class="mc-stat-icon bg-surface-100 dark:bg-surface-700/50">
+                                        <i class="fas fa-shield-halved text-surface-400 text-xs"></i>
+                                    </div>
+                                    <div id="ov-chain" class="mc-stat-pill mc-stat-pill-neutral mc-skeleton" data-i18n="overview_audit_unverified">Unverified</div>
+                                    <div class="mc-stat-label" data-i18n="overview_audit">Audit chain</div>
+                                </div>
+                                <div onclick="navigateTo('review-queue')"
+                                     class="mc-stat mc-tint-rose mc-stat-link mc-anim mc-card" style="--mc-delay:200ms">
+                                    <div class="mc-stat-icon bg-rose-100 dark:bg-rose-900/40">
+                                        <i class="fas fa-flag text-rose-500 text-xs"></i>
+                                    </div>
+                                    <div id="ov-review-queue-open" class="mc-stat-num mc-skeleton" data-count-to="0">0</div>
+                                    <div class="mc-stat-label" data-i18n="overview_review_queue">Open flags to review</div>
+                                </div>
+                                <div onclick="navigateTo('alerts')"
+                                     class="mc-stat mc-tint-amber mc-stat-link mc-anim mc-card" style="--mc-delay:240ms">
+                                    <div class="mc-stat-icon bg-amber-100 dark:bg-amber-900/40">
+                                        <i class="fas fa-bell text-amber-500 text-xs"></i>
+                                    </div>
+                                    <div id="ov-alerts-open" class="mc-stat-num mc-skeleton" data-count-to="0">0</div>
+                                    <div class="mc-stat-label" data-i18n="overview_alerts">Open alerts</div>
+                                </div>
+                            </div>
+
+                            <!-- Coverage row: every other product area, one glance each -->
+                            <div class="mc-eyebrow mc-anim" style="--mc-delay:260ms" data-i18n="overview_section_coverage">Coverage</div>
+                            <div class="grid grid-cols-2 lg:grid-cols-6 gap-3 mb-6">
+                                <div onclick="navigateTo('workflows')"
+                                     class="mc-stat mc-tint-indigo mc-stat-link mc-anim mc-card" style="--mc-delay:280ms">
+                                    <div class="mc-stat-icon bg-indigo-100 dark:bg-indigo-900/40">
+                                        <i class="fas fa-code-branch text-indigo-500 text-xs"></i>
+                                    </div>
+                                    <div id="ov-workflows" class="mc-stat-num mc-skeleton" data-count-to="0">0</div>
+                                    <div class="mc-stat-label" data-i18n="overview_workflows">Workflows</div>
+                                </div>
+                                <div onclick="navigateTo('teams')"
+                                     class="mc-stat mc-tint-teal mc-stat-link mc-anim mc-card" style="--mc-delay:300ms">
+                                    <div class="mc-stat-icon bg-teal-100 dark:bg-teal-900/40">
+                                        <i class="fas fa-people-group text-teal-500 text-xs"></i>
+                                    </div>
+                                    <div id="ov-teams" class="mc-stat-num mc-skeleton" data-count-to="0">0</div>
+                                    <div class="mc-stat-label" data-i18n="overview_teams">Teams</div>
+                                </div>
+                                <div onclick="navigateTo('meetings')"
+                                     class="mc-stat mc-tint-sky mc-stat-link mc-anim mc-card" style="--mc-delay:320ms">
+                                    <div class="mc-stat-icon bg-sky-100 dark:bg-sky-900/40">
+                                        <i class="fas fa-users-rectangle text-sky-500 text-xs"></i>
+                                    </div>
+                                    <div id="ov-meetings" class="mc-stat-num mc-skeleton" data-count-to="0">0</div>
+                                    <div class="mc-stat-label" data-i18n="overview_meetings">Meetings</div>
+                                </div>
+                                <div onclick="navigateTo('knowledge')"
+                                     class="mc-stat mc-tint-fuchsia mc-stat-link mc-anim mc-card" style="--mc-delay:340ms">
+                                    <div class="mc-stat-icon bg-fuchsia-100 dark:bg-fuchsia-900/40">
+                                        <i class="fas fa-book text-fuchsia-500 text-xs"></i>
+                                    </div>
+                                    <div id="ov-knowledge" class="mc-stat-num mc-skeleton" data-count-to="0">0</div>
+                                    <div class="mc-stat-label" data-i18n="overview_knowledge">Knowledge docs</div>
+                                </div>
+                                <div onclick="navigateTo('settings', 'channels')"
+                                     class="mc-stat mc-tint-cyan mc-stat-link mc-anim mc-card" style="--mc-delay:360ms">
+                                    <div class="mc-stat-icon bg-cyan-100 dark:bg-cyan-900/40">
+                                        <i class="fas fa-tower-broadcast text-cyan-500 text-xs"></i>
+                                    </div>
+                                    <div id="ov-channels" class="mc-stat-num mc-skeleton" data-count-to="0">0</div>
+                                    <div class="mc-stat-label" data-i18n="overview_channels">Channels connected</div>
+                                </div>
+                                <div onclick="navigateTo('settings', 'skills')"
+                                     class="mc-stat mc-tint-orange mc-stat-link mc-anim mc-card" style="--mc-delay:380ms">
+                                    <div class="mc-stat-icon bg-orange-100 dark:bg-orange-900/40">
+                                        <i class="fas fa-bolt text-orange-500 text-xs"></i>
+                                    </div>
+                                    <div id="ov-skills" class="mc-stat-num mc-skeleton" data-count-to="0">0</div>
+                                    <div class="mc-stat-label" data-i18n="overview_skills">Skills installed</div>
+                                </div>
+                            </div>
+
+                            <!-- Query volume trend -->
+                            <div class="p-5 rounded-xl border border-surface-200 dark:border-white/10 bg-white dark:bg-surface-800 mb-6 mc-anim" style="--mc-delay:400ms">
+                                <div class="flex items-baseline justify-between mb-3">
+                                    <h3 class="text-sm font-semibold text-surface-700 dark:text-surface-200" data-i18n="overview_query_trend">Query volume</h3>
+                                    <span id="ov-query-trend-total" class="text-xs text-surface-400 dark:text-surface-500"></span>
+                                </div>
+                                <div id="ov-query-chart" class="flex items-end gap-1 h-24"></div>
+                            </div>
+
+                            <!-- Alerts feed + Analytics snapshot -->
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+                                <div class="p-5 rounded-xl border border-surface-200 dark:border-white/10 bg-white dark:bg-surface-800 mc-anim" style="--mc-delay:420ms">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <h3 class="text-sm font-semibold text-surface-700 dark:text-surface-200" data-i18n="menu_alerts">Alerts</h3>
+                                        <a onclick="navigateTo('alerts')" class="text-xs text-primary-500 hover:text-primary-600 cursor-pointer font-medium" data-i18n="overview_view_all">View all</a>
+                                    </div>
+                                    <div id="ov-alerts-feed" class="space-y-1.5 text-xs"></div>
+                                </div>
+                                <div class="p-5 rounded-xl border border-surface-200 dark:border-white/10 bg-white dark:bg-surface-800 mc-anim" style="--mc-delay:440ms">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <h3 class="text-sm font-semibold text-surface-700 dark:text-surface-200" data-i18n="menu_analytics">Analytics</h3>
+                                        <a onclick="navigateTo('analytics')" class="text-xs text-primary-500 hover:text-primary-600 cursor-pointer font-medium" data-i18n="overview_view_all">View all</a>
+                                    </div>
+                                    <div class="flex items-baseline justify-between mb-2">
+                                        <span class="text-xs text-surface-500 dark:text-surface-400" data-i18n="overview_egress_trend">Egress calls, last 14 days</span>
+                                        <span id="ov-egress-trend-total" class="text-xs text-surface-400 dark:text-surface-500"></span>
+                                    </div>
+                                    <div id="ov-egress-chart" class="flex items-end gap-1 h-16 mb-3"></div>
+                                    <div class="flex items-center justify-between text-xs">
+                                        <span class="text-surface-500 dark:text-surface-400" data-i18n="overview_task_rate">Task completion</span>
+                                        <span id="ov-task-rate" class="font-semibold text-surface-700 dark:text-surface-200">0%</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Task board snapshot -->
+                            <div class="p-5 rounded-xl border border-surface-200 dark:border-white/10 bg-white dark:bg-surface-800 mb-6 mc-anim" style="--mc-delay:460ms">
+                                <h3 class="text-sm font-semibold text-surface-700 dark:text-surface-200 mb-3" data-i18n="overview_board">Task board</h3>
+                                <!-- Proportional stacked bar: one segment per status, fixed left-to-right
+                                     order matching the board's own column order, with a 2px surface gap
+                                     between segments (dataviz skill: mark spec for stacked fills). -->
+                                <div id="ov-board-bar" class="flex h-3 rounded-full overflow-hidden mb-2 bg-surface-100 dark:bg-surface-700/50"></div>
+                                <div id="ov-board-legend" class="flex flex-wrap gap-x-4 gap-y-1 mb-4 text-[11px]"></div>
+                                <div id="ov-board" class="grid grid-cols-2 sm:grid-cols-5 gap-3 text-center"></div>
+                            </div>
+
+                            <!-- Agent roster + recent activity -->
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                <div class="p-5 rounded-xl border border-surface-200 dark:border-white/10 bg-white dark:bg-surface-800 mc-anim" style="--mc-delay:500ms">
+                                    <h3 class="text-sm font-semibold text-surface-700 dark:text-surface-200 mb-3" data-i18n="overview_roster">Agent roster</h3>
+                                    <div id="ov-roster" class="space-y-1.5 text-sm"></div>
+                                </div>
+                                <div class="p-5 rounded-xl border border-surface-200 dark:border-white/10 bg-white dark:bg-surface-800 mc-anim" style="--mc-delay:540ms">
+                                    <h3 class="text-sm font-semibold text-surface-700 dark:text-surface-200 mb-3" data-i18n="overview_activity">Recent activity</h3>
+                                    <div id="ov-activity" class="space-y-1.5 text-xs max-h-72 overflow-y-auto"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>

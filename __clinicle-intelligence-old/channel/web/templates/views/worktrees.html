@@ -1,0 +1,43 @@
+                <!-- ====================================================== -->
+                <!-- VIEW: Worktrees (isolated sub agent merge-back queue)   -->
+                <!-- ====================================================== -->
+                <div id="view-worktrees" class="view">
+                    <div class="flex-1 overflow-y-auto p-6">
+                        <div class="max-w-4xl mx-auto">
+                            <div class="flex items-center gap-3 mb-6">
+                                <div class="w-9 h-9 rounded-lg bg-primary-50 dark:bg-primary-900/30 flex items-center justify-center shrink-0">
+                                    <i class="fas fa-code-branch text-primary-500 text-sm"></i>
+                                </div>
+                                <div>
+                                    <h2 class="text-xl font-bold text-surface-800 dark:text-surface-100" data-i18n="worktrees_title">Worktrees</h2>
+                                    <p class="text-sm text-surface-500 dark:text-surface-400 mt-0.5" data-i18n="worktrees_desc">Sub agent tasks run in an isolated git worktree end here -- Merge folds the work into the project, Discard drops it. Nothing merges on its own.</p>
+                                </div>
+                            </div>
+
+                            <div id="worktrees-status" class="text-sm mb-4 opacity-0 transition-opacity duration-150"></div>
+
+                            <div id="worktrees-list" class="space-y-2"></div>
+                        </div>
+                    </div>
+
+                    <!-- Merge-conflict resolution modal: git's own conflict
+                         markers, parsed into hunks -- accept-ours/
+                         accept-theirs/edit-manually per hunk, then commit.
+                         Not a 3-way diff engine, just git's own output made
+                         clickable. -->
+                    <div id="wt-conflict-modal" class="wt-conflict-modal hidden">
+                        <div class="wt-conflict-backdrop" onclick="wtCloseConflictModal()"></div>
+                        <div class="wt-conflict-panel">
+                            <div class="wt-conflict-header">
+                                <h3 class="text-sm font-semibold text-surface-800 dark:text-surface-100" data-i18n="worktrees_conflict_title">Merge conflict</h3>
+                                <button type="button" class="wt-conflict-close" onclick="wtCloseConflictModal()">&times;</button>
+                            </div>
+                            <div id="wt-conflict-files" class="wt-conflict-files"></div>
+                            <div class="wt-conflict-footer">
+                                <span id="wt-conflict-status" class="text-xs text-surface-400"></span>
+                                <button type="button" class="wt-conflict-abort-btn" onclick="wtAbortConflict()" data-i18n="worktrees_conflict_abort">Abort merge</button>
+                                <button type="button" class="wt-conflict-complete-btn" onclick="wtCompleteConflict()" data-i18n="worktrees_conflict_complete">Commit merge</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>

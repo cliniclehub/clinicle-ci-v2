@@ -1,0 +1,82 @@
+# Configuration files (use environment variables in Docker instead)
+config/
+
+# Logs
+logs/
+*.log
+
+# Virtual environment
+.venv/
+venv/
+env/
+ENV/
+
+# Testingtests/
+.pytest_cache/
+.coverage
+htmlcov/
+.benchmarks/
+
+# Development files
+.git/
+.gitignore
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# MacOS
+.DS_Store
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Documentation (lives under devops/docs in monorepo)
+*.md
+devops/docs/
+
+# IDE and editor files
+*.sublime-project
+*.sublime-workspace
+.project
+.pydevproject
+
+# Backup files
+*_backup.py
+*_backup*.py
+* copy/
+*_copy/
+
+# Environment files (should use Docker env vars)
+.env
+.env.*
+
+# Type checking
+.mypy_cache/
+.pytype/
+.pyre/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Coverage
+.coverage.*
+coverage.xml
+*.cover
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+

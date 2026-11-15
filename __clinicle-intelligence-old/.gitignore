@@ -1,0 +1,83 @@
+.DS_Store
+.idea
+.vscode
+.claude/
+.agents/
+.serena/
+.swarm/
+.claude-flow/
+.base-ast/
+ruvector.db
+Faheem Overview.pdf
+.venv
+.vs
+__pycache__/
+venv*
+*.pyc
+python
+config.json
+extension_tools/
+QR.png
+nohup.out
+tmp
+plugins.json
+*.log
+logs/
+/workspace
+config.yaml
+user_datas.pkl
+chatgpt_tool_hub/
+plugins/**/
+!plugins/bdunit
+!plugins/dungeon
+!plugins/finish
+!plugins/godcmd
+!plugins/tool
+!plugins/banwords
+!plugins/banwords/**/
+plugins/banwords/__pycache__
+plugins/banwords/lib/__pycache__
+!plugins/hello
+!plugins/role
+!plugins/keyword
+!plugins/linkai
+!plugins/cow_cli
+client_config.json
+# HMAC key for signing /preview URLs; generated per install.
+.preview_secret
+ref/
+**/.dev.vars
+.cursor/
+local/
+node_modules/
+
+# cow cli
+dist/
+build/
+*.egg-info/
+.cow.pid
+
+.wrangler/
+
+# Obsidian editor workspace (accidental commit vector; never part of the app)
+.obsidian/
+
+# FuXi session state (settings, scheduled-task locks, scratchpad symlinks)
+.fuxi/
+
+# Ruflo local secrets and runtime data
+.env
+.env.local
+.env.*.local
+.claude-flow/data/
+.claude-flow/logs/
+.claude-flow/sessions/
+
+# Codex local configuration
+.codex/
+
+# Docker runtime data (live DBs, pickled user data -- not source)
+docker/cow/
+docker/cow-data/
+# Claude Flow runtime data
+# Environment variables

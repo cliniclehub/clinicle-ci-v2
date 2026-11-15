@@ -1,0 +1,548 @@
+                <!-- ====================================================== -->
+                <!-- VIEW: Config                                            -->
+                <!-- ====================================================== -->
+                <div id="view-config" class="settings-pane" data-settings-pane="general">
+                    <!-- Tailwind JIT safelist: models capability-card icon colors
+                         are emitted from JS template strings. Listing them here
+                         (display:none) guarantees the CDN-side compiler picks
+                         them up regardless of render timing. -->
+                    <div class="hidden bg-blue-50 dark:bg-blue-900/30 text-blue-500
+                                       bg-orange-50 dark:bg-orange-900/30 text-orange-500
+                                       bg-purple-50 dark:bg-purple-900/30 text-purple-500
+                                       bg-amber-50 dark:bg-amber-900/30 text-amber-500
+                                       bg-primary-50 dark:bg-primary-900/30 text-primary-500"></div>
+                    <div class="flex-1 overflow-y-auto p-6">
+                        <div class="max-w-4xl mx-auto">
+                            <div class="flex items-center justify-between mb-6">
+                                <div>
+                                    <h2 class="text-xl font-bold text-surface-800 dark:text-surface-100" data-i18n="config_title">Configuration</h2>
+                                    <p class="text-sm text-surface-500 dark:text-surface-400 mt-1" data-i18n="config_desc">Manage model and agent settings</p>
+                                </div>
+                            </div>
+
+                            <!-- Tabs: General / Models -->
+                            <div class="flex items-center justify-between gap-3 mb-6">
+                                <div class="flex items-center bg-surface-100 dark:bg-white/10 rounded-lg p-0.5 w-max">
+                                    <button id="config-tab-basic" onclick="switchConfigTab('basic')"
+                                            class="config-tab px-4 py-1.5 rounded-md text-xs font-medium cursor-pointer transition-colors duration-150 active">
+                                        <i class="fas fa-sliders mr-1.5"></i><span data-i18n="settings_tab_basic">General</span>
+                                    </button>
+                                    <button id="config-tab-models" onclick="switchConfigTab('models')"
+                                            class="config-tab px-4 py-1.5 rounded-md text-xs font-medium cursor-pointer transition-colors duration-150">
+                                        <i class="fas fa-microchip mr-1.5"></i><span data-i18n="settings_tab_models">Models</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Panel: General -->
+                            <div id="config-panel-basic" class="grid gap-6">
+
+                                <!-- Model Config Card -->
+                                <div class="bg-white dark:bg-[#0F2036] rounded-xl border border-surface-200 dark:border-white/10 p-6">
+                                    <div class="flex items-center gap-3 mb-5">
+                                        <div class="w-9 h-9 rounded-lg bg-primary-50 dark:bg-primary-900/30 flex items-center justify-center">
+                                            <i class="fas fa-microchip text-primary-500 text-sm"></i>
+                                        </div>
+                                        <h3 class="font-semibold text-surface-800 dark:text-surface-100" data-i18n="config_model">Model Configuration</h3>
+                                        <a class="ml-auto text-xs text-surface-500 dark:text-surface-400 hover:text-primary-500 dark:hover:text-primary-400 cursor-pointer transition-colors flex items-center gap-1"
+                                           onclick="switchConfigTab('models')">
+                                            <span data-i18n="config_model_advanced">Advanced</span>
+                                            <i class="fas fa-arrow-right text-[10px]"></i>
+                                        </a>
+                                    </div>
+                                    <div class="space-y-5">
+                                        <!-- Provider -->
+                                        <div>
+                                            <label class="block text-sm font-medium text-surface-600 dark:text-surface-400 mb-1.5" data-i18n="config_provider">Provider</label>
+                                            <div id="cfg-provider" class="cfg-dropdown" tabindex="0">
+                                                <div class="cfg-dropdown-selected">
+                                                    <span class="cfg-dropdown-text">--</span>
+                                                    <i class="fas fa-chevron-down cfg-dropdown-arrow"></i>
+                                                </div>
+                                                <div class="cfg-dropdown-menu"></div>
+                                            </div>
+                                            <div id="cfg-custom-tip" class="mt-1.5 text-xs text-surface-400 dark:text-surface-500 hidden">
+                                                <i class="fas fa-info-circle mr-1"></i><span data-i18n="config_custom_tip">API must follow OpenAI protocol.</span>
+                                            </div>
+                                        </div>
+                                        <!-- Model -->
+                                        <div>
+                                            <label class="block text-sm font-medium text-surface-600 dark:text-surface-400 mb-1.5" data-i18n="config_model_name">Model</label>
+                                            <div id="cfg-model-select" class="cfg-dropdown" tabindex="0">
+                                                <div class="cfg-dropdown-selected">
+                                                    <span class="cfg-dropdown-text">--</span>
+                                                    <i class="fas fa-chevron-down cfg-dropdown-arrow"></i>
+                                                </div>
+                                                <div class="cfg-dropdown-menu"></div>
+                                            </div>
+                                            <div id="cfg-model-custom-wrap" class="mt-2 hidden">
+                                                <input id="cfg-model-custom" type="text"
+                                                       class="w-full px-3 py-2 rounded-lg border border-surface-200 dark:border-surface-600
+                                                              bg-surface-50 dark:bg-white/5 text-sm text-surface-800 dark:text-surface-100
+                                                              focus:outline-none focus:border-primary-500 font-mono transition-colors"
+                                                       data-i18n-placeholder="config_custom_model_hint" placeholder="Enter custom model name">
+                                            </div>
+                                        </div>
+                                        <!-- API Key -->
+                                        <div id="cfg-api-key-wrap">
+                                            <div class="flex items-center justify-between gap-2 mb-1.5">
+                                                <label class="block text-sm font-medium text-surface-600 dark:text-surface-400">API Key</label>
+                                                <a id="cfg-manage-key" href="https://link-ai.tech/console/models?apikey=1"
+                                                   target="_blank" rel="noopener noreferrer"
+                                                   class="hidden inline-flex items-center gap-1 text-xs text-primary-500 hover:underline">
+                                                    <span data-i18n="models_manage_api_key">Manage API keys</span>
+                                                    <i class="fas fa-arrow-up-right-from-square text-[10px]"></i>
+                                                </a>
+                                            </div>
+                                            <div class="relative">
+                                                <input id="cfg-api-key" type="text" autocomplete="off" data-1p-ignore data-lpignore="true"
+                                                       class="w-full px-3 py-2 pr-10 rounded-lg border border-surface-200 dark:border-surface-600
+                                                              bg-surface-50 dark:bg-white/5 text-sm text-surface-800 dark:text-surface-100
+                                                              focus:outline-none focus:border-primary-500 font-mono transition-colors cfg-key-masked"
+                                                       placeholder="sk-...">
+                                                <button type="button" id="cfg-api-key-toggle"
+                                                        class="absolute right-2.5 top-1/2 -translate-y-1/2 text-surface-400 hover:text-surface-600
+                                                               dark:hover:text-surface-300 cursor-pointer transition-colors p-1"
+                                                        onclick="toggleApiKeyVisibility()">
+                                                    <i class="fas fa-eye text-xs"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <!-- API Base -->
+                                        <div id="cfg-api-base-wrap" class="hidden">
+                                            <label class="block text-sm font-medium text-surface-600 dark:text-surface-400 mb-1.5">API Base</label>
+                                            <input id="cfg-api-base" type="text"
+                                                   class="w-full px-3 py-2 rounded-lg border border-surface-200 dark:border-surface-600
+                                                          bg-surface-50 dark:bg-white/5 text-sm text-surface-800 dark:text-surface-100
+                                                          focus:outline-none focus:border-primary-500 font-mono transition-colors"
+                                                   placeholder="https://...">
+                                        </div>
+                                        <!-- Save Model Button -->
+                                        <div class="flex items-center justify-end gap-3 pt-1">
+                                            <span id="cfg-model-status" class="text-xs text-primary-500 opacity-0 transition-opacity duration-300"></span>
+                                            <button id="cfg-model-save"
+                                                    class="px-4 py-2 rounded-lg bg-primary-500 hover:bg-primary-600 text-white text-sm font-medium
+                                                           cursor-pointer transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
+                                                    onclick="saveModelConfig()" data-i18n="config_save">Save</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Agent Config Card -->
+                                <div id="config-agent-card" class="bg-white dark:bg-[#0F2036] rounded-xl border border-surface-200 dark:border-white/10 p-6">
+                                    <div class="flex items-center gap-3 mb-5">
+                                        <div class="w-9 h-9 rounded-lg bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center">
+                                            <i class="fas fa-robot text-emerald-500 text-sm"></i>
+                                        </div>
+                                        <h3 class="font-semibold text-surface-800 dark:text-surface-100" data-i18n="config_agent">Agent Configuration</h3>
+                                    </div>
+                                    <div class="space-y-4">
+                                        <div>
+                                            <label class="flex items-center gap-1.5 text-sm font-medium text-surface-600 dark:text-surface-400 mb-1.5">
+                                                <span data-i18n="config_max_tokens">Max Context Tokens</span>
+                                                <span class="cfg-tip" data-tip-key="config_max_tokens_hint"><i class="fas fa-circle-question"></i></span>
+                                            </label>
+                                            <input id="cfg-max-tokens" type="number" min="0" max="10000000" step="1000"
+                                                   class="w-full px-3 py-2 rounded-lg border border-surface-200 dark:border-surface-600
+                                                          bg-surface-50 dark:bg-white/5 text-sm text-surface-800 dark:text-surface-100
+                                                          focus:outline-none focus:border-primary-500 font-mono transition-colors">
+                                        </div>
+                                        <div>
+                                            <label class="flex items-center gap-1.5 text-sm font-medium text-surface-600 dark:text-surface-400 mb-1.5">
+                                                <span data-i18n="config_max_turns">Max Memory Turns</span>
+                                                <span class="cfg-tip" data-tip-key="config_max_turns_hint"><i class="fas fa-circle-question"></i></span>
+                                            </label>
+                                            <input id="cfg-max-turns" type="number" min="1" max="1000" step="1"
+                                                   class="w-full px-3 py-2 rounded-lg border border-surface-200 dark:border-surface-600
+                                                          bg-surface-50 dark:bg-white/5 text-sm text-surface-800 dark:text-surface-100
+                                                          focus:outline-none focus:border-primary-500 font-mono transition-colors">
+                                        </div>
+                                        <div>
+                                            <label class="flex items-center gap-1.5 text-sm font-medium text-surface-600 dark:text-surface-400 mb-1.5">
+                                                <span data-i18n="config_max_steps">Max Steps</span>
+                                                <span class="cfg-tip" data-tip-key="config_max_steps_hint"><i class="fas fa-circle-question"></i></span>
+                                            </label>
+                                            <input id="cfg-max-steps" type="number" min="1" max="1000" step="1"
+                                                   class="w-full px-3 py-2 rounded-lg border border-surface-200 dark:border-surface-600
+                                                          bg-surface-50 dark:bg-white/5 text-sm text-surface-800 dark:text-surface-100
+                                                          focus:outline-none focus:border-primary-500 font-mono transition-colors">
+                                        </div>
+                                        <div class="flex items-center justify-between">
+                                            <label class="flex items-center gap-1.5 text-sm font-medium text-surface-600 dark:text-surface-400">
+                                                <span data-i18n="config_enable_thinking">Deep Thinking</span>
+                                                <span class="cfg-tip" data-tip-key="config_enable_thinking_hint"><i class="fas fa-circle-question"></i></span>
+                                            </label>
+                                            <label class="relative inline-flex items-center cursor-pointer">
+                                                <input id="cfg-enable-thinking" type="checkbox" class="sr-only peer">
+                                                <div class="w-9 h-5 bg-surface-200 dark:bg-surface-700 peer-checked:bg-primary-400 rounded-full
+                                                            after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white
+                                                            after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-full"></div>
+                                            </label>
+                                        </div>
+                                        <div id="cfg-reasoning-effort-wrap" class="hidden">
+                                            <label class="flex items-center gap-1.5 text-sm font-medium text-surface-600 dark:text-surface-400 mb-1.5">
+                                                <span data-i18n="config_reasoning_effort">Reasoning Effort</span>
+                                                <span class="cfg-tip" data-tip-key="config_reasoning_effort_hint"><i class="fas fa-circle-question"></i></span>
+                                            </label>
+                                            <div id="cfg-reasoning-effort" class="cfg-dropdown" tabindex="0">
+                                                <div class="cfg-dropdown-selected">
+                                                    <span class="cfg-dropdown-text">--</span>
+                                                    <i class="fas fa-chevron-down cfg-dropdown-arrow"></i>
+                                                </div>
+                                                <div class="cfg-dropdown-menu"></div>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center justify-between">
+                                            <label class="flex items-center gap-1.5 text-sm font-medium text-surface-600 dark:text-surface-400">
+                                                <span data-i18n="config_subagent">Sub Agents</span>
+                                                <span class="cfg-tip" data-tip-key="config_subagent_hint"><i class="fas fa-circle-question"></i></span>
+                                            </label>
+                                            <label class="relative inline-flex items-center cursor-pointer">
+                                                <input id="cfg-subagent" type="checkbox" class="sr-only peer">
+                                                <div class="w-9 h-5 bg-surface-200 dark:bg-surface-700 peer-checked:bg-primary-400 rounded-full
+                                                            after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white
+                                                            after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-full"></div>
+                                            </label>
+                                        </div>
+                                        <div class="flex items-center justify-between">
+                                            <label class="flex items-center gap-1.5 text-sm font-medium text-surface-600 dark:text-surface-400">
+                                                <span data-i18n="config_self_evolution">Self-Evolution</span>
+                                                <span class="cfg-tip" data-tip-key="config_self_evolution_hint"><i class="fas fa-circle-question"></i></span>
+                                            </label>
+                                            <label class="relative inline-flex items-center cursor-pointer">
+                                                <input id="cfg-self-evolution" type="checkbox" class="sr-only peer">
+                                                <div class="w-9 h-5 bg-surface-200 dark:bg-surface-700 peer-checked:bg-primary-400 rounded-full
+                                                            after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white
+                                                            after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-full"></div>
+                                            </label>
+                                        </div>
+                                        <div class="flex items-center justify-end gap-3 pt-1">
+                                            <span id="cfg-agent-status" class="text-xs text-primary-500 opacity-0 transition-opacity duration-300"></span>
+                                            <button id="cfg-agent-save"
+                                                    class="px-4 py-2 rounded-lg bg-primary-500 hover:bg-primary-600 text-white text-sm font-medium
+                                                           cursor-pointer transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
+                                                    onclick="saveAgentConfig()" data-i18n="config_save">Save</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Runtimes & Automation Card -->
+                                <div id="config-runtimes-card" class="bg-white dark:bg-[#0F2036] rounded-xl border border-surface-200 dark:border-white/10 p-6">
+                                    <div class="flex items-center gap-3 mb-5">
+                                        <div class="w-9 h-9 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center">
+                                            <i class="fas fa-gauge-high text-indigo-500 text-sm"></i>
+                                        </div>
+                                        <h3 class="font-semibold text-surface-800 dark:text-surface-100" data-i18n="config_runtimes">Runtimes &amp; Automation</h3>
+                                    </div>
+                                    <div class="space-y-4">
+                                        <div class="flex items-center justify-between">
+                                            <label class="flex items-center gap-1.5 text-sm font-medium text-surface-600 dark:text-surface-400">
+                                                <span data-i18n="config_cost_tracking">Track token cost</span>
+                                                <span class="cfg-tip" data-tip-key="config_cost_tracking_hint"><i class="fas fa-circle-question"></i></span>
+                                            </label>
+                                            <label class="relative inline-flex items-center cursor-pointer">
+                                                <input id="cfg-cost-tracking" type="checkbox" class="sr-only peer">
+                                                <div class="w-9 h-5 bg-surface-200 dark:bg-surface-700 peer-checked:bg-primary-400 rounded-full
+                                                            after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white
+                                                            after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-full"></div>
+                                            </label>
+                                        </div>
+                                        <div class="grid grid-cols-2 gap-3">
+                                            <div>
+                                                <label class="flex items-center gap-1.5 text-sm font-medium text-surface-600 dark:text-surface-400 mb-1.5">
+                                                    <span data-i18n="config_watchdog_threshold">Stall watchdog threshold (s)</span>
+                                                    <span class="cfg-tip" data-tip-key="config_watchdog_threshold_hint"><i class="fas fa-circle-question"></i></span>
+                                                </label>
+                                                <input id="cfg-watchdog-threshold" type="number" min="60" step="60"
+                                                       class="w-full px-3 py-2 rounded-lg border border-surface-200 dark:border-surface-600
+                                                              bg-surface-50 dark:bg-white/5 text-sm text-surface-800 dark:text-surface-100
+                                                              focus:outline-none focus:border-primary-500 font-mono transition-colors">
+                                            </div>
+                                            <div>
+                                                <label class="flex items-center gap-1.5 text-sm font-medium text-surface-600 dark:text-surface-400 mb-1.5">
+                                                    <span data-i18n="config_watchdog_max_nudges">Max nudges per session</span>
+                                                </label>
+                                                <input id="cfg-watchdog-max-nudges" type="number" min="1" step="1"
+                                                       class="w-full px-3 py-2 rounded-lg border border-surface-200 dark:border-surface-600
+                                                              bg-surface-50 dark:bg-white/5 text-sm text-surface-800 dark:text-surface-100
+                                                              focus:outline-none focus:border-primary-500 font-mono transition-colors">
+                                            </div>
+                                        </div>
+                                        <p class="text-xs text-surface-400 dark:text-surface-500" data-i18n="config_watchdog_global_note">These are the global defaults; an Agent's own Stall watchdog fields (in its detail page) override them.</p>
+
+                                        <div class="pt-2 border-t border-surface-100 dark:border-white/5">
+                                            <label class="flex items-center gap-1.5 text-sm font-medium text-surface-600 dark:text-surface-400 mb-1.5">
+                                                <span data-i18n="config_cli_runtime">Claude Code CLI runtime</span>
+                                                <span class="cfg-tip" data-tip-key="config_cli_runtime_hint"><i class="fas fa-circle-question"></i></span>
+                                            </label>
+                                            <p class="text-xs text-surface-400 dark:text-surface-500 mb-3" data-i18n="config_cli_runtime_desc">Only used by an Agent whose model is set to "Claude Code CLI" (Agents &gt; that Agent &gt; Model). Leave blank to use the defaults (the "claude" binary on PATH, the Agent's own workspace, a 300s timeout).</p>
+                                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                                <div>
+                                                    <label class="text-xs text-surface-500 dark:text-surface-400 mb-1 block" data-i18n="config_cli_path">Binary path</label>
+                                                    <input id="cfg-cli-path" type="text" placeholder="claude"
+                                                           class="w-full px-3 py-2 rounded-lg border border-surface-200 dark:border-surface-600
+                                                                  bg-surface-50 dark:bg-white/5 text-sm text-surface-800 dark:text-surface-100
+                                                                  focus:outline-none focus:border-primary-500 font-mono transition-colors">
+                                                </div>
+                                                <div>
+                                                    <label class="text-xs text-surface-500 dark:text-surface-400 mb-1 block" data-i18n="config_cli_cwd">Working directory</label>
+                                                    <input id="cfg-cli-cwd" type="text" placeholder="(Agent's workspace)"
+                                                           class="w-full px-3 py-2 rounded-lg border border-surface-200 dark:border-surface-600
+                                                                  bg-surface-50 dark:bg-white/5 text-sm text-surface-800 dark:text-surface-100
+                                                                  focus:outline-none focus:border-primary-500 font-mono transition-colors">
+                                                </div>
+                                                <div>
+                                                    <label class="text-xs text-surface-500 dark:text-surface-400 mb-1 block" data-i18n="config_cli_timeout">Timeout (s)</label>
+                                                    <input id="cfg-cli-timeout" type="number" min="1" step="10" placeholder="300"
+                                                           class="w-full px-3 py-2 rounded-lg border border-surface-200 dark:border-surface-600
+                                                                  bg-surface-50 dark:bg-white/5 text-sm text-surface-800 dark:text-surface-100
+                                                                  focus:outline-none focus:border-primary-500 font-mono transition-colors">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="pt-2 border-t border-surface-100 dark:border-white/5">
+                                            <label class="flex items-center gap-1.5 text-sm font-medium text-surface-600 dark:text-surface-400 mb-1.5">
+                                                <span data-i18n="config_codex_cli_runtime">Codex CLI runtime</span>
+                                                <span class="cfg-tip" data-tip-key="config_codex_cli_runtime_hint"><i class="fas fa-circle-question"></i></span>
+                                            </label>
+                                            <p class="text-xs text-surface-400 dark:text-surface-500 mb-3" data-i18n="config_codex_cli_runtime_desc">Only used by an Agent whose model is set to "Codex CLI" (Agents &gt; that Agent &gt; Model). Leave blank to use the defaults (the "codex" binary on PATH, the Agent's own workspace, a 300s timeout).</p>
+                                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                                <div>
+                                                    <label class="text-xs text-surface-500 dark:text-surface-400 mb-1 block" data-i18n="config_cli_path">Binary path</label>
+                                                    <input id="cfg-codex-cli-path" type="text" placeholder="codex"
+                                                           class="w-full px-3 py-2 rounded-lg border border-surface-200 dark:border-surface-600
+                                                                  bg-surface-50 dark:bg-white/5 text-sm text-surface-800 dark:text-surface-100
+                                                                  focus:outline-none focus:border-primary-500 font-mono transition-colors">
+                                                </div>
+                                                <div>
+                                                    <label class="text-xs text-surface-500 dark:text-surface-400 mb-1 block" data-i18n="config_cli_cwd">Working directory</label>
+                                                    <input id="cfg-codex-cli-cwd" type="text" placeholder="(Agent's workspace)"
+                                                           class="w-full px-3 py-2 rounded-lg border border-surface-200 dark:border-surface-600
+                                                                  bg-surface-50 dark:bg-white/5 text-sm text-surface-800 dark:text-surface-100
+                                                                  focus:outline-none focus:border-primary-500 font-mono transition-colors">
+                                                </div>
+                                                <div>
+                                                    <label class="text-xs text-surface-500 dark:text-surface-400 mb-1 block" data-i18n="config_cli_timeout">Timeout (s)</label>
+                                                    <input id="cfg-codex-cli-timeout" type="number" min="1" step="10" placeholder="300"
+                                                           class="w-full px-3 py-2 rounded-lg border border-surface-200 dark:border-surface-600
+                                                                  bg-surface-50 dark:bg-white/5 text-sm text-surface-800 dark:text-surface-100
+                                                                  focus:outline-none focus:border-primary-500 font-mono transition-colors">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="pt-2 border-t border-surface-100 dark:border-white/5">
+                                            <label class="flex items-center gap-1.5 text-sm font-medium text-surface-600 dark:text-surface-400 mb-1.5">
+                                                <span data-i18n="config_browser_cdp">Browser: control your own Chrome (CDP)</span>
+                                                <span class="cfg-tip" data-tip-key="config_browser_cdp_hint"><i class="fas fa-circle-question"></i></span>
+                                            </label>
+                                            <p class="text-xs text-surface-400 dark:text-surface-500 mb-3" data-i18n="config_browser_cdp_desc">When set, the browser tool attaches to your own already-open Chrome (started with --remote-debugging-port) instead of launching a separate one. Your Chrome window becomes the live view -- if the agent hits a login wall, just finish logging in there yourself and it continues. Leave blank to use the default (a separate, persistent browser profile).</p>
+                                            <label class="text-xs text-surface-500 dark:text-surface-400 mb-1 block" data-i18n="config_browser_cdp_endpoint">CDP endpoint</label>
+                                            <input id="cfg-browser-cdp-endpoint" type="text" placeholder="http://localhost:9222"
+                                                   class="w-full px-3 py-2 rounded-lg border border-surface-200 dark:border-surface-600
+                                                          bg-surface-50 dark:bg-white/5 text-sm text-surface-800 dark:text-surface-100
+                                                          focus:outline-none focus:border-primary-500 font-mono transition-colors">
+                                        </div>
+
+                                        <div class="flex items-center justify-end gap-3 pt-1">
+                                            <span id="cfg-runtimes-status" class="text-xs text-primary-500 opacity-0 transition-opacity duration-300"></span>
+                                            <button id="cfg-runtimes-save"
+                                                    class="px-4 py-2 rounded-lg bg-primary-500 hover:bg-primary-600 text-white text-sm font-medium
+                                                           cursor-pointer transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
+                                                    onclick="saveRuntimesConfig()" data-i18n="config_save">Save</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Appearance Card -->
+                                <div class="bg-white dark:bg-[#0F2036] rounded-xl border border-surface-200 dark:border-white/10 p-6">
+                                    <div class="flex items-center gap-3 mb-5">
+                                        <div class="w-9 h-9 rounded-lg bg-pink-50 dark:bg-pink-900/30 flex items-center justify-center">
+                                            <i class="fas fa-paintbrush text-pink-500 text-sm"></i>
+                                        </div>
+                                        <h3 class="font-semibold text-surface-800 dark:text-surface-100" data-i18n="config_appearance">Appearance</h3>
+                                    </div>
+                                    <div class="space-y-3">
+                                        <label class="flex items-center gap-1.5 text-sm font-medium text-surface-600 dark:text-surface-400" data-i18n="config_custom_css">Custom CSS</label>
+                                        <p class="text-xs text-surface-400 dark:text-surface-500" data-i18n="config_custom_css_desc">Applied on top of the built-in theme, on every page, for every user of this workspace. Leave blank to use the built-in theme only. Applies immediately on save, no reload needed.</p>
+                                        <textarea id="cfg-custom-css" rows="8" spellcheck="false"
+                                                  placeholder=".sidebar-item { border-radius: 4px; }"
+                                                  class="w-full px-3 py-2 rounded-lg border border-surface-200 dark:border-surface-600
+                                                         bg-surface-50 dark:bg-white/5 text-sm text-surface-800 dark:text-surface-100
+                                                         focus:outline-none focus:border-primary-500 font-mono transition-colors"></textarea>
+                                        <div class="flex items-center justify-end gap-3">
+                                            <span id="cfg-appearance-status" class="text-xs text-primary-500 opacity-0 transition-opacity duration-300"></span>
+                                            <button id="cfg-appearance-save"
+                                                    class="px-4 py-2 rounded-lg bg-primary-500 hover:bg-primary-600 text-white text-sm font-medium
+                                                           cursor-pointer transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
+                                                    onclick="saveAppearanceConfig()" data-i18n="config_save">Save</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Extensions Card -->
+                                <div class="bg-white dark:bg-[#0F2036] rounded-xl border border-surface-200 dark:border-white/10 p-6">
+                                    <div class="flex items-center justify-between mb-5">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-9 h-9 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center">
+                                                <i class="fas fa-puzzle-piece text-indigo-500 text-sm"></i>
+                                            </div>
+                                            <h3 class="font-semibold text-surface-800 dark:text-surface-100" data-i18n="config_extensions">Extensions</h3>
+                                        </div>
+                                        <button id="cfg-extensions-install-btn" onclick="openExtensionInstallModal()"
+                                                class="px-3 py-1.5 rounded-lg bg-primary-500 hover:bg-primary-600 text-white text-xs font-medium
+                                                       cursor-pointer transition-colors duration-150" data-i18n="config_extensions_install">Install</button>
+                                    </div>
+                                    <p class="text-xs text-surface-400 dark:text-surface-500 mb-4" data-i18n="config_extensions_desc">A manifest-driven package contributing theme CSS, translation strings, and/or a custom tool. Applies to every user of this workspace. A manifest with tool_code runs real Python with full server privileges -- admin/owner only, with an explicit confirmation before install.</p>
+                                    <div id="cfg-extensions-empty" class="text-xs text-surface-400 dark:text-surface-500" data-i18n="config_extensions_empty">No extensions installed.</div>
+                                    <div id="cfg-extensions-list" class="space-y-2"></div>
+                                </div>
+
+                                <!-- Extension Install Modal -->
+                                <div id="extension-install-modal-overlay" class="fixed inset-0 bg-black/50 z-[100] hidden flex items-center justify-center">
+                                    <div class="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-white/10 shadow-xl w-full max-w-lg mx-4 p-6">
+                                        <h3 class="font-semibold text-surface-800 dark:text-surface-100 text-base mb-1" data-i18n="config_extensions_install_title">Install extension</h3>
+                                        <p class="text-xs text-surface-400 dark:text-surface-500 mb-3" data-i18n="config_extensions_install_desc">Paste a manifest: {"name", "version", "author", "description", "theme_css", "strings": {"en": {...}, "ar": {...}}, "tool_code": "..."}. tool_code is optional and requires admin/owner + a risk confirmation.</p>
+                                        <textarea id="extension-install-manifest" rows="10" spellcheck="false"
+                                                  placeholder='{"name": "My Theme", "theme_css": ".sidebar-item { ... }"}'
+                                                  class="w-full px-3 py-2 rounded-lg border border-surface-200 dark:border-surface-600
+                                                         bg-surface-50 dark:bg-white/5 text-sm text-surface-800 dark:text-surface-100
+                                                         focus:outline-none focus:border-primary-500 font-mono transition-colors"></textarea>
+                                        <div class="flex items-center justify-between gap-3 mt-4">
+                                            <span id="extension-install-status" class="flex-1 text-xs text-red-500"></span>
+                                            <button onclick="closeExtensionInstallModal()"
+                                                    class="px-4 py-2 rounded-lg border border-surface-200 dark:border-white/10 text-surface-600 dark:text-surface-300
+                                                           text-sm font-medium hover:bg-surface-50 dark:hover:bg-white/5 cursor-pointer transition-colors duration-150"
+                                                    data-i18n="cancel">Cancel</button>
+                                            <button onclick="installExtensionFromModal()"
+                                                    class="px-4 py-2 rounded-lg bg-primary-500 hover:bg-primary-600 text-white text-sm font-medium
+                                                           cursor-pointer transition-colors duration-150" data-i18n="config_extensions_install">Install</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Extension Settings Page Modal: renders one
+                                     extension's settings_page_js -- real JS,
+                                     executed with full page privileges, no
+                                     sandbox. Opened only by an admin/owner from
+                                     the Extensions card above. -->
+                                <div id="extension-settings-page-overlay" class="fixed inset-0 bg-black/50 z-[100] hidden flex items-center justify-center">
+                                    <div class="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-white/10 shadow-xl w-full max-w-2xl mx-4 p-6 max-h-[80vh] overflow-y-auto">
+                                        <div class="flex items-center justify-between mb-3">
+                                            <h3 id="extension-settings-page-title" class="font-semibold text-surface-800 dark:text-surface-100 text-base"></h3>
+                                            <button onclick="closeExtensionSettingsPage()" class="text-surface-400 hover:text-surface-600 cursor-pointer">&times;</button>
+                                        </div>
+                                        <div id="extension-settings-page-root"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Security Config Card -->
+                                <div class="bg-white dark:bg-[#0F2036] rounded-xl border border-surface-200 dark:border-white/10 p-6">
+                                    <div class="flex items-center gap-3 mb-5">
+                                        <div class="w-9 h-9 rounded-lg bg-amber-50 dark:bg-amber-900/30 flex items-center justify-center">
+                                            <i class="fas fa-lock text-amber-500 text-sm"></i>
+                                        </div>
+                                        <h3 class="font-semibold text-surface-800 dark:text-surface-100" data-i18n="config_security">Security</h3>
+                                    </div>
+                                    <div class="space-y-4">
+                                        <div>
+                                            <label class="flex items-center gap-1.5 text-sm font-medium text-surface-600 dark:text-surface-400 mb-1.5">
+                                                <span data-i18n="config_permission">Default permissions</span>
+                                                <span class="cfg-tip" data-tip-key="config_permission_hint"><i class="fas fa-circle-question"></i></span>
+                                            </label>
+                                            <div id="cfg-permission" class="cfg-dropdown" tabindex="0">
+                                                <div class="cfg-dropdown-selected">
+                                                    <span class="cfg-dropdown-text">--</span>
+                                                    <i class="fas fa-chevron-down cfg-dropdown-arrow"></i>
+                                                </div>
+                                                <div class="cfg-dropdown-menu"></div>
+                                            </div>
+                                            <p class="text-xs text-surface-400 dark:text-surface-500 mt-1.5" data-i18n="config_permission_desc">New chats start with this; each chat can be changed under the input box</p>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-surface-600 dark:text-surface-400 mb-1.5" data-i18n="config_password">Password</label>
+                                            <input id="cfg-password" type="password" autocomplete="new-password"
+                                                   class="w-full px-3 py-2 rounded-lg border border-surface-200 dark:border-surface-600
+                                                          bg-surface-50 dark:bg-white/5 text-sm text-surface-800 dark:text-surface-100
+                                                          focus:outline-none focus:border-primary-500 font-mono transition-colors
+                                                          cfg-key-masked"
+                                                   data-masked="1">
+                                            <p class="text-xs text-surface-400 dark:text-surface-500 mt-1.5" data-i18n="config_password_hint">Leave empty to disable password protection</p>
+                                        </div>
+                                        <div class="flex items-center justify-end gap-3 pt-1">
+                                            <span id="cfg-password-status" class="text-xs text-primary-500 opacity-0 transition-opacity duration-300"></span>
+                                            <button id="cfg-password-save"
+                                                    class="px-4 py-2 rounded-lg bg-primary-500 hover:bg-primary-600 text-white text-sm font-medium
+                                                           cursor-pointer transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
+                                                    onclick="savePasswordConfig()" data-i18n="config_save">Save</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- System Config Card -->
+                                <div class="bg-white dark:bg-[#0F2036] rounded-xl border border-surface-200 dark:border-white/10 p-6">
+                                    <div class="flex items-center gap-3 mb-5">
+                                        <div class="w-9 h-9 rounded-lg bg-sky-50 dark:bg-sky-900/30 flex items-center justify-center">
+                                            <i class="fas fa-sliders-h text-sky-500 text-sm"></i>
+                                        </div>
+                                        <h3 class="font-semibold text-surface-800 dark:text-surface-100" data-i18n="config_system">System</h3>
+                                    </div>
+                                    <div class="space-y-4">
+                                        <div>
+                                            <label class="flex items-center gap-1.5 text-sm font-medium text-surface-600 dark:text-surface-400 mb-1.5">
+                                                <span data-i18n="config_language">Language</span>
+                                                <span class="cfg-tip" data-tip-key="config_language_hint"><i class="fas fa-circle-question"></i></span>
+                                            </label>
+                                            <div id="cfg-lang-select" class="cfg-dropdown" tabindex="0">
+                                                <div class="cfg-dropdown-selected">
+                                                    <span class="cfg-dropdown-text">--</span>
+                                                    <i class="fas fa-chevron-down cfg-dropdown-arrow"></i>
+                                                </div>
+                                                <div class="cfg-dropdown-menu"></div>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center justify-between">
+                                            <label class="flex items-center gap-1.5 text-sm font-medium text-surface-600 dark:text-surface-400">
+                                                <span data-i18n="config_task_notify">Task Notifications</span>
+                                                <span class="cfg-tip" data-tip-key="config_task_notify_hint"><i class="fas fa-circle-question"></i></span>
+                                            </label>
+                                            <label class="relative inline-flex items-center cursor-pointer">
+                                                <input id="cfg-task-notify" type="checkbox" class="sr-only peer">
+                                                <div class="w-9 h-5 bg-surface-200 dark:bg-surface-700 peer-checked:bg-primary-400 rounded-full
+                                                            after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white
+                                                            after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-full"></div>
+                                            </label>
+                                        </div>
+                                        <div class="flex items-center justify-between">
+                                            <label class="flex items-center gap-1.5 text-sm font-medium text-surface-600 dark:text-surface-400">
+                                                <span data-i18n="config_task_notify_sound">Notification Sound</span>
+                                                <span class="cfg-tip" data-tip-key="config_task_notify_sound_hint"><i class="fas fa-circle-question"></i></span>
+                                            </label>
+                                            <label class="relative inline-flex items-center cursor-pointer">
+                                                <input id="cfg-task-notify-sound" type="checkbox" class="sr-only peer">
+                                                <div class="w-9 h-5 bg-surface-200 dark:bg-surface-700 peer-checked:bg-primary-400 rounded-full
+                                                            after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white
+                                                            after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-full"></div>
+                                            </label>
+                                        </div>
+                                        <div id="cfg-task-notify-blocked" class="hidden flex items-start gap-2 text-xs text-amber-600 dark:text-amber-500 bg-amber-50 dark:bg-amber-900/20 rounded-lg px-3 py-2">
+                                            <i class="fas fa-triangle-exclamation mt-0.5"></i>
+                                            <span data-i18n="config_task_notify_blocked">Notifications are blocked by the browser. Click the icon on the left of the address bar → Notifications → Allow, then reload.</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <!-- Panel: Models (advanced vendor / capability management) -->
+                            <div id="config-panel-models" class="hidden">
+                                <div id="models-loading" class="flex items-center gap-2 py-12 justify-center text-surface-400 dark:text-surface-500 text-sm">
+                                    <i class="fas fa-spinner fa-spin text-xs"></i><span>Loading...</span>
+                                </div>
+                                <div id="models-content" class="grid gap-6 hidden"></div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>

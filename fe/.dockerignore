@@ -1,0 +1,40 @@
+# Dependencies and build output (rebuilt in image)
+node_modules
+.next
+out
+dist
+.turbo
+
+# Local env and secrets
+.env
+.env.*
+!.env.example
+
+# Git and editor
+.git
+.github
+.cursor
+.vscode
+
+# Archived / unused code (not part of the app)
+_archive
+
+# Logs and caches
+logs
+**/*.log
+npm-debug.log*
+tsconfig.tsbuildinfo
+
+# Docs and tests (not needed for production build)
+**/*.md
+!README.md
+**/__tests__
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+coverage
+
+# Misc
+.DS_Store
+*.pem

@@ -1,0 +1,10 @@
+graph LR
+  CH["Channels<br/>Web Console + IM"] --> CF["Channel Factory"]
+  CF --> CORE["Agent Core<br/>registry / routing / teams"]
+  CORE --> TOOLS["Tools<br/>files, bash, connectors, scheduler, workflows"]
+  CORE --> MODELS["Models<br/>bot_factory + providers"]
+  TOOLS --> STATE["State and Memory<br/>SQLite stores, knowledge base"]
+  TOOLS --> AUDIT["Audit Log<br/>hash-chained"]
+  CORE --> TEN["Tenancy<br/>org_id, RBAC"]
+  TEN -.scopes.-> STATE
+  TEN -.scopes.-> AUDIT

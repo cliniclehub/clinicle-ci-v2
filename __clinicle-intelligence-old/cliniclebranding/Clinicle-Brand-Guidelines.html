@@ -1,0 +1,781 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Clinicle · Brand Guidelines v1</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="../logos/svg/clinicle-favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --deep-sky: #2E9FDC;
+    --sky-blue: #4DB8F0;
+    --sky-light: #7ECEF5;
+    --mint-teal: #5EDEC8;
+    --mint-soft: #A6ECDD;
+    --sky-mist: #EBF5FF;
+    --sky-frost: #F4FAFE;
+    --hairline: #DCEBF7;
+    --muted: #6FA8C9;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #fff; color: var(--deep-sky); font-family: 'Inter Tight', system-ui, sans-serif; }
+  .page {
+    width: 1080px;
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 80px 80px 120px;
+    page-break-after: always;
+    background: #fff;
+  }
+  .page:last-child { page-break-after: auto; }
+
+  h1 { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 64px; line-height: 1.05; letter-spacing: -0.02em; color: var(--deep-sky); margin: 0; }
+  h1 .accent { color: var(--mint-teal); }
+  h2 { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 36px; line-height: 1.1; color: var(--deep-sky); margin: 0 0 16px; letter-spacing: -0.01em; }
+  h3 { font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 20px; color: var(--deep-sky); margin: 24px 0 8px; letter-spacing: -0.005em; }
+  p, li { font-family: 'Inter Tight', sans-serif; font-size: 14px; line-height: 1.65; color: #4d7e9b; }
+  p.lede { font-size: 18px; line-height: 1.55; color: var(--muted); max-width: 720px; margin: 16px 0 0; }
+  .label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.18em; color: var(--mint-teal); text-transform: uppercase; }
+  .meta { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--muted); }
+  hr { border: none; border-top: 1px solid var(--hairline); margin: 56px 0; }
+
+  .top { display: flex; justify-content: space-between; align-items: center; padding-bottom: 22px; border-bottom: 1px solid var(--hairline); margin-bottom: 56px; }
+  .footer { display: flex; justify-content: space-between; padding-top: 22px; border-top: 1px solid var(--hairline); margin-top: 64px; }
+
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .grid-6 { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; }
+
+  .card { background: #fff; border-radius: 14px; border: 1px solid var(--hairline); padding: 28px; }
+  .card.hero { padding: 56px 32px; display: flex; align-items: center; justify-content: center; min-height: 200px; }
+  .card.tinted-mist { background: var(--sky-mist); }
+  .card.tinted-deep { background: var(--deep-sky); border-color: transparent; }
+  .card.tinted-mint { background: var(--mint-teal); border-color: transparent; }
+  .card.tinted-grad { background: linear-gradient(135deg, var(--sky-mist) 0%, #E6FAF3 100%); }
+
+  .swatch { padding: 24px; border-radius: 14px; color: #fff; min-height: 200px; display: flex; flex-direction: column; justify-content: space-between; }
+  .swatch.light { color: var(--deep-sky); border: 1px solid var(--hairline); }
+  .swatch__name { font: 700 18px/1 'Nunito', sans-serif; }
+  .swatch__role { font: 11px/1.4 'JetBrains Mono', monospace; opacity: 0.85; letter-spacing: 0.05em; margin-top: 6px; }
+  .swatch__codes { font: 500 11px/1.6 'JetBrains Mono', monospace; opacity: 0.9; letter-spacing: 0.04em; }
+
+  .typespec { display: grid; grid-template-columns: 200px 1fr; gap: 24px; padding: 18px 0; border-bottom: 1px solid var(--hairline); }
+  .typespec:last-child { border-bottom: none; }
+  .typespec__name { font: 700 14px/1.4 'Nunito', sans-serif; color: var(--deep-sky); }
+  .typespec__role { font: 11px/1.4 'JetBrains Mono', monospace; color: var(--muted); margin-top: 4px; letter-spacing: 0.04em; }
+  .typespec__sample { color: var(--deep-sky); }
+
+  .donts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .dont { padding: 24px; border-radius: 12px; border: 1px solid var(--hairline); display: flex; flex-direction: column; gap: 12px; align-items: center; text-align: center; min-height: 200px; justify-content: center; position: relative; }
+  .dont__x { position: absolute; top: 12px; right: 12px; width: 22px; height: 22px; border-radius: 50%; background: #FF6B6B; color: #fff; display: flex; align-items: center; justify-content: center; font: 700 12px/1 sans-serif; }
+  .dont__lbl { font: 500 12px/1.4 'Inter Tight', sans-serif; color: var(--muted); }
+
+  /* mark renderings */
+  .mark { display: inline-block; }
+  .wm { font-family: 'Nunito', sans-serif; font-weight: 800; letter-spacing: -0.015em; color: var(--deep-sky); line-height: 1; }
+  .wm .accent-letter { color: var(--mint-teal); }
+  .tagline { font-family: 'Inter Tight', sans-serif; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+
+  .lockup { display: inline-flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+  .lockup__row { display: flex; align-items: center; gap: 16px; }
+  .lockup--center { align-items: center; }
+  .lockup--center .lockup__row { justify-content: center; }
+
+  table { width: 100%; border-collapse: collapse; font-family: 'Inter Tight', sans-serif; font-size: 13px; }
+  th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--hairline); color: #4d7e9b; }
+  th { font: 700 12px/1.4 'Nunito', sans-serif; color: var(--deep-sky); letter-spacing: 0; text-transform: uppercase; font-size: 11px; letter-spacing: 0.06em; }
+
+  .download-list { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--muted); line-height: 1.9; }
+  .download-list b { color: var(--deep-sky); font-weight: 600; }
+
+  /* page numbers etc */
+  .pageno { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--muted); letter-spacing: 0.05em; }
+
+  @media print {
+    body { background: #fff; }
+    .page { padding: 60px; box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- COVER -->
+<!-- ============================================================ -->
+<section class="page">
+  <div class="top">
+    <div class="lockup__row">
+      <svg width="40" height="40" viewBox="0 0 100 100"><circle cx="20" cy="62" r="9" fill="#4DB8F0"/><circle cx="50" cy="44" r="13" fill="#2E9FDC"/><circle cx="80" cy="56" r="8" fill="#5EDEC8"/></svg>
+      <span class="wm" style="font-size: 26px;">Clinic<span class="accent-letter">le</span></span>
+    </div>
+    <span class="meta">Brand Guidelines · v1.0 · 2026</span>
+  </div>
+
+  <span class="label">A complete brand identity system</span>
+  <h1 style="margin-top: 18px;">Clinicle.<br />Connecting health.<br /><span class="accent">Empowering lives.</span></h1>
+  <p class="lede">
+    Clinicle is the integrated platform where Patients, Providers and Payers meet — three pillars working together
+    in a single, connected community. This document defines the visual identity that carries that idea: the mark, the
+    wordmark, the colors, the typography, the voice — and the rules that hold them together across every surface
+    where Clinicle appears.
+  </p>
+
+  <div style="margin-top: 80px; display: flex; justify-content: center;">
+    <div class="lockup lockup--center">
+      <div class="lockup__row">
+        <svg width="140" height="140" viewBox="0 0 100 100"><circle cx="20" cy="62" r="9" fill="#4DB8F0"/><circle cx="50" cy="44" r="13" fill="#2E9FDC"/><circle cx="80" cy="56" r="8" fill="#5EDEC8"/></svg>
+        <span class="wm" style="font-size: 120px;">Clinic<span class="accent-letter">le</span></span>
+      </div>
+      <span class="tagline" style="font-size: 18px; align-self: center; margin-top: 8px;">connecting health. empowering lives</span>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span class="meta">Section 00 · Cover</span>
+    <span class="pageno">01</span>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- TABLE OF CONTENTS -->
+<!-- ============================================================ -->
+<section class="page">
+  <div class="top">
+    <span class="label">Brand Guidelines</span>
+    <span class="meta">Clinicle · v1.0</span>
+  </div>
+
+  <span class="label">Contents</span>
+  <h1 style="margin-top: 12px;">Inside this book.</h1>
+
+  <table style="margin-top: 56px;">
+    <thead>
+      <tr><th style="width:60px;">§</th><th>Section</th><th style="width:100px; text-align:right;">Page</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>01</td><td>Brand concept · the three pillars</td><td style="text-align:right;">03</td></tr>
+      <tr><td>02</td><td>Logo system · mark, wordmark, lockups</td><td style="text-align:right;">04</td></tr>
+      <tr><td>03</td><td>Logo variations · with / without slogan, mono, reverse</td><td style="text-align:right;">05</td></tr>
+      <tr><td>04</td><td>Clear space, sizing &amp; favicon</td><td style="text-align:right;">06</td></tr>
+      <tr><td>05</td><td>Color · palette, codes, usage</td><td style="text-align:right;">07</td></tr>
+      <tr><td>06</td><td>Typography · Nunito + Inter Tight</td><td style="text-align:right;">08</td></tr>
+      <tr><td>07</td><td>Voice &amp; tone · how Clinicle speaks</td><td style="text-align:right;">09</td></tr>
+      <tr><td>08</td><td>Don'ts · misuse of the logo</td><td style="text-align:right;">10</td></tr>
+      <tr><td>09</td><td>Applications · web, mobile, stationery, social</td><td style="text-align:right;">11</td></tr>
+      <tr><td>10</td><td>Asset index · what's in the package</td><td style="text-align:right;">12</td></tr>
+    </tbody>
+  </table>
+
+  <div class="footer"><span class="meta">Contents</span><span class="pageno">02</span></div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 01 BRAND CONCEPT -->
+<!-- ============================================================ -->
+<section class="page">
+  <div class="top"><span class="label">01 · Brand concept</span><span class="meta">Clinicle</span></div>
+  <span class="label">The big idea</span>
+  <h1 style="margin-top: 12px;">Three pillars.<br /><span class="accent">One platform.</span></h1>
+  <p class="lede">Clinicle exists to bring three audiences out of their silos and into one community: the people receiving care, the people delivering it, and the people paying for it. The identity makes that promise visible.</p>
+
+  <hr />
+
+  <div class="grid-3">
+    <div class="card">
+      <div style="width: 18px; height: 18px; border-radius: 50%; background: var(--sky-blue); margin-bottom: 14px;"></div>
+      <h3>Patients</h3>
+      <p>People, families and members. The smaller dot — closest to us, where the journey starts.</p>
+    </div>
+    <div class="card">
+      <div style="width: 22px; height: 22px; border-radius: 50%; background: var(--deep-sky); margin-bottom: 14px;"></div>
+      <h3>Providers</h3>
+      <p>Clinicians, clinics, hospitals. The largest dot at the apex — anchoring the network.</p>
+    </div>
+    <div class="card">
+      <div style="width: 16px; height: 16px; border-radius: 50%; background: var(--mint-teal); margin-bottom: 14px;"></div>
+      <h3>Payers</h3>
+      <p>Insurers, employers, plans. The mint accent — the connector that completes the orbit.</p>
+    </div>
+  </div>
+
+  <hr />
+
+  <h2>Why Orbit?</h2>
+  <p>The mark resolves all three audiences as a single shape — three dots arranged in a gentle upward arc, like planets sharing one orbit. None dominates. None drifts. Read together they form a single rising movement: three parties getting better, together. The mint dot — Payers — is placed last on the right, as the connector that completes the system.</p>
+
+  <h2 style="margin-top: 32px;">Why all-light?</h2>
+  <p>Healthcare brands lean dark and clinical by default. Clinicle deliberately drops black ink — including in the wordmark itself — and stays in sky blue and mint teal. The result feels human, hopeful, and modern; trustworthy without feeling cold.</p>
+
+  <div class="footer"><span class="meta">01 · Concept</span><span class="pageno">03</span></div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 02 LOGO SYSTEM -->
+<!-- ============================================================ -->
+<section class="page">
+  <div class="top"><span class="label">02 · Logo system</span><span class="meta">Clinicle</span></div>
+  <span class="label">The mark, the wordmark, the lockups</span>
+  <h1 style="margin-top: 12px;">Anatomy.</h1>
+
+  <div class="card hero" style="margin-top: 40px;">
+    <div class="lockup">
+      <div class="lockup__row">
+        <svg width="120" height="120" viewBox="0 0 100 100"><circle cx="20" cy="62" r="9" fill="#4DB8F0"/><circle cx="50" cy="44" r="13" fill="#2E9FDC"/><circle cx="80" cy="56" r="8" fill="#5EDEC8"/></svg>
+        <span class="wm" style="font-size: 100px;">Clinic<span class="accent-letter">le</span></span>
+      </div>
+      <span class="tagline" style="font-size: 14px;">connecting health. empowering lives</span>
+    </div>
+  </div>
+
+  <div class="grid-3" style="margin-top: 40px;">
+    <div>
+      <h3>The mark</h3>
+      <p>Three dots in an upward arc — Patients (small sky blue), Providers (large deep sky) and Payers (mint teal accent). Always rendered in pure circles; never connected by lines or strokes.</p>
+    </div>
+    <div>
+      <h3>The wordmark</h3>
+      <p>"Clinicle" set in Nunito 800. The stem "Clinic" in Deep Sky #2E9FDC; the suffix "le" in Mint Teal #5EDEC8 — the same accent that lives in the mark, completing the system.</p>
+    </div>
+    <div>
+      <h3>The tagline</h3>
+      <p>"connecting health. empowering lives" set in Inter Tight 500, all caps, tracked +180. Always sits below the entire mark + wordmark line, never beside or above.</p>
+    </div>
+  </div>
+
+  <div class="footer"><span class="meta">02 · Logo system</span><span class="pageno">04</span></div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 03 LOGO VARIATIONS -->
+<!-- ============================================================ -->
+<section class="page">
+  <div class="top"><span class="label">03 · Logo variations</span><span class="meta">Clinicle</span></div>
+  <span class="label">Every form the logo takes</span>
+  <h1 style="margin-top: 12px;">Variations.</h1>
+
+  <h2 style="margin-top: 56px;">With and without slogan</h2>
+  <div class="grid-2">
+    <div class="card hero">
+      <div class="lockup">
+        <div class="lockup__row">
+          <svg width="56" height="56" viewBox="0 0 100 100"><circle cx="20" cy="62" r="9" fill="#4DB8F0"/><circle cx="50" cy="44" r="13" fill="#2E9FDC"/><circle cx="80" cy="56" r="8" fill="#5EDEC8"/></svg>
+          <span class="wm" style="font-size: 48px;">Clinic<span class="accent-letter">le</span></span>
+        </div>
+        <span class="tagline" style="font-size: 10px;">connecting health. empowering lives</span>
+      </div>
+    </div>
+    <div class="card hero">
+      <div class="lockup__row">
+        <svg width="56" height="56" viewBox="0 0 100 100"><circle cx="20" cy="62" r="9" fill="#4DB8F0"/><circle cx="50" cy="44" r="13" fill="#2E9FDC"/><circle cx="80" cy="56" r="8" fill="#5EDEC8"/></svg>
+        <span class="wm" style="font-size: 48px;">Clinic<span class="accent-letter">le</span></span>
+      </div>
+    </div>
+  </div>
+  <div class="grid-2"><span class="meta">a · Horizontal · with slogan</span><span class="meta">b · Horizontal · no slogan</span></div>
+
+  <h2 style="margin-top: 56px;">Stacked &amp; mark / wordmark only</h2>
+  <div class="grid-4">
+    <div class="card hero">
+      <div class="lockup lockup--center" style="text-align:center;">
+        <svg width="64" height="64" viewBox="0 0 100 100"><circle cx="20" cy="62" r="9" fill="#4DB8F0"/><circle cx="50" cy="44" r="13" fill="#2E9FDC"/><circle cx="80" cy="56" r="8" fill="#5EDEC8"/></svg>
+        <span class="wm" style="font-size: 36px;">Clinic<span class="accent-letter">le</span></span>
+        <span class="tagline" style="font-size: 9px;">connecting health. empowering lives</span>
+      </div>
+    </div>
+    <div class="card hero">
+      <svg width="80" height="80" viewBox="0 0 100 100"><circle cx="20" cy="62" r="9" fill="#4DB8F0"/><circle cx="50" cy="44" r="13" fill="#2E9FDC"/><circle cx="80" cy="56" r="8" fill="#5EDEC8"/></svg>
+    </div>
+    <div class="card hero">
+      <span class="wm" style="font-size: 40px;">Clinic<span class="accent-letter">le</span></span>
+    </div>
+    <div class="card hero tinted-mist">
+      <svg width="48" height="48" viewBox="0 0 100 100"><circle cx="20" cy="62" r="9" fill="#4DB8F0"/><circle cx="50" cy="44" r="13" fill="#2E9FDC"/><circle cx="80" cy="56" r="8" fill="#5EDEC8"/></svg>
+    </div>
+  </div>
+  <div class="grid-4"><span class="meta">c · Stacked</span><span class="meta">d · Mark only</span><span class="meta">e · Wordmark only</span><span class="meta">f · Favicon</span></div>
+
+  <h2 style="margin-top: 56px;">Mono &amp; reverse</h2>
+  <div class="grid-4">
+    <div class="card hero">
+      <div class="lockup__row">
+        <svg width="48" height="48" viewBox="0 0 100 100"><circle cx="20" cy="62" r="9" fill="#2E9FDC"/><circle cx="50" cy="44" r="13" fill="#2E9FDC"/><circle cx="80" cy="56" r="8" fill="#2E9FDC"/></svg>
+        <span class="wm" style="font-size: 40px;">Clinic<span class="accent-letter" style="color: #2E9FDC;">le</span></span>
+      </div>
+    </div>
+    <div class="card hero">
+      <div class="lockup__row">
+        <svg width="48" height="48" viewBox="0 0 100 100"><circle cx="20" cy="62" r="9" fill="#5EDEC8"/><circle cx="50" cy="44" r="13" fill="#5EDEC8"/><circle cx="80" cy="56" r="8" fill="#5EDEC8"/></svg>
+        <span class="wm" style="font-size: 40px; color: #5EDEC8;">Clinic<span class="accent-letter" style="color: #5EDEC8;">le</span></span>
+      </div>
+    </div>
+    <div class="card hero tinted-deep">
+      <div class="lockup__row">
+        <svg width="48" height="48" viewBox="0 0 100 100"><circle cx="20" cy="62" r="9" fill="#fff"/><circle cx="50" cy="44" r="13" fill="#fff"/><circle cx="80" cy="56" r="8" fill="#5EDEC8"/></svg>
+        <span class="wm" style="font-size: 40px; color: #fff;">Clinic<span class="accent-letter">le</span></span>
+      </div>
+    </div>
+    <div class="card hero tinted-mint">
+      <div class="lockup__row">
+        <svg width="48" height="48" viewBox="0 0 100 100"><circle cx="20" cy="62" r="9" fill="#fff"/><circle cx="50" cy="44" r="13" fill="#fff"/><circle cx="80" cy="56" r="8" fill="#fff"/></svg>
+        <span class="wm" style="font-size: 40px; color: #fff;">Clinic<span class="accent-letter" style="color:#fff;">le</span></span>
+      </div>
+    </div>
+  </div>
+  <div class="grid-4">
+    <span class="meta">g · Mono · Deep Sky</span>
+    <span class="meta">h · Mono · Mint Teal</span>
+    <span class="meta">i · Reverse on Deep Sky</span>
+    <span class="meta">j · All-white on Mint</span>
+  </div>
+
+  <div class="footer"><span class="meta">03 · Variations</span><span class="pageno">05</span></div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 04 CLEAR SPACE & FAVICON -->
+<!-- ============================================================ -->
+<section class="page">
+  <div class="top"><span class="label">04 · Clear space &amp; sizing</span><span class="meta">Clinicle</span></div>
+  <h1>Give it room.</h1>
+  <p class="lede">The minimum clear space around the logo equals the diameter of the largest dot in the mark (the deep-sky Provider dot, x). Maintain x on every side. Don't let any other element — text, photo edge, container border — cross into this protected zone.</p>
+
+  <div class="card hero" style="position: relative; background: var(--sky-mist); margin-top: 40px;">
+    <div style="position: relative; padding: 60px 60px;">
+      <!-- clear space marks -->
+      <div style="position:absolute; inset: 0; border: 1px dashed rgba(46,159,220,0.4); border-radius: 8px;"></div>
+      <div class="lockup">
+        <div class="lockup__row">
+          <svg width="80" height="80" viewBox="0 0 100 100"><circle cx="20" cy="62" r="9" fill="#4DB8F0"/><circle cx="50" cy="44" r="13" fill="#2E9FDC"/><circle cx="80" cy="56" r="8" fill="#5EDEC8"/></svg>
+          <span class="wm" style="font-size: 64px;">Clinic<span class="accent-letter">le</span></span>
+        </div>
+      </div>
+      <span class="meta" style="position:absolute; top:8px; left:50%; transform: translateX(-50%);">x</span>
+      <span class="meta" style="position:absolute; bottom:8px; left:50%; transform: translateX(-50%);">x</span>
+      <span class="meta" style="position:absolute; left:8px; top:50%; transform: translateY(-50%);">x</span>
+      <span class="meta" style="position:absolute; right:8px; top:50%; transform: translateY(-50%);">x</span>
+    </div>
+  </div>
+
+  <hr />
+
+  <h2>Minimum sizes</h2>
+  <table>
+    <thead><tr><th>Lockup</th><th>Digital min</th><th>Print min</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Horizontal · with slogan</td><td>180 px wide</td><td>40 mm wide</td><td>Slogan must remain legible</td></tr>
+      <tr><td>Horizontal · no slogan</td><td>120 px wide</td><td>25 mm wide</td><td>—</td></tr>
+      <tr><td>Stacked</td><td>120 px wide</td><td>25 mm wide</td><td>—</td></tr>
+      <tr><td>Mark only</td><td>24 px square</td><td>6 mm square</td><td>—</td></tr>
+      <tr><td>Favicon</td><td>16 px square</td><td>—</td><td>Use favicon variant; don't shrink full mark</td></tr>
+    </tbody>
+  </table>
+
+  <h2 style="margin-top: 48px;">Favicon set</h2>
+  <p>The package ships favicons rendered at every common digital size. Use the SVG variant when the host supports it; otherwise pick the closest PNG.</p>
+  <div class="grid-6" style="margin-top: 24px; align-items: end;">
+    <div style="text-align:center;"><svg width="16" height="16" viewBox="0 0 100 100"><circle cx="20" cy="62" r="9" fill="#4DB8F0"/><circle cx="50" cy="44" r="13" fill="#2E9FDC"/><circle cx="80" cy="56" r="8" fill="#5EDEC8"/></svg><div class="meta">16</div></div>
+    <div style="text-align:center;"><svg width="32" height="32" viewBox="0 0 100 100"><circle cx="20" cy="62" r="9" fill="#4DB8F0"/><circle cx="50" cy="44" r="13" fill="#2E9FDC"/><circle cx="80" cy="56" r="8" fill="#5EDEC8"/></svg><div class="meta">32</div></div>
+    <div style="text-align:center;"><svg width="48" height="48" viewBox="0 0 100 100"><circle cx="20" cy="62" r="9" fill="#4DB8F0"/><circle cx="50" cy="44" r="13" fill="#2E9FDC"/><circle cx="80" cy="56" r="8" fill="#5EDEC8"/></svg><div class="meta">48</div></div>
+    <div style="text-align:center;"><svg width="64" height="64" viewBox="0 0 100 100"><circle cx="20" cy="62" r="9" fill="#4DB8F0"/><circle cx="50" cy="44" r="13" fill="#2E9FDC"/><circle cx="80" cy="56" r="8" fill="#5EDEC8"/></svg><div class="meta">64</div></div>
+    <div style="text-align:center;"><svg width="128" height="128" viewBox="0 0 100 100"><circle cx="20" cy="62" r="9" fill="#4DB8F0"/><circle cx="50" cy="44" r="13" fill="#2E9FDC"/><circle cx="80" cy="56" r="8" fill="#5EDEC8"/></svg><div class="meta">128</div></div>
+    <div style="text-align:center;"><svg width="180" height="180" viewBox="0 0 100 100"><circle cx="20" cy="62" r="9" fill="#4DB8F0"/><circle cx="50" cy="44" r="13" fill="#2E9FDC"/><circle cx="80" cy="56" r="8" fill="#5EDEC8"/></svg><div class="meta">180 (Apple)</div></div>
+  </div>
+
+  <div class="footer"><span class="meta">04 · Clear space</span><span class="pageno">06</span></div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 05 COLOR -->
+<!-- ============================================================ -->
+<section class="page">
+  <div class="top"><span class="label">05 · Color</span><span class="meta">Clinicle</span></div>
+  <h1>Sky &amp; <span class="accent">Mint.</span></h1>
+  <p class="lede">The full Clinicle palette is six tones — built from sky blues that anchor and mint that connects. No black, no navy, no warm grays. Use Deep Sky as the primary color; Mint Teal as the accent; Sky Mist for whitespace; Sky Light and Mint Soft as supporting tints.</p>
+
+  <h2 style="margin-top: 56px;">Primary</h2>
+  <div class="grid-2">
+    <div class="swatch" style="background: #2E9FDC;">
+      <div>
+        <div class="swatch__name">Deep Sky</div>
+        <div class="swatch__role">Primary · Wordmark body · Headlines · CTA</div>
+      </div>
+      <div class="swatch__codes">
+        HEX  #2E9FDC<br>
+        RGB  46 · 159 · 220<br>
+        CMYK 79 · 28 · 0 · 14<br>
+        PMS  Pantone 2925 C
+      </div>
+    </div>
+    <div class="swatch" style="background: #5EDEC8;">
+      <div>
+        <div class="swatch__name">Mint Teal</div>
+        <div class="swatch__role">Accent · "le" suffix · Connector dot · Highlight</div>
+      </div>
+      <div class="swatch__codes">
+        HEX  #5EDEC8<br>
+        RGB  94 · 222 · 200<br>
+        CMYK 58 · 0 · 10 · 13<br>
+        PMS  Pantone 3375 C
+      </div>
+    </div>
+  </div>
+
+  <h2 style="margin-top: 48px;">Secondary &amp; tints</h2>
+  <div class="grid-4">
+    <div class="swatch" style="background: #4DB8F0;">
+      <div><div class="swatch__name">Sky Blue</div><div class="swatch__role">Patients dot · Links</div></div>
+      <div class="swatch__codes">#4DB8F0<br>77·184·240</div>
+    </div>
+    <div class="swatch" style="background: #7ECEF5;">
+      <div><div class="swatch__name">Sky Light</div><div class="swatch__role">Hairlines · Hover</div></div>
+      <div class="swatch__codes">#7ECEF5<br>126·206·245</div>
+    </div>
+    <div class="swatch" style="background: #A6ECDD;">
+      <div><div class="swatch__name">Mint Soft</div><div class="swatch__role">Mint backgrounds</div></div>
+      <div class="swatch__codes">#A6ECDD<br>166·236·221</div>
+    </div>
+    <div class="swatch light" style="background: #EBF5FF;">
+      <div><div class="swatch__name">Sky Mist</div><div class="swatch__role">Surfaces · Cards</div></div>
+      <div class="swatch__codes">#EBF5FF<br>235·245·255</div>
+    </div>
+  </div>
+
+  <h2 style="margin-top: 48px;">Color usage rules</h2>
+  <ul>
+    <li>Deep Sky is the brand's voice. Use it for primary text, the wordmark body, and key UI accents.</li>
+    <li>Mint Teal is reserved as the accent — the connector. Use it sparingly: the "le" suffix in the wordmark, a single button, a subtle highlight. Never as a body color.</li>
+    <li>Sky Mist is the default secondary surface. Avoid pure gray backgrounds — let sky tones breathe.</li>
+    <li>Never combine the wordmark with black, navy, charcoal or warm earth tones.</li>
+  </ul>
+
+  <div class="footer"><span class="meta">05 · Color</span><span class="pageno">07</span></div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 06 TYPOGRAPHY -->
+<!-- ============================================================ -->
+<section class="page">
+  <div class="top"><span class="label">06 · Typography</span><span class="meta">Clinicle</span></div>
+  <h1>Nunito &amp; <span class="accent">Inter Tight.</span></h1>
+  <p class="lede">Two open-source families. Nunito carries the brand: rounded, warm, optimistic. Inter Tight handles UI text and tracked-out details. Both are free, screen-tuned, and load fast.</p>
+
+  <h2 style="margin-top: 56px;">Nunito · Display</h2>
+  <p>Designed by Vernon Adams, maintained by Jacques Le Bailly &amp; the Google Fonts team.<br />Source: <span style="font-family: 'JetBrains Mono', monospace; color: var(--deep-sky);">fonts.google.com/specimen/Nunito</span> · License: SIL Open Font License 1.1 (free for commercial use)</p>
+
+  <div class="card" style="padding: 40px; margin-top: 24px;">
+    <div class="typespec">
+      <div><div class="typespec__name">Nunito 800 — Wordmark</div><div class="typespec__role">Logo · Headlines · Hero</div></div>
+      <div class="typespec__sample" style="font-family: 'Nunito'; font-weight: 800; font-size: 56px; letter-spacing: -0.015em;">Clinicle</div>
+    </div>
+    <div class="typespec">
+      <div><div class="typespec__name">Nunito 800 — Display</div><div class="typespec__role">Page H1 · large feature text</div></div>
+      <div class="typespec__sample" style="font-family: 'Nunito'; font-weight: 800; font-size: 40px;">Three pillars, one platform.</div>
+    </div>
+    <div class="typespec">
+      <div><div class="typespec__name">Nunito 700 — Heading</div><div class="typespec__role">H2 · H3 · section starters</div></div>
+      <div class="typespec__sample" style="font-family: 'Nunito'; font-weight: 700; font-size: 22px;">Patients, Providers, Payers — connected.</div>
+    </div>
+  </div>
+
+  <h2 style="margin-top: 48px;">Inter Tight · Text &amp; UI</h2>
+  <p>Designed by Rasmus Andersson. Source: <span style="font-family: 'JetBrains Mono', monospace; color: var(--deep-sky);">fonts.google.com/specimen/Inter+Tight</span> · License: SIL Open Font License 1.1 (free for commercial use)</p>
+
+  <div class="card" style="padding: 40px; margin-top: 24px;">
+    <div class="typespec">
+      <div><div class="typespec__name">Inter Tight 500 — Tagline</div><div class="typespec__role">Slogan · tracked +180 · uppercase</div></div>
+      <div class="typespec__sample" style="font-family: 'Inter Tight'; font-weight: 500; font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase;">connecting health. empowering lives</div>
+    </div>
+    <div class="typespec">
+      <div><div class="typespec__name">Inter Tight 400 — Body</div><div class="typespec__role">Paragraphs · UI · long-form</div></div>
+      <div class="typespec__sample" style="font-family: 'Inter Tight'; font-weight: 400; font-size: 15px; line-height: 1.55; color: #4d7e9b;">Clinicle is where patients, providers and payers meet — a single, integrated community for health.</div>
+    </div>
+    <div class="typespec">
+      <div><div class="typespec__name">Inter Tight 600 — UI</div><div class="typespec__role">Buttons · navigation · labels</div></div>
+      <div class="typespec__sample" style="font-family: 'Inter Tight'; font-weight: 600; font-size: 14px;">Sign in · Patients · Providers · Payers</div>
+    </div>
+  </div>
+
+  <h2 style="margin-top: 48px;">Type rules</h2>
+  <ul>
+    <li>Headlines are always Nunito 700–800. Never use weight 300/400 for display.</li>
+    <li>Body copy is Inter Tight 400. Line-height 1.55. Color: <span style="font-family: 'JetBrains Mono', monospace;">#4d7e9b</span> (Deep Sky tinted for paragraphs).</li>
+    <li>Wordmark spacing is fixed at letter-spacing −1.5%. Don't re-set it.</li>
+    <li>Tagline tracking is +180 (0.18em). Always uppercase.</li>
+  </ul>
+
+  <div class="footer"><span class="meta">06 · Typography</span><span class="pageno">08</span></div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 07 VOICE & TONE -->
+<!-- ============================================================ -->
+<section class="page">
+  <div class="top"><span class="label">07 · Voice &amp; tone</span><span class="meta">Clinicle</span></div>
+  <h1>How Clinicle <span class="accent">speaks.</span></h1>
+  <p class="lede">Warm, plainspoken, optimistic. Clinicle is a healthcare brand that doesn't sound like one. We trade jargon for human language; we trade clinical for clear.</p>
+
+  <hr />
+
+  <div class="grid-2">
+    <div>
+      <h3>We are</h3>
+      <ul>
+        <li>Warm — never cold or institutional</li>
+        <li>Plain — never jargon-filled</li>
+        <li>Confident — never overpromising</li>
+        <li>Optimistic — never naive</li>
+        <li>Inclusive — never one-sided to a single audience</li>
+      </ul>
+    </div>
+    <div>
+      <h3>We are not</h3>
+      <ul>
+        <li>Salesy</li>
+        <li>Bureaucratic</li>
+        <li>Pessimistic about healthcare</li>
+        <li>Technical for technical's sake</li>
+        <li>Cute</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2 style="margin-top: 48px;">Examples</h2>
+  <div class="grid-2">
+    <div class="card">
+      <span class="label" style="color: var(--mint-teal);">Yes</span>
+      <p style="font-family: 'Nunito'; font-weight: 700; font-size: 22px; color: var(--deep-sky); margin-top: 8px; line-height: 1.25;">"One platform. Three connected pillars."</p>
+      <p style="margin-top: 8px;">Clear, confident, and grounded in the brand idea.</p>
+    </div>
+    <div class="card">
+      <span class="label" style="color: #FF6B6B;">No</span>
+      <p style="font-family: 'Nunito'; font-weight: 700; font-size: 22px; color: var(--deep-sky); margin-top: 8px; line-height: 1.25;">"Empowering stakeholders to leverage synergies in the healthcare value chain."</p>
+      <p style="margin-top: 8px;">Jargon. Says nothing. Sounds like every other healthcare deck.</p>
+    </div>
+  </div>
+
+  <h2 style="margin-top: 48px;">Sample headlines</h2>
+  <ul>
+    <li>Where patients, providers and payers connect.</li>
+    <li>Health, finally on the same page.</li>
+    <li>One sign-in for everyone in the room.</li>
+    <li>Care that flows — across systems, across roles.</li>
+  </ul>
+
+  <div class="footer"><span class="meta">07 · Voice</span><span class="pageno">09</span></div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 08 DON'TS -->
+<!-- ============================================================ -->
+<section class="page">
+  <div class="top"><span class="label">08 · Don'ts</span><span class="meta">Clinicle</span></div>
+  <h1>Misuse.</h1>
+  <p class="lede">A few hard rules that protect the identity. If a layout breaks any of these, fix it before publishing.</p>
+
+  <div class="donts" style="margin-top: 56px;">
+    <div class="dont">
+      <span class="dont__x">×</span>
+      <div class="lockup__row">
+        <svg width="40" height="40" viewBox="0 0 100 100"><circle cx="20" cy="62" r="9" fill="#1A2B3C"/><circle cx="50" cy="44" r="13" fill="#1A2B3C"/><circle cx="80" cy="56" r="8" fill="#1A2B3C"/></svg>
+        <span class="wm" style="font-size: 30px; color: #1A2B3C;">Clinic<span style="color: #1A2B3C;">le</span></span>
+      </div>
+      <span class="dont__lbl">Don't use black or navy for the wordmark.</span>
+    </div>
+    <div class="dont">
+      <span class="dont__x">×</span>
+      <div class="lockup__row">
+        <svg width="40" height="40" viewBox="0 0 100 100"><circle cx="20" cy="62" r="9" fill="#4DB8F0"/><circle cx="50" cy="44" r="13" fill="#2E9FDC"/><circle cx="80" cy="56" r="8" fill="#5EDEC8"/></svg>
+        <span class="wm" style="font-size: 30px; font-family: 'Times New Roman', serif;">Clinic<span class="accent-letter">le</span></span>
+      </div>
+      <span class="dont__lbl">Don't change the wordmark typeface.</span>
+    </div>
+    <div class="dont">
+      <span class="dont__x">×</span>
+      <div class="lockup__row">
+        <svg width="40" height="40" viewBox="0 0 100 100"><circle cx="20" cy="62" r="9" fill="#4DB8F0"/><circle cx="50" cy="44" r="13" fill="#2E9FDC"/><circle cx="80" cy="56" r="8" fill="#5EDEC8"/></svg>
+        <span class="wm" style="font-size: 30px; transform: skewX(-15deg); display: inline-block;">Clinic<span class="accent-letter">le</span></span>
+      </div>
+      <span class="dont__lbl">Don't skew, rotate, or distort.</span>
+    </div>
+    <div class="dont">
+      <span class="dont__x">×</span>
+      <div class="lockup__row" style="opacity: 0.3;">
+        <svg width="40" height="40" viewBox="0 0 100 100"><circle cx="20" cy="62" r="9" fill="#4DB8F0"/><circle cx="50" cy="44" r="13" fill="#2E9FDC"/><circle cx="80" cy="56" r="8" fill="#5EDEC8"/></svg>
+        <span class="wm" style="font-size: 30px;">Clinic<span class="accent-letter">le</span></span>
+      </div>
+      <span class="dont__lbl">Don't reduce opacity below 100%.</span>
+    </div>
+    <div class="dont">
+      <span class="dont__x">×</span>
+      <span class="wm" style="font-size: 30px; background: linear-gradient(90deg,#FF6B6B,#FFD93D); -webkit-background-clip: text; background-clip: text; color: transparent;">Clinicle</span>
+      <span class="dont__lbl">Don't recolor with non-brand colors.</span>
+    </div>
+    <div class="dont" style="background: linear-gradient(45deg,#222,#444);">
+      <span class="dont__x">×</span>
+      <div class="lockup__row">
+        <svg width="40" height="40" viewBox="0 0 100 100"><circle cx="20" cy="62" r="9" fill="#4DB8F0"/><circle cx="50" cy="44" r="13" fill="#2E9FDC"/><circle cx="80" cy="56" r="8" fill="#5EDEC8"/></svg>
+        <span class="wm" style="font-size: 30px;">Clinic<span class="accent-letter">le</span></span>
+      </div>
+      <span class="dont__lbl" style="color: rgba(255,255,255,.7);">Don't place primary logo on dark backgrounds.<br>(Use the reverse variant.)</span>
+    </div>
+  </div>
+
+  <div class="footer"><span class="meta">08 · Don'ts</span><span class="pageno">10</span></div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 09 APPLICATIONS -->
+<!-- ============================================================ -->
+<section class="page">
+  <div class="top"><span class="label">09 · Applications</span><span class="meta">Clinicle</span></div>
+  <h1>In the wild.</h1>
+  <p class="lede">A short tour of where the identity lives — web, mobile, stationery, social. The package includes editable HTML for web/mobile mockups, a Word letterhead, and a PowerPoint template.</p>
+
+  <h2 style="margin-top: 56px;">Website</h2>
+  <div class="card" style="padding: 0; overflow: hidden; margin-top: 16px;">
+    <div style="display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: var(--sky-mist); border-bottom: 1px solid var(--hairline);">
+      <span style="width:10px;height:10px;border-radius:50%;background:var(--sky-light);opacity:.55"></span>
+      <span style="width:10px;height:10px;border-radius:50%;background:var(--sky-light);opacity:.55"></span>
+      <span style="width:10px;height:10px;border-radius:50%;background:var(--sky-light);opacity:.55"></span>
+      <span style="margin-left:10px; padding: 5px 12px; background: #fff; border-radius: 999px; font: 11px/1 'JetBrains Mono', monospace; color: var(--muted); border: 1px solid var(--hairline);">clinicle.com</span>
+    </div>
+    <div style="padding: 18px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--hairline);">
+      <div class="lockup__row">
+        <svg width="32" height="32" viewBox="0 0 100 100"><circle cx="20" cy="62" r="9" fill="#4DB8F0"/><circle cx="50" cy="44" r="13" fill="#2E9FDC"/><circle cx="80" cy="56" r="8" fill="#5EDEC8"/></svg>
+        <span class="wm" style="font-size: 22px;">Clinic<span class="accent-letter">le</span></span>
+      </div>
+      <div style="display:flex; gap: 24px; font: 500 13px/1 'Inter Tight'; color: var(--muted); align-items: center;">
+        <span>Patients</span><span>Providers</span><span>Payers</span><span>Platform</span>
+        <span style="background: #2E9FDC; color: #fff; padding: 8px 16px; border-radius: 999px; font-weight: 500;">Sign in</span>
+      </div>
+    </div>
+    <div style="padding: 60px 24px; background: linear-gradient(180deg,#fff 0%,#EBF5FF 100%);">
+      <span class="label">Welcome</span>
+      <h2 style="margin-top: 14px; font-size: 38px; max-width: 600px;">Where patients, providers and payers <span style="color: var(--mint-teal);">connect.</span></h2>
+      <p style="margin-top: 16px; max-width: 460px; font-size: 14px;">One integrated platform. Three communities. A single place for health to flow.</p>
+    </div>
+  </div>
+
+  <h2 style="margin-top: 48px;">Mobile app</h2>
+  <div style="display: flex; gap: 24px; margin-top: 16px;">
+    <div style="width: 240px; height: 480px; background: #fff; border-radius: 38px; box-shadow: inset 0 0 0 8px var(--sky-mist), 0 12px 32px rgba(46,159,220,.14); padding: 26px; position: relative;">
+      <div style="display:flex; justify-content:space-between; font: 500 9px/1 'JetBrains Mono'; color: var(--muted);"><span>9:41</span><span>●●●</span></div>
+      <div style="display:flex; flex-direction:column; align-items:center; gap: 14px; margin-top: 100px;">
+        <svg width="80" height="80" viewBox="0 0 100 100"><circle cx="20" cy="62" r="9" fill="#4DB8F0"/><circle cx="50" cy="44" r="13" fill="#2E9FDC"/><circle cx="80" cy="56" r="8" fill="#5EDEC8"/></svg>
+        <span class="wm" style="font-size: 32px;">Clinic<span class="accent-letter">le</span></span>
+        <span class="tagline" style="font-size: 9px;">connecting health. empowering lives</span>
+      </div>
+      <div style="position: absolute; bottom: 32px; left: 26px; right: 26px;">
+        <div style="background: #2E9FDC; color: #fff; border-radius: 999px; padding: 12px 0; text-align: center; font: 600 13px/1 'Inter Tight';">Continue</div>
+        <div style="color: var(--muted); font: 500 12px/1 'Inter Tight'; text-align: center; margin-top: 14px;">Sign in</div>
+      </div>
+    </div>
+    <div class="card" style="flex: 1; padding: 32px;">
+      <h3>Splash · onboarding · home</h3>
+      <p>The mobile app uses the stacked lockup at the splash and the mark-only at the home tab bar. The Continue CTA always uses Deep Sky #2E9FDC; secondary actions are muted Sky.</p>
+      <h3 style="margin-top: 20px;">App icon</h3>
+      <p>Use <span style="font-family: 'JetBrains Mono', monospace; color: var(--deep-sky);">apple-touch-icon-180.png</span> for iOS and <span style="font-family: 'JetBrains Mono', monospace; color: var(--deep-sky);">clinicle-favicon-512.png</span> for Android adaptive icons. Pad with white when the host requires a square shape.</p>
+    </div>
+  </div>
+
+  <h2 style="margin-top: 48px;">Stationery &amp; collateral</h2>
+  <div class="grid-3">
+    <div class="card hero" style="padding: 24px;">
+      <div class="lockup">
+        <div class="lockup__row">
+          <svg width="32" height="32" viewBox="0 0 100 100"><circle cx="20" cy="62" r="9" fill="#4DB8F0"/><circle cx="50" cy="44" r="13" fill="#2E9FDC"/><circle cx="80" cy="56" r="8" fill="#5EDEC8"/></svg>
+          <span class="wm" style="font-size: 22px;">Clinic<span class="accent-letter">le</span></span>
+        </div>
+        <div style="font: 600 12px/1 'Inter Tight'; color: var(--deep-sky); margin-top: 18px;">Sara Halabi</div>
+        <div style="font: 500 9px/1.6 'JetBrains Mono'; color: var(--muted);">Head of Provider Network<br>sara@clinicle.com<br>+1 415 555 0142</div>
+      </div>
+    </div>
+    <div class="card hero" style="padding: 24px; background: linear-gradient(135deg,#EBF5FF 0%,#E6FAF3 100%);">
+      <div class="lockup lockup--center" style="text-align:center;">
+        <svg width="60" height="60" viewBox="0 0 100 100"><circle cx="20" cy="62" r="9" fill="#4DB8F0"/><circle cx="50" cy="44" r="13" fill="#2E9FDC"/><circle cx="80" cy="56" r="8" fill="#5EDEC8"/></svg>
+        <span class="tagline" style="font-size: 9px; margin-top: 10px;">connecting health.<br>empowering lives</span>
+      </div>
+    </div>
+    <div class="card" style="padding: 18px;">
+      <div class="lockup__row">
+        <svg width="22" height="22" viewBox="0 0 100 100"><circle cx="20" cy="62" r="9" fill="#4DB8F0"/><circle cx="50" cy="44" r="13" fill="#2E9FDC"/><circle cx="80" cy="56" r="8" fill="#5EDEC8"/></svg>
+        <span class="wm" style="font-size: 14px;">Clinic<span class="accent-letter">le</span></span>
+      </div>
+      <div style="height: 8px;"></div>
+      <div style="font: 700 14px/1.2 Nunito; color: var(--deep-sky);">Q3 Network Update</div>
+      <div style="display: flex; flex-direction: column; gap: 4px; margin-top: 10px;">
+        <div style="height: 5px; background: var(--sky-mist); border-radius: 3px;"></div>
+        <div style="height: 5px; background: var(--sky-mist); border-radius: 3px;"></div>
+        <div style="height: 5px; background: var(--sky-mist); border-radius: 3px; width: 60%;"></div>
+      </div>
+    </div>
+  </div>
+  <div class="grid-3"><span class="meta">a · Business card</span><span class="meta">b · Card back</span><span class="meta">c · Document / memo</span></div>
+
+  <div class="footer"><span class="meta">09 · Applications</span><span class="pageno">11</span></div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 10 ASSET INDEX -->
+<!-- ============================================================ -->
+<section class="page">
+  <div class="top"><span class="label">10 · Asset index</span><span class="meta">Clinicle</span></div>
+  <h1>What's <span class="accent">in the box.</span></h1>
+  <p class="lede">Everything you need to put Clinicle into the world. All assets are organized by format and use; pick the closest variant for your context. SVG is preferred wherever it's supported.</p>
+
+  <h2 style="margin-top: 48px;">Folder layout</h2>
+  <div class="card" style="padding: 28px;">
+    <pre class="download-list">
+<b>brand-package/</b>
+├── <b>logos/</b>
+│   ├── <b>svg/</b>     21 lockup variants &middot; mark only &middot; favicon
+│   ├── <b>png/</b>     Same as SVG, rendered at 2× size
+│   ├── <b>jpg/</b>     White-background JPGs for legacy systems
+│   └── <b>favicon/</b> 16 / 32 / 48 / 64 / 128 / 192 / 256 / 512 / Apple 180
+├── <b>guidelines/</b>
+│   ├── Clinicle-Brand-Guidelines.html
+│   └── Clinicle-Brand-Guidelines.pdf
+├── <b>templates/</b>
+│   ├── Clinicle-Letterhead.docx
+│   ├── Clinicle-Memo.docx
+│   └── Clinicle-Presentation.pptx
+├── <b>applications/</b>
+│   ├── website-mockup.html
+│   ├── mobile-mockup.html
+│   ├── email-signature.html
+│   └── social-banners.html
+└── <b>colors/</b>
+    ├── clinicle-palette.css
+    ├── clinicle-palette.json
+    └── clinicle-palette.ase   (Adobe Swatch Exchange · text version)
+    </pre>
+  </div>
+
+  <h2 style="margin-top: 48px;">Quick reference</h2>
+  <table>
+    <thead><tr><th>Use case</th><th>File</th></tr></thead>
+    <tbody>
+      <tr><td>Web header (preferred)</td><td>logos/svg/clinicle-horizontal-no-tagline.svg</td></tr>
+      <tr><td>Web header (with slogan)</td><td>logos/svg/clinicle-horizontal-with-tagline.svg</td></tr>
+      <tr><td>Email signature / footer</td><td>logos/png/clinicle-horizontal-with-tagline.png</td></tr>
+      <tr><td>Browser favicon</td><td>logos/favicon/clinicle-favicon-32.png</td></tr>
+      <tr><td>iOS app icon</td><td>logos/favicon/apple-touch-icon-180.png</td></tr>
+      <tr><td>Social avatar (square)</td><td>logos/png/clinicle-mark-only-on-mist.png</td></tr>
+      <tr><td>PowerPoint cover</td><td>logos/png/clinicle-stacked-with-tagline.png</td></tr>
+      <tr><td>Print on dark</td><td>logos/svg/clinicle-horizontal-reverse-on-deepsky.svg</td></tr>
+      <tr><td>Embossing / single-color print</td><td>logos/svg/clinicle-horizontal-mono-deepsky.svg</td></tr>
+      <tr><td>Word letterhead</td><td>templates/Clinicle-Letterhead.docx</td></tr>
+    </tbody>
+  </table>
+
+  <hr />
+
+  <p class="meta" style="margin-top: 32px;">Clinicle Brand Guidelines · v1.0 · 2026 · For internal &amp; partner use.</p>
+
+  <div class="footer"><span class="meta">10 · Index</span><span class="pageno">12</span></div>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,53 @@
+/* Browser View: a live, read-only view of whatever page the shared browser
+   tool is currently showing (see channel/web/api/browser_view.py). Polled
+   via a plain <img> tag, not a canvas/video element -- a JPEG poll needs
+   neither. */
+
+#view-browser-view.active { display: flex; flex-direction: column; height: 100%; }
+.bv-shell { display: flex; flex-direction: column; height: 100%; min-height: 0; }
+.bv-toolbar {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 16px; border-bottom: 1px solid var(--border-color, #e5e7eb);
+    flex-shrink: 0;
+}
+.bv-body {
+    flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center;
+    background: #0f172a; overflow: auto;
+}
+.bv-frame { max-width: 100%; max-height: 100%; object-fit: contain; }
+.bv-empty {
+    color: #94a3b8; font-size: 13px; text-align: center; padding: 24px;
+}
+
+/* Bidirectional takeover: click/type/scroll on the live page. Off by
+   default (read-only view) -- the operator arms it explicitly, and the
+   frame gets a visible highlight while armed so it's never ambiguous
+   whether clicking the image will actually do something. */
+.bv-control-toggle {
+    display: flex; align-items: center; gap: 6px;
+    padding: 4px 10px; border-radius: 8px; font-size: 12px; font-weight: 500;
+    border: 1px solid var(--border-color, #e5e7eb); background: transparent;
+    color: #5A7C96; cursor: pointer; transition: all 0.15s ease;
+}
+.bv-control-toggle:hover { background: rgba(90, 124, 150, 0.08); }
+.bv-control-toggle.active { background: #2280B8; border-color: #2280B8; color: #fff; }
+.bv-body.bv-controlling { cursor: crosshair; }
+.bv-body.bv-controlling .bv-frame { outline: 2px solid #2280B8; outline-offset: -2px; }
+.bv-control-bar {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 16px; border-top: 1px solid rgba(255, 255, 255, 0.08);
+    background: #0f172a; flex-shrink: 0;
+}
+.bv-control-hint { font-size: 11px; color: #94a3b8; flex-shrink: 0; max-width: 40%; }
+.bv-control-input {
+    flex: 1; padding: 5px 10px; border-radius: 6px; font-size: 12.5px;
+    border: 1px solid rgba(255, 255, 255, 0.12); background: rgba(255, 255, 255, 0.05);
+    color: #e2e8f0; outline: none;
+}
+.bv-control-input:focus { border-color: #2280B8; }
+.bv-control-key-btn {
+    padding: 5px 10px; border-radius: 6px; font-size: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.12); background: rgba(255, 255, 255, 0.05);
+    color: #cbd5e1; cursor: pointer; flex-shrink: 0;
+}
+.bv-control-key-btn:hover { background: rgba(255, 255, 255, 0.1); }

@@ -1,0 +1,7 @@
+node_modules/
+.env
+newman/
+.pytest_cache/
+__pycache__/
+*.pyc
+assets/video_file.mp4

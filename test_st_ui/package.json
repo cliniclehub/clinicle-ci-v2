@@ -1,0 +1,40 @@
+{
+  "name": "platform-fe-ui-test",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "test": "playwright test",
+    "test:smoke": "playwright test --project=smoke",
+    "test:auth": "playwright test --project=auth",
+    "test:user": "playwright test --project=user",
+    "test:org-admin": "playwright test --project=org-admin",
+    "test:org-owner": "playwright test --project=org-owner",
+    "test:super-admin": "playwright test --project=super-admin",
+    "test:admin": "npm run test:org-admin",
+    "test:mobile": "playwright test --project=smoke-mobile",
+    "test:matrix": "playwright test --project='matrix-*'",
+    "test:mobile-critical": "playwright test --project='*-mobile' --grep @mobile-critical",
+    "test:p0": "playwright test --grep @P0",
+    "matrix:generate": "tsx scripts/generate-route-matrix.ts",
+    "seed:check": "tsx seed/cli.ts check",
+    "seed:bootstrap": "tsx seed/cli.ts bootstrap",
+    "seed:scenario": "tsx seed/cli.ts scenario",
+    "seed:cleanup": "tsx seed/cli.ts cleanup",
+    "test:headed": "playwright test --headed --workers=1",
+    "test:headed-slow": "PLAYWRIGHT_SLOW_MO=500 playwright test --headed --workers=1",
+    "test:ui": "playwright test --ui",
+    "test:debug": "playwright test --debug",
+    "report": "playwright show-report",
+    "codegen": "npx playwright codegen \"$(./scripts/resolve-base-url.sh)\"",
+    "test:security": "playwright test --project=security"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.51.1",
+    "@types/node": "^22",
+    "@types/pg": "^8.11.10",
+    "dotenv": "^16.4.7",
+    "pg": "^8.13.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5"
+  }
+}

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accept invite &middot; Clinicle Intelligence</title>
+    <link rel="stylesheet" href="/assets/vendor/fonts/inter/inter.css">
+    <link rel="stylesheet" href="/assets/vendor/fonts/inter-tight/inter-tight.css">
+    <link rel="stylesheet" href="/assets/vendor/fonts/nunito/nunito.css">
+    <style>
+        body {
+            margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center;
+            background: #081527; color: #DCEBF7; font-family: 'Inter Tight', 'Inter', sans-serif;
+        }
+        .card { width: 100%; max-width: 380px; padding: 32px; }
+        h1 { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 18px; margin: 0 0 6px; }
+        p { font-size: 13px; color: #7F9FB8; margin: 0 0 24px; }
+        label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .03em; color: #7F9FB8; display: block; margin-bottom: 6px; }
+        input {
+            width: 100%; box-sizing: border-box; padding: 10px 12px; margin-bottom: 16px; border-radius: 8px;
+            border: 1px solid rgba(255,255,255,.12); background: #0F2036; color: #DCEBF7; font-size: 13px;
+        }
+        button {
+            width: 100%; padding: 11px; border-radius: 8px; border: none; background: #2E9FDC; color: #fff;
+            font-size: 13px; font-weight: 600; cursor: pointer;
+        }
+        button:hover { background: #2280B8; }
+        #invite-error { font-size: 12px; color: #f87171; margin-top: 12px; display: none; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Set your password</h1>
+        <p>You've been invited to join as <strong>{{INVITE_EMAIL}}</strong>.</p>
+        <form id="invite-form">
+            <label>Password</label>
+            <input type="password" id="invite-password" autocomplete="new-password" minlength="8" required>
+            <label>Confirm password</label>
+            <input type="password" id="invite-password-confirm" autocomplete="new-password" minlength="8" required>
+            <button type="submit">Join</button>
+            <div id="invite-error"></div>
+        </form>
+    </div>
+    <script>
+        document.getElementById('invite-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const password = document.getElementById('invite-password').value;
+            const confirm = document.getElementById('invite-password-confirm').value;
+            const errorEl = document.getElementById('invite-error');
+            errorEl.style.display = 'none';
+            if (password !== confirm) {
+                errorEl.textContent = 'Passwords do not match.';
+                errorEl.style.display = 'block';
+                return;
+            }
+            fetch('/api/invites/{{INVITE_TOKEN}}/accept', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ password: password }),
+            }).then(r => r.json()).then(data => {
+                if (data.status !== 'success') {
+                    errorEl.textContent = data.message || 'Could not accept this invite.';
+                    errorEl.style.display = 'block';
+                    return;
+                }
+                window.location.href = '/';
+            }).catch(() => {
+                errorEl.textContent = 'Could not reach the server.';
+                errorEl.style.display = 'block';
+            });
+        });
+    </script>
+</body>
+</html>

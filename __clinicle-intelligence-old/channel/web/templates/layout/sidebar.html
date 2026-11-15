@@ -1,0 +1,231 @@
+        <!-- ================================================================ -->
+        <!-- SIDEBAR                                                          -->
+        <!-- ================================================================ -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-52 bg-surface-950 text-surface-400 flex flex-col
+                                    transform -translate-x-full lg:relative lg:translate-x-0
+                                    transition-transform duration-300 ease-in-out">
+            <!-- Logo -->
+            <div class="flex items-center gap-3 px-5 h-14 border-b border-white/10 flex-shrink-0">
+                <!-- The mark itself goes home, as it does everywhere else on the
+                     web. Only the mark: the name beside it is a heading. Reverse
+                     variant (white + mint dots) per brand guide: never place the
+                     primary color mark on a dark background. -->
+                <svg id="sidebar-home" role="button" tabindex="0" aria-label="Clinicle Intelligence"
+                     viewBox="0 0 100 100" width="32" height="32"
+                     class="brand-mark flex-shrink-0 cursor-pointer rounded-lg
+                            hover:opacity-80 transition-opacity duration-150">
+                    <circle cx="20" cy="62" r="9" fill="#fff"/>
+                    <circle cx="50" cy="44" r="13" fill="#fff"/>
+                    <circle cx="80" cy="56" r="8" fill="#5EDEC8"/>
+                </svg>
+                <div class="flex flex-col min-w-0">
+                    <span class="text-white text-sm truncate"
+                          style="font-family:'Nunito',sans-serif;font-weight:800;letter-spacing:-0.015em;">Clinic<span style="color:#5EDEC8">le</span></span>
+                    <span class="text-surface-500 truncate"
+                          style="font-family:'Inter Tight',sans-serif;font-weight:500;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;">Intelligence</span>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
+                <!-- Mission Control: the app's home/landing page -->
+                <a class="sidebar-item active flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-all duration-150 hover:bg-white/5 hover:text-surface-200 text-[14px]"
+                   data-view="overview">
+                    <i class="fas fa-gauge-high item-icon text-xs w-5 text-center"></i>
+                    <span data-i18n="menu_overview">Dashboard</span>
+                </a>
+
+                <!-- Workspace Group -- Org Graph moved in here from a flat top-level
+                     item: nav.js's VIEW_META already tagged it group: 'nav_workspace'
+                     for the breadcrumb, so the sidebar itself was the only place still
+                     treating it as ungrouped. Code Editor and Browser View used to live
+                     here too; both are now split panels on the Chat view instead (see
+                     chat/code-editor-panel.js, chat/browser-panel.js). -->
+                <div class="menu-group open" data-group="workspace">
+                    <button class="w-full flex items-center gap-2 px-3 py-2 text-xs font-semibold uppercase tracking-wider text-surface-500 hover:text-surface-300 cursor-pointer transition-colors duration-150">
+                        <i class="fas fa-chevron-right text-[10px] chevron"></i>
+                        <span data-i18n="nav_workspace">Workspace</span>
+                    </button>
+                    <div class="menu-group-items pl-2">
+                        <a class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-all duration-150 hover:bg-white/5 hover:text-surface-200 text-[14px]"
+                           data-view="chat">
+                            <i class="fas fa-message item-icon text-xs w-5 text-center"></i>
+                            <span data-i18n="menu_home">Home</span>
+                        </a>
+                        <a class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-all duration-150 hover:bg-white/5 hover:text-surface-200 text-[14px]"
+                           data-view="board">
+                            <i class="fas fa-diagram-project item-icon text-xs w-5 text-center"></i>
+                            <span data-i18n="menu_board">Task Board</span>
+                        </a>
+                        <a class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-all duration-150 hover:bg-white/5 hover:text-surface-200 text-[14px]"
+                           data-view="teams">
+                            <i class="fas fa-people-group item-icon text-xs w-5 text-center"></i>
+                            <span data-i18n="menu_teams">Teams</span>
+                        </a>
+                        <a class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-all duration-150 hover:bg-white/5 hover:text-surface-200 text-[14px]"
+                           data-view="org-graph">
+                            <i class="fas fa-sitemap item-icon text-xs w-5 text-center"></i>
+                            <span data-i18n="menu_org_graph">Org Graph</span>
+                        </a>
+                        <a class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-all duration-150 hover:bg-white/5 hover:text-surface-200 text-[14px]"
+                           data-view="meetings">
+                            <i class="fas fa-users-rectangle item-icon text-xs w-5 text-center"></i>
+                            <span data-i18n="menu_meetings">Meetings</span>
+                        </a>
+                        <a class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-all duration-150 hover:bg-white/5 hover:text-surface-200 text-[14px]"
+                           data-view="tasks">
+                            <i class="fas fa-clock item-icon text-xs w-5 text-center"></i>
+                            <span data-i18n="menu_scheduled">Scheduled</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Review Group -- Review Queue, Pending Edits and Worktrees all
+                     shared VIEW_META's group: 'menu_review_queue' already (same
+                     breadcrumb top label), which was the tell that these three were
+                     meant to read as one set, not three flat entries. -->
+                <div class="menu-group open" data-group="review">
+                    <button class="w-full flex items-center gap-2 px-3 py-2 text-xs font-semibold uppercase tracking-wider text-surface-500 hover:text-surface-300 cursor-pointer transition-colors duration-150">
+                        <i class="fas fa-chevron-right text-[10px] chevron"></i>
+                        <span data-i18n="nav_review">Review</span>
+                    </button>
+                    <div class="menu-group-items pl-2">
+                        <a class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-all duration-150 hover:bg-white/5 hover:text-surface-200 text-[14px]"
+                           data-view="review-queue">
+                            <i class="fas fa-flag item-icon text-xs w-5 text-center"></i>
+                            <span data-i18n="menu_review_queue">Review Queue</span>
+                        </a>
+                        <a class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-all duration-150 hover:bg-white/5 hover:text-surface-200 text-[14px]"
+                           data-view="pending-edits">
+                            <i class="fas fa-code-compare item-icon text-xs w-5 text-center"></i>
+                            <span data-i18n="menu_pending_edits">Pending Edits</span>
+                        </a>
+                        <a class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-all duration-150 hover:bg-white/5 hover:text-surface-200 text-[14px]"
+                           data-view="worktrees">
+                            <i class="fas fa-code-branch item-icon text-xs w-5 text-center"></i>
+                            <span data-i18n="menu_worktrees">Worktrees</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Automation Group -- Agents and Workflows are both "build/configure
+                     the automation layer" pages, previously two unrelated flat items. -->
+                <div class="menu-group open" data-group="automation">
+                    <button class="w-full flex items-center gap-2 px-3 py-2 text-xs font-semibold uppercase tracking-wider text-surface-500 hover:text-surface-300 cursor-pointer transition-colors duration-150">
+                        <i class="fas fa-chevron-right text-[10px] chevron"></i>
+                        <span data-i18n="nav_automation">Automation</span>
+                    </button>
+                    <div class="menu-group-items pl-2">
+                        <a class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-all duration-150 hover:bg-white/5 hover:text-surface-200 text-[14px]"
+                           data-view="agents">
+                            <i class="fas fa-robot item-icon text-xs w-5 text-center"></i>
+                            <span data-i18n="menu_agents">Agents</span>
+                        </a>
+                        <a class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-all duration-150 hover:bg-white/5 hover:text-surface-200 text-[14px]"
+                           data-view="workflows">
+                            <i class="fas fa-code-branch item-icon text-xs w-5 text-center"></i>
+                            <span data-i18n="menu_workflows">Workflows</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Knowledge Group -->
+                <div class="menu-group open" data-group="knowledge">
+                    <button class="w-full flex items-center gap-2 px-3 py-2 text-xs font-semibold uppercase tracking-wider text-surface-500 hover:text-surface-300 cursor-pointer transition-colors duration-150">
+                        <i class="fas fa-chevron-right text-[10px] chevron"></i>
+                        <span data-i18n="nav_knowledge">Knowledge</span>
+                    </button>
+                    <div class="menu-group-items pl-2">
+                        <a class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-all duration-150 hover:bg-white/5 hover:text-surface-200 text-[14px]"
+                           data-view="knowledge">
+                            <i class="fas fa-book item-icon text-xs w-5 text-center"></i>
+                            <span data-i18n="menu_knowledge_base">Knowledge Base</span>
+                        </a>
+                        <a class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-all duration-150 hover:bg-white/5 hover:text-surface-200 text-[14px]"
+                           data-view="memory">
+                            <i class="fas fa-brain item-icon text-xs w-5 text-center"></i>
+                            <span data-i18n="menu_memory">Memory</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Insights Group (was: flat Overview/Alerts under an "Admin"
+                     divider, plus Analytics inside the old Governance group --
+                     merged since all three are read-only reporting, not settings
+                     or org administration) -->
+                <div class="menu-group open" data-group="insights">
+                    <button class="w-full flex items-center gap-2 px-3 py-2 text-xs font-semibold uppercase tracking-wider text-surface-500 hover:text-surface-300 cursor-pointer transition-colors duration-150">
+                        <i class="fas fa-chevron-right text-[10px] chevron"></i>
+                        <span data-i18n="nav_insights">Insights</span>
+                    </button>
+                    <div class="menu-group-items pl-2">
+                        <a class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-all duration-150 hover:bg-white/5 hover:text-surface-200 text-[14px]"
+                           data-view="alerts">
+                            <i class="fas fa-bell item-icon text-xs w-5 text-center"></i>
+                            <span data-i18n="menu_alerts">Alerts</span>
+                        </a>
+                        <a class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-all duration-150 hover:bg-white/5 hover:text-surface-200 text-[14px]"
+                           data-view="analytics">
+                            <i class="fas fa-chart-line item-icon text-xs w-5 text-center"></i>
+                            <span data-i18n="menu_analytics">Analytics</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- System Group -->
+                <div class="menu-group open" data-group="system">
+                    <button class="w-full flex items-center gap-2 px-3 py-2 text-xs font-semibold uppercase tracking-wider text-surface-500 hover:text-surface-300 cursor-pointer transition-colors duration-150">
+                        <i class="fas fa-chevron-right text-[10px] chevron"></i>
+                        <span data-i18n="nav_system">System</span>
+                    </button>
+                    <div class="menu-group-items pl-2">
+                        <a class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-all duration-150 hover:bg-white/5 hover:text-surface-200 text-[14px]"
+                           data-view="logs">
+                            <i class="fas fa-terminal item-icon text-xs w-5 text-center"></i>
+                            <span data-i18n="menu_logs">Logs</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Settings: one destination for everything that used to be 8
+                     separate items (External AI/config, Skills, Connectors,
+                     Channels, Agents & Org, Sovereignty, Security & Access) --
+                     see templates/views/settings.html for the sub-nav inside it. -->
+                <a class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-all duration-150 hover:bg-white/5 hover:text-surface-200 text-[14px]"
+                   data-view="settings">
+                    <i class="fas fa-gear item-icon text-xs w-5 text-center"></i>
+                    <span data-i18n="menu_settings">Settings</span>
+                </a>
+            </nav>
+
+            <!-- Sidebar Footer -->
+            <div class="px-4 py-3 border-t border-white/10 flex-shrink-0 relative">
+                <div class="flex items-center gap-2 text-xs text-surface-600">
+                    <i class="fas fa-circle text-[6px] text-primary-400"></i>
+                    <button type="button" id="sidebar-version" onclick="toggleUpdateMenu(event)"
+                       class="update-version-btn hover:text-primary-400 transition-colors duration-150 cursor-pointer bg-transparent border-0 p-0 text-left"
+                       aria-haspopup="menu" aria-controls="update-menu" aria-expanded="false"></button>
+                </div>
+
+                <!-- Up-popover menu anchored to the version row -->
+                <div id="update-menu" class="update-menu hidden" role="menu" aria-labelledby="sidebar-version">
+                    <!-- Single update entry: "Check for update" turns into "Update now" once a
+                         newer version is found (mirrors the desktop NavRail). -->
+                    <button type="button" id="update-action-item" class="update-menu-item" role="menuitem" onclick="onUpdateActionClick()">
+                        <span class="update-menu-icon">
+                            <i id="update-action-icon" class="fas fa-arrows-rotate"></i>
+                            <span id="update-dot" class="update-dot hidden" aria-hidden="true"></span>
+                        </span>
+                        <span id="update-action-label" class="update-menu-label" data-i18n="update_check">Check for update</span>
+                    </button>
+                    <button type="button" class="update-menu-item" role="menuitem" onclick="openReleaseNotes()">
+                        <span class="update-menu-icon"><i class="fas fa-file-lines"></i></span>
+                        <span class="update-menu-label" data-i18n="update_changelog">Release notes</span>
+                        <i class="fas fa-arrow-up-right-from-square update-menu-ext"></i>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Mobile Overlay -->
+        <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden cursor-pointer" onclick="toggleSidebar()"></div>

@@ -1,0 +1,27 @@
+name: platform
+
+services:
+  db:
+    image: postgres:16
+    container_name: ci_db
+    restart: always
+    env_file:
+      - ./deploy/env.database
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db-backups:/backups
+      - ./logs/database:/var/log/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ci_user -d ci_db"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  pgdata:
+
+networks:
+  default:
+    name: ci_network

@@ -1,0 +1,12 @@
+graph TD
+  ROUTE["Routing"] --> REG["Agent Registry"]
+  ROUTE --> TEAM["Team / Multiagent<br/>leader delegates to teammates"]
+  ROUTE --> GUARD["Permission / Security / Compliance"]
+  REG --> FILE["File + Bash tools"]
+  REG --> CONN["Connectors<br/>Composio only"]
+  REG --> WF["Workflow engine<br/>visual DAG"]
+  REG --> RQ["review_queue tool<br/>flag, never auto-act"]
+  WF --> STORES["SQLite stores"]
+  RQ --> STORES
+  RQ --> AUDIT2["Audit Log"]
+  GUARD --> AUDIT2

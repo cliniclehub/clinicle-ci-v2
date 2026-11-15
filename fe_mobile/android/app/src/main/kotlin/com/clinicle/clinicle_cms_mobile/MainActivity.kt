@@ -1,0 +1,5 @@
+package com.clinicle.clinicle_cms_mobile
+
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity : FlutterActivity()

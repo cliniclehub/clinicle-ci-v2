@@ -1,0 +1,121 @@
+                <!-- ====================================================== -->
+                <!-- VIEW: Task Board (Agent Fleet Kanban + Autopilot)       -->
+                <!-- ====================================================== -->
+                <div id="view-board" class="view">
+                    <div class="board-header">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <i class="fas fa-diagram-project board-header-icon"></i>
+                            <h2 class="text-base font-semibold text-surface-800 dark:text-surface-100" data-i18n="board_title">Task Board</h2>
+                            <select id="board-team-select" onchange="selectBoardTeam(this.value)"
+                                    class="px-2.5 py-1.5 text-xs rounded-lg border border-surface-200 dark:border-white/10 bg-white dark:bg-surface-800 text-surface-700 dark:text-surface-200 cursor-pointer max-w-[220px]"></select>
+                        </div>
+                        <div class="flex items-center gap-3 flex-shrink-0 min-w-0">
+                            <div id="board-working-pill" class="board-working-pill hidden">
+                                <span class="board-dot board-dot-green"></span>
+                                <span id="board-working-pill-text" class="truncate"></span>
+                            </div>
+                            <button onclick="openBoardTaskModal()"
+                                    class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-primary-500 hover:bg-primary-600 text-white cursor-pointer">
+                                <i class="fas fa-plus"></i>
+                                <span data-i18n="board_new_task">New Task</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="board-empty" class="board-empty">
+                        <i class="fas fa-diagram-project text-3xl opacity-40"></i>
+                        <div class="text-sm" data-i18n="board_empty_hint">Create a Team first (see the Teams view) -- the board tracks tasks per Team.</div>
+                    </div>
+
+                    <div id="board-body" class="board-body hidden">
+                        <!-- Autopilot toggle card -->
+                        <div class="board-autopilot-card">
+                            <label class="board-autopilot-switch">
+                                <input type="checkbox" id="board-autopilot-checkbox" onchange="toggleBoardAutopilot(this.checked)">
+                                <span class="board-autopilot-track"><span class="board-autopilot-thumb"></span></span>
+                            </label>
+                            <div class="min-w-0 flex-1">
+                                <div class="board-autopilot-title">Autopilot <span class="board-autopilot-dot">&middot;</span> Clinicle Intelligence works the board</div>
+                                <div id="board-autopilot-caption" class="board-autopilot-caption">Off &mdash; tasks stay put until you turn Autopilot on.</div>
+                            </div>
+                        </div>
+
+                        <!-- Autopilot live-activity panel -->
+                        <div id="board-activity-panel" class="board-activity-panel hidden">
+                            <div class="board-activity-head">
+                                <div class="flex items-center gap-2 min-w-0">
+                                    <i class="fas fa-wave-square board-activity-pulse"></i>
+                                    <span class="font-semibold text-sm">Autopilot &middot; live activity</span>
+                                </div>
+                                <div id="board-activity-project-pill" class="board-project-pill"></div>
+                            </div>
+                            <div class="board-activity-inner">
+                                <button class="board-stop-btn" onclick="toggleBoardAutopilot(false)">Stop</button>
+                                <div class="board-activity-status">
+                                    <span class="board-dot board-dot-green"></span>
+                                    <span>&#9889; Autopilot &middot; Working...</span>
+                                </div>
+                                <div id="board-activity-task" class="board-activity-task"></div>
+                                <div class="board-progress-track"><div id="board-progress-bar" class="board-progress-bar"></div></div>
+
+                                <div class="board-steps">
+                                    <button type="button" class="board-step" onclick="_toggleBoardStep(this)">
+                                        <i id="board-step1-icon" class="fas fa-circle-notch board-step-icon"></i>
+                                        <span id="board-step1-label">Dispatched task to the owner</span>
+                                        <i class="fas fa-chevron-down board-step-chevron"></i>
+                                    </button>
+                                    <div class="board-step-body hidden">Ran the task's owner through a real turn (agent_reply) against the task's own session -- the same call `team_manage(delegate)` makes.</div>
+
+                                    <button type="button" class="board-step" onclick="_toggleBoardStep(this)">
+                                        <i class="fas fa-circle-half-stroke board-step-icon"></i>
+                                        <span>Thought</span>
+                                        <i class="fas fa-chevron-down board-step-chevron"></i>
+                                    </button>
+                                    <div class="board-step-body hidden">Self-check: asked the same agent whether it fully completed the task. A leading "DONE" moves the task to Done; anything else stays in Review for a human.</div>
+                                </div>
+
+                                <div class="board-activity-stream"><span id="board-activity-stream-text"></span><span class="board-cursor"></span></div>
+
+                                <div class="board-steer-row">
+                                    <input type="text" id="board-steer-input" placeholder="Steer Clinicle Intelligence mid-task... (e.g. focus on X, skip Y)"
+                                           onkeydown="if(event.key==='Enter'){steerBoardAutopilot();}">
+                                    <button onclick="steerBoardAutopilot()" title="Send" aria-label="Send steering instruction">
+                                        <i class="fas fa-arrow-up"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="board-columns" class="board-columns"></div>
+                    </div>
+                </div>
+
+                <!-- New/edit task modal -->
+                <div id="board-task-modal" class="fixed inset-0 z-[60] hidden items-center justify-center bg-black/40 p-4">
+                    <div class="bg-white dark:bg-surface-800 rounded-xl shadow-xl w-full max-w-md flex flex-col overflow-hidden">
+                        <div class="flex items-center justify-between px-5 py-4 border-b border-surface-200 dark:border-white/10">
+                            <h3 class="text-base font-semibold text-surface-800 dark:text-surface-100" data-i18n="board_new_task">New Task</h3>
+                            <button onclick="closeBoardTaskModal()" class="text-surface-400 hover:text-surface-600 dark:hover:text-surface-200 cursor-pointer" aria-label="Close">
+                                <i class="fas fa-xmark"></i>
+                            </button>
+                        </div>
+                        <div class="p-5 space-y-4">
+                            <div>
+                                <label class="text-xs font-medium text-surface-500 dark:text-surface-400" data-i18n="board_task_subject">Task</label>
+                                <input type="text" id="board-task-subject"
+                                       class="mt-1 w-full px-3 py-2 rounded-lg border border-surface-200 dark:border-white/10 bg-transparent text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/40">
+                            </div>
+                            <div>
+                                <label class="text-xs font-medium text-surface-500 dark:text-surface-400" data-i18n="board_task_owner">Owner</label>
+                                <select id="board-task-owner"
+                                        class="mt-1 w-full px-3 py-2 rounded-lg border border-surface-200 dark:border-white/10 bg-white dark:bg-surface-800 text-sm"></select>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-end gap-2 px-5 py-4 border-t border-surface-200 dark:border-white/10">
+                            <button onclick="closeBoardTaskModal()"
+                                    class="px-3 py-1.5 rounded-lg text-xs font-medium text-surface-600 dark:text-surface-300 hover:bg-surface-100 dark:hover:bg-white/10 cursor-pointer" data-i18n="cancel">Cancel</button>
+                            <button onclick="submitBoardTask()"
+                                    class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-primary-500 hover:bg-primary-600 text-white cursor-pointer" data-i18n="board_create">Create</button>
+                        </div>
+                    </div>
+                </div>

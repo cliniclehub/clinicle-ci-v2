@@ -1,0 +1,86 @@
+                <!-- ====================================================== -->
+                <!-- VIEW: Security & Access                                 -->
+                <!-- ====================================================== -->
+                <div id="view-security-access" class="settings-pane" data-settings-pane="security-access">
+                    <div class="flex-1 overflow-y-auto p-6">
+                        <div class="max-w-4xl mx-auto">
+                            <!-- Header -->
+                            <div class="flex items-center gap-3 mb-6">
+                                <div class="w-9 h-9 rounded-lg bg-primary-50 dark:bg-primary-900/30 flex items-center justify-center shrink-0">
+                                    <i class="fas fa-lock text-primary-500 text-sm"></i>
+                                </div>
+                                <div>
+                                    <h2 class="text-xl font-bold text-surface-800 dark:text-surface-100" data-i18n="security_access_title">Security &amp; Access</h2>
+                                    <p class="text-sm text-surface-500 dark:text-surface-400 mt-0.5" data-i18n="security_access_desc">Credentials, default agent permissions, and MFA coverage across the organization</p>
+                                </div>
+                            </div>
+
+                            <div id="security-access-status" class="text-sm mb-4 opacity-0 transition-opacity duration-150"></div>
+
+                            <!-- Secrets Vault -->
+                            <div class="p-5 rounded-xl border border-surface-200 dark:border-white/10 bg-white dark:bg-surface-800 mb-5">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <h3 class="text-sm font-semibold text-surface-700 dark:text-surface-200" data-i18n="security_access_vault_title">Secrets Vault</h3>
+                                    <span id="sec-vault-count" class="px-2 py-0.5 rounded-full text-[11px] bg-surface-100 dark:bg-surface-700 text-surface-500 dark:text-surface-400 font-medium">0</span>
+                                </div>
+                                <p class="text-xs text-surface-400 dark:text-surface-500 mb-4" data-i18n="security_access_vault_desc">Values are encrypted at rest and never shown again after creation.</p>
+
+                                <div id="sec-vault-list" class="space-y-1.5 text-sm mb-4"></div>
+
+                                <form id="sec-vault-add-form" class="flex flex-col sm:flex-row gap-2">
+                                    <input id="sec-vault-name" type="text" autocomplete="off" placeholder="Name (e.g. stripe_key)"
+                                           data-i18n-placeholder="security_access_vault_name_placeholder"
+                                           class="flex-1 px-3 py-2 rounded-lg border border-surface-200 dark:border-white/10 bg-surface-50 dark:bg-surface-900/40 text-sm text-surface-700 dark:text-surface-200 focus:outline-none focus:ring-2 focus:ring-primary-400/40" />
+                                    <input id="sec-vault-value" type="password" autocomplete="new-password" placeholder="Value"
+                                           data-i18n-placeholder="security_access_vault_value_placeholder"
+                                           class="flex-1 px-3 py-2 rounded-lg border border-surface-200 dark:border-white/10 bg-surface-50 dark:bg-surface-900/40 text-sm text-surface-700 dark:text-surface-200 focus:outline-none focus:ring-2 focus:ring-primary-400/40" />
+                                    <button type="submit"
+                                            class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold bg-primary-500 hover:bg-primary-600 text-white cursor-pointer transition-colors shrink-0">
+                                        <i class="fas fa-plus text-[11px]"></i>
+                                        <span data-i18n="security_access_vault_add">Add secret</span>
+                                    </button>
+                                </form>
+                            </div>
+
+                            <!-- Default Agent Behavior -->
+                            <div class="p-5 rounded-xl border border-surface-200 dark:border-white/10 bg-white dark:bg-surface-800 mb-5">
+                                <h3 class="text-sm font-semibold text-surface-700 dark:text-surface-200 mb-1" data-i18n="security_access_permission_title">Default Agent Behavior</h3>
+                                <p class="text-xs text-surface-400 dark:text-surface-500 mb-4" data-i18n="security_access_permission_desc">What a new session may do without asking, unless it pins its own mode.</p>
+
+                                <div id="sec-permission-modes" class="grid grid-cols-1 sm:grid-cols-3 gap-2"></div>
+                            </div>
+
+                            <!-- Active Sessions -->
+                            <div class="p-5 rounded-xl border border-surface-200 dark:border-white/10 bg-white dark:bg-surface-800 mb-5">
+                                <h3 class="text-sm font-semibold text-surface-700 dark:text-surface-200 mb-1" data-i18n="security_access_sessions_title">Active Sessions</h3>
+                                <p class="text-xs text-surface-400 dark:text-surface-500 mb-4" data-i18n="security_access_sessions_desc">
+                                    Sessions are stateless sign-in tokens, not individually tracked devices -- "Sign out everywhere" invalidates every token a member currently holds; they'll need to sign in again on every device.
+                                </p>
+                                <div id="sec-sessions-list" class="space-y-1.5 text-sm"></div>
+                                <p id="sec-sessions-note" class="text-xs text-surface-400 dark:text-surface-500 mt-3"></p>
+                            </div>
+
+                            <!-- MFA Coverage -->
+                            <div class="p-5 rounded-xl border border-surface-200 dark:border-white/10 bg-white dark:bg-surface-800">
+                                <h3 class="text-sm font-semibold text-surface-700 dark:text-surface-200 mb-1" data-i18n="security_access_mfa_title">MFA Coverage</h3>
+                                <p class="text-xs text-surface-400 dark:text-surface-500 mb-4" data-i18n="security_access_mfa_desc">Read-only summary. Members enroll their own MFA from Agents &amp; Org.</p>
+
+                                <div id="sec-mfa-summary" class="grid grid-cols-3 gap-3 text-center">
+                                    <div class="p-3 rounded-lg bg-surface-50 dark:bg-surface-700/40">
+                                        <div id="sec-mfa-total" class="text-2xl font-bold text-surface-800 dark:text-surface-100">0</div>
+                                        <div class="text-[11px] text-surface-400 dark:text-surface-500 mt-0.5" data-i18n="security_access_mfa_total">Members</div>
+                                    </div>
+                                    <div class="p-3 rounded-lg bg-emerald-50/60 dark:bg-emerald-900/10">
+                                        <div id="sec-mfa-enabled" class="text-2xl font-bold text-emerald-600 dark:text-emerald-400">0</div>
+                                        <div class="text-[11px] text-surface-400 dark:text-surface-500 mt-0.5" data-i18n="security_access_mfa_enabled">MFA enabled</div>
+                                    </div>
+                                    <div class="p-3 rounded-lg bg-amber-50/60 dark:bg-amber-900/10">
+                                        <div id="sec-mfa-disabled" class="text-2xl font-bold text-amber-600 dark:text-amber-400">0</div>
+                                        <div class="text-[11px] text-surface-400 dark:text-surface-500 mt-0.5" data-i18n="security_access_mfa_disabled">Without MFA</div>
+                                    </div>
+                                </div>
+                                <p id="sec-mfa-note" class="text-xs text-surface-400 dark:text-surface-500 mt-3"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>

@@ -1,0 +1,11 @@
+# Claude Instructions
+
+Read and follow [devops/docs/rules/AI_RULES.md](devops/docs/rules/AI_RULES.md) before making changes in this repository.
+
+Repository-specific priority:
+
+1. Current code patterns in this repo
+2. `devops/docs/rules/AI_RULES.md`
+3. User instructions for the current task
+
+When changing code, keep edits scoped, protect unrelated user changes, and run the most relevant checks available.

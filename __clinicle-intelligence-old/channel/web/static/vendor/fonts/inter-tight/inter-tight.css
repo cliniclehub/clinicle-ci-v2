@@ -1,0 +1,21 @@
+/* Inter Tight (variable font, full latin+ character set).
+ * Weight axis 100-900, covers all weights this app uses (400/500/600).
+ * Source: Google Fonts (Inter Tight), redistributed locally to avoid runtime
+ * dependency on fonts.googleapis.com / fonts.gstatic.com.
+ */
+
+@font-face {
+    font-family: 'Inter Tight';
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url('./inter-tight-variable.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Inter Tight';
+    font-style: italic;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url('./inter-tight-italic-variable.ttf') format('truetype');
+}

@@ -1,0 +1,58 @@
+{
+	email admin@localhost
+}
+
+# Combined Clinicle CI + CMS local HTTPS proxy.
+# Same file in clinicle-ci and clinicle-cms — start Caddy from either repo;
+# each hostname family always hits that product's ports.
+#
+# Ports (override with CI_FE_PORT / CI_BE_PORT / CMS_FE_PORT / CMS_BE_PORT):
+#   CI   FE :3003  API :8003
+#   CMS  FE :3004  API :8004
+#
+# 192.168.0.25 is attached to CMS only (one A-record cannot hit both stacks).
+
+# ---------------------------------------------------------------------------
+# Clinicle Intelligence (CI) — frontend
+# ---------------------------------------------------------------------------
+testorg-a.clinicle-ci.local,
+testorg-b.clinicle-ci.local,
+admin.clinicle-ci.local,
+allure.clinicle-ci.local {
+	encode gzip
+	reverse_proxy 127.0.0.1:{$CI_FE_PORT:3003} {
+		transport http {
+			read_timeout 5m
+			write_timeout 5m
+		}
+	}
+}
+
+# Clinicle Intelligence (CI) — backend
+api.clinicle-ci.local {
+	encode gzip
+	reverse_proxy 127.0.0.1:{$CI_BE_PORT:8003}
+}
+
+# ---------------------------------------------------------------------------
+# Clinic Management System (CMS) — frontend
+# ---------------------------------------------------------------------------
+testorg-a.clinicle-cms.local,
+testorg-b.clinicle-cms.local,
+admin.clinicle-cms.local,
+allure.clinicle-cms.local,
+192.168.0.25 {
+	encode gzip
+	reverse_proxy 127.0.0.1:{$CMS_FE_PORT:3004} {
+		transport http {
+			read_timeout 5m
+			write_timeout 5m
+		}
+	}
+}
+
+# Clinic Management System (CMS) — backend
+api.clinicle-cms.local {
+	encode gzip
+	reverse_proxy 127.0.0.1:{$CMS_BE_PORT:8004}
+}

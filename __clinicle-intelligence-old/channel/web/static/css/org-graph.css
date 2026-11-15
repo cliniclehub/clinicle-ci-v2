@@ -1,0 +1,28 @@
+/* Org Graph: read-only org -> teams -> agents map. Layout chrome (header,
+   body, canvas-wrap, empty-state) reuses workflows.css/meetings.css classes
+   verbatim -- only the node/edge/badge look is new here. */
+
+#view-org-graph { display: none; flex-direction: column; height: 100%; }
+#view-org-graph.active { display: flex; }
+
+.og-node rect { stroke-width: 1.5px; }
+.og-node-icon { font-family: "Font Awesome 6 Free"; font-weight: 900; font-size: 13px; fill: currentColor; dominant-baseline: middle; }
+.og-node-label { font-size: 12px; font-weight: 600; fill: #182E44; dominant-baseline: middle; }
+.dark .og-node-label { fill: #DCEBF7; }
+
+.og-node-org .og-node-icon, .og-node-org .og-node-label { fill: #8b5cf6; }
+.og-node-team .og-node-icon, .og-node-team .og-node-label { fill: #2E9FDC; }
+.og-node-agent .og-node-icon, .og-node-agent .og-node-label { fill: #16a34a; }
+.dark .og-node-agent .og-node-icon, .dark .og-node-agent .og-node-label { fill: #4ade80; }
+
+.og-edge { fill: none; stroke: #7F9FB8; stroke-width: 1.5px; }
+
+/* Landing here from a specific team's rail icon -- the graph itself is
+   identical for every team, this ring is what tells them apart. */
+.og-node-focused rect { stroke-width: 3px; filter: drop-shadow(0 0 6px rgba(46, 159, 220, .5)); }
+
+.og-task-badge {
+    display: inline-block; font-size: 10px; font-weight: 600; color: #5A7C96;
+    background: rgba(90,124,150,.12); border-radius: 8px; padding: 1px 6px;
+}
+.dark .og-task-badge { color: #9DB8CC; background: rgba(157,184,204,.15); }
